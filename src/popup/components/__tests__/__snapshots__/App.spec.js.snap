@@ -1,0 +1,315 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App.vue it has the correct pristine / empty state 1`] = `
+<div
+  class="recorder"
+  id="puppeteer-recorder"
+>
+  <div
+    class="header"
+  >
+    
+    Puppeteer recorder
+    
+    <div
+      class="left"
+    >
+      <div
+        class="recording-badge"
+        style="display: none;"
+      >
+        <span
+          class="red-dot"
+        />
+        
+        recording
+      
+      </div>
+       
+      <a
+        class="options-button"
+        href="#"
+      >
+        <img
+          alt="settings"
+          src="/images/settings.svg"
+          width="18px"
+        />
+      </a>
+    </div>
+  </div>
+   
+  <div
+    class="main"
+  >
+    <div
+      class="tabs"
+    >
+      <div
+        class="tab record-tab"
+      >
+        <div
+          class="content"
+        >
+          <div
+            class="empty"
+          >
+            <img
+              alt="desert"
+              src="/images/Desert.svg"
+              width="78px"
+            />
+             
+            <h3>
+              No recorded events yet
+            </h3>
+             
+            <p
+              class="text-muted"
+            >
+              Click record to begin
+            </p>
+          </div>
+           
+          <div
+            class="events"
+            style="display: none;"
+          >
+            <p
+              class="text-muted text-center"
+            >
+              Waiting for events...
+            </p>
+             
+            <ul
+              class="event-list"
+            />
+          </div>
+        </div>
+         
+        <div
+          class="footer"
+        >
+          <button
+            class="btn btn-sm btn-primary"
+          >
+            
+            Record
+          
+          </button>
+           
+          <a
+            href="#"
+            style="display: none;"
+          >
+            view code
+          </a>
+        </div>
+      </div>
+       
+      <div
+        class="tab results-tab"
+        style="display: none;"
+      >
+        <div
+          class="content"
+        >
+          <pre>
+                        
+            <code>
+              
+              No code yet...
+            
+            </code>
+            
+          
+          </pre>
+           
+          <pre
+            style="display: none;"
+          >
+            <code
+              class="javascript"
+            />
+          </pre>
+        </div>
+         
+        <div
+          class="footer"
+        >
+          <button
+            class="btn btn-sm btn-primary"
+            style="display: none;"
+          >
+            Restart
+          </button>
+           
+          <a
+            href="#"
+            style="display: none;"
+          >
+            copy to clipboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`App.vue it has the expected html structure 1`] = `
+<div
+  class="recorder"
+  id="puppeteer-recorder"
+>
+  <div
+    class="header"
+  >
+    
+    Puppeteer recorder
+    
+    <div
+      class="left"
+    >
+      <div
+        class="recording-badge"
+        style="display: none;"
+      >
+        <span
+          class="red-dot"
+        />
+        
+        recording
+      
+      </div>
+       
+      <a
+        class="options-button"
+        href="#"
+      >
+        <img
+          alt="settings"
+          src="/images/settings.svg"
+          width="18px"
+        />
+      </a>
+    </div>
+  </div>
+   
+  <div
+    class="main"
+  >
+    <div
+      class="tabs"
+    >
+      <div
+        class="tab record-tab"
+      >
+        <div
+          class="content"
+        >
+          <div
+            class="empty"
+          >
+            <img
+              alt="desert"
+              src="/images/Desert.svg"
+              width="78px"
+            />
+             
+            <h3>
+              No recorded events yet
+            </h3>
+             
+            <p
+              class="text-muted"
+            >
+              Click record to begin
+            </p>
+          </div>
+           
+          <div
+            class="events"
+            style="display: none;"
+          >
+            <p
+              class="text-muted text-center"
+            >
+              Waiting for events...
+            </p>
+             
+            <ul
+              class="event-list"
+            />
+          </div>
+        </div>
+         
+        <div
+          class="footer"
+        >
+          <button
+            class="btn btn-sm btn-primary"
+          >
+            
+            Record
+          
+          </button>
+           
+          <a
+            href="#"
+            style="display: none;"
+          >
+            view code
+          </a>
+        </div>
+      </div>
+       
+      <div
+        class="tab results-tab"
+        style="display: none;"
+      >
+        <div
+          class="content"
+        >
+          <pre>
+                        
+            <code>
+              
+              No code yet...
+            
+            </code>
+            
+          
+          </pre>
+           
+          <pre
+            style="display: none;"
+          >
+            <code
+              class="javascript"
+            />
+          </pre>
+        </div>
+         
+        <div
+          class="footer"
+        >
+          <button
+            class="btn btn-sm btn-primary"
+            style="display: none;"
+          >
+            Restart
+          </button>
+           
+          <a
+            href="#"
+            style="display: none;"
+          >
+            copy to clipboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

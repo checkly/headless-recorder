@@ -64,7 +64,6 @@
 
 <script>
   import CodeGenerator from '../code-generator/CodeGenerator'
-  import './github-gist.css'
   export default {
     name: 'App',
     data () {
