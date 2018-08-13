@@ -6,7 +6,7 @@ const page = await browser.newPage()`
 const footer = `
 await browser.close()`
 
-const wrappedHeader = `$(async () => {
+const wrappedHeader = `(async () => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()\n`
 

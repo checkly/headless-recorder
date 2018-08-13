@@ -1,6 +1,6 @@
 import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import ChromeExtensionReloader from 'webpack-chrome-extension-reloader'
+// import ChromeExtensionReloader from 'webpack-chrome-extension-reloader'
 import CopyPlugin from 'copy-webpack-plugin'
 import { VueLoaderPlugin } from 'vue-loader'
 import path from 'path'
