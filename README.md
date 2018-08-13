@@ -11,6 +11,12 @@ but does the following already:
 - Copy to clipboard
 - Offers configuration options
 
+## Tips
+
+- hit <kbd>tab</kbd> after you finish typing in an `input` element.
+- wait for full page loads on each navigation.
+
+
 ## Background
 
 Writing Puppeteer scripts for scraping, testing and monitoring can be tricky. A recorder / code generator can be helpful,
@@ -40,3 +46,5 @@ and open message connections between parts of the extension misfiring.
 Puppeteer recorder is the spiritual successor & love child of segment.io's 
 [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder).
 
+## License
+MIT
