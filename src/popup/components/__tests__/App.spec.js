@@ -1,29 +1,34 @@
-import { mount } from '@vue/test-utils'
-import Vue from 'vue'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import App from '../App'
 
-beforeAll(() => {
-  global.chrome = {
-    storage: {
-      local: {
-        get: jest.fn()
-      }
-    },
-    extension: {
-      connect: jest.fn()
+const chrome = {
+  storage: {
+    local: {
+      get: jest.fn()
     }
+  },
+  extension: {
+    connect: jest.fn()
   }
-})
+}
+
+const mocks = { $chrome: chrome }
 
 describe('App.vue', () => {
-  let Cmp, vm
-
+  let localVue
   beforeEach(() => {
-    Cmp = Vue.extend(App)
-    vm = new Cmp().$mount()
+    localVue = createLocalVue()
+    localVue.directive('highlightjs', () => {})
+    localVue.directive('clipboard', () => {})
   })
 
   test('it has the correct pristine / empty state', () => {
-    expect(vm.$el).toMatchSnapshot()
+    const wrapper = shallowMount(App, { mocks, localVue })
+    expect(wrapper.element).toMatchSnapshot()
   })
+  // test('it has the correct waiting for events  state', () => {
+  //   const wrapper = shallowMount(App, { mocks, localVue })
+  //   wrapper.setData({ isRecording: true })
+  //   expect(wrapper.element).toMatchSnapshot()
+  // })
 })

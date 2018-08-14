@@ -15,6 +15,11 @@ const base = {
     popup: './src/popup/index.js',
     options: './src/options/options.js'
   },
+  resolve: {
+    alias: {
+      styles: path.resolve(__dirname, './src/popup/styles/')
+    }
+  },
   output: {
     path: path.join(__dirname, 'build'),
     filename: '[name].js'
