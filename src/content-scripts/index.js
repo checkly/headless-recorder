@@ -6,7 +6,6 @@ const selector = new Selector()
 
 class EventRecorder {
   start () {
-    console.debug('starting in EventRecorder')
     const elements = document.querySelectorAll(elementsToBindTo.join(','))
 
     for (let i = 0; i < elements.length; i++) {
@@ -16,10 +15,13 @@ class EventRecorder {
     }
 
     chrome.runtime.onMessage.addListener((msg, sender, resp) => {
-      if (msg.action && msg.action === 'get-current-url') {
+      if (msg.control && msg.control === 'get-current-url') {
         resp({ href: window.location.href })
       }
     })
+    const msg = { control: 'event-recorder-started' }
+    sendMessage(msg)
+    console.debug('Puppeteer Recorder in-page EventRecorder started')
   }
 }
 
