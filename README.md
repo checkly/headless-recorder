@@ -34,12 +34,8 @@ below) but add extensibility, configurability and a smoother UI.
 
 ## Known issues
 
-- For some dark reason, the popup does not open on very first click. Second and following clicks are fine.
 - When navigating between pages, the script is only injected when the full navigation is done, 'committed' in Chrome extension
 speak. This means you might be able to see the page and click on stuff, but no events are recorded.
-- Restarting a recording reloads the extension in the background. This is annoying and has to do with state, handlers
-and open message connections between parts of the extension misfiring.
-
 
 ## Credits & disclaimer
 
