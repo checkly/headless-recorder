@@ -1,6 +1,7 @@
 let recording = []
 let boundedMessageHandler
 let boundedNavigationHandler
+let boundedWaitHandler
 let scriptInjected = false
 let badgeState = ''
 let isPaused = false
@@ -35,12 +36,12 @@ function start () {
 
   boundedMessageHandler = handleMessage.bind(this)
   boundedNavigationHandler = handleNavigation.bind(this)
+  boundedWaitHandler = handleWait.bind(this)
 
   chrome.runtime.onMessage.addListener(boundedMessageHandler)
   chrome.webNavigation.onCompleted.addListener(boundedNavigationHandler)
-  chrome.webNavigation.onBeforeNavigate.addListener(() => {
-    chrome.browserAction.setBadgeText({ text: 'wait' })
-  })
+  chrome.webNavigation.onBeforeNavigate.addListener(boundedWaitHandler)
+
   chrome.browserAction.setIcon({ path: './images/icon-green.png' })
   chrome.browserAction.setBadgeText({ text: badgeState })
   chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
@@ -52,6 +53,8 @@ function stop () {
 
   chrome.runtime.onMessage.removeListener(boundedMessageHandler)
   chrome.webNavigation.onCompleted.removeListener(boundedNavigationHandler)
+  chrome.webNavigation.onBeforeNavigate.removeListener(boundedWaitHandler)
+
   chrome.browserAction.setIcon({ path: './images/icon-black.png' })
   chrome.browserAction.setBadgeText({text: badgeState})
   chrome.browserAction.setBadgeBackgroundColor({color: '#45C8F1'})
@@ -111,5 +114,8 @@ function handleNavigation ({ url, frameId }) {
   }
 }
 
+function handleWait () {
+  chrome.browserAction.setBadgeText({ text: 'wait' })
+}
 console.debug('booting puppeteer-recorder')
 boot()
