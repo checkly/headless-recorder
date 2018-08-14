@@ -61,6 +61,15 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         
         </button>
          
+        <button
+          class="btn btn-sm btn-primary btn-outline-primary"
+          style="display: none;"
+        >
+          
+          Pause
+        
+        </button>
+         
         <a
           href="#"
           style="display: none;"

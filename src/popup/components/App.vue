@@ -1,19 +1,24 @@
 <template>
   <div id="puppeteer-recorder" class="recorder">
     <div class="header">
-      Puppeteer recorder
+      <a href="#" @click="goHome">
+        Puppeteer recorder
+      </a>
       <div class="left">
         <div class="recording-badge" v-show="isRecording">
           <span class="red-dot"></span>
           {{recordingBadgeText}}
         </div>
-        <a href="#" @click="openOptions" class="options-button">
+        <a href="#" @click="toggleShowHelp" class="header-button">
+          <img src="/images/help.svg" alt="help" width="18px">
+        </a>
+        <a href="#" @click="openOptions" class="header-button">
           <img src="/images/settings.svg" alt="settings" width="18px">
         </a>
       </div>
     </div>
     <div class="main">
-      <div class="tabs">
+      <div class="tabs" v-show="!showHelp">
         <RecordingTab :code="code" :is-recording="isRecording" :live-events="liveEvents" v-show="!showResultsTab"/>
         <div class="recording-footer" v-show="!showResultsTab">
           <button class="btn btn-sm" @click="toggleRecord" :class="isRecording ? 'btn-danger' : 'btn-primary'">
@@ -30,6 +35,7 @@
           <a href="#" v-clipboard:copy='code' @click="setCopying" v-show="code">{{copyLinkText}}</a>
         </div>
       </div>
+      <HelpTab v-show="showHelp"></HelpTab>
     </div>
   </div>
 </template>
@@ -38,14 +44,16 @@
   import CodeGenerator from '../code-generator/CodeGenerator'
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
+  import HelpTab from "./HelpTab.vue";
 
   export default {
     name: 'App',
-    components: {ResultsTab, RecordingTab},
+    components: { ResultsTab, RecordingTab, HelpTab },
     data () {
       return {
         code: '',
         showResultsTab: false,
+        showHelp: false,
         liveEvents: [],
         recording: [],
         isRecording: false,
@@ -144,6 +152,13 @@
       setCopying () {
         this.isCopying = true
         setTimeout(() => { this.isCopying = false }, 1500)
+      },
+      goHome () {
+        this.showResultsTab = false
+        this.showHelp = false
+      },
+      toggleShowHelp () {
+        this.showHelp = !this.showHelp
       }
     },
     computed: {
@@ -179,6 +194,10 @@
       padding: 0 $spacer;
       font-weight: 500;
 
+      a {
+        color: $gray-dark;
+      }
+
       .left {
         margin-left: auto;
         display: flex;
@@ -199,7 +218,7 @@
           }
         }
 
-        .options-button {
+        .header-button {
           margin-left: $spacer;
           img {
             vertical-align: middle;
