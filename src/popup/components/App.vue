@@ -5,7 +5,7 @@
       <div class="left">
         <div class="recording-badge" v-show="isRecording">
           <span class="red-dot"></span>
-          recording
+          {{recordingBadgeText}}
         </div>
         <a href="#" @click="openOptions" class="options-button">
           <img src="/images/settings.svg" alt="settings" width="18px">
@@ -18,6 +18,9 @@
         <div class="recording-footer" v-show="!showResultsTab">
           <button class="btn btn-sm" @click="toggleRecord" :class="isRecording ? 'btn-danger' : 'btn-primary'">
             {{recordButtonText}}
+          </button>
+          <button class="btn btn-sm btn-primary btn-outline-primary" @click="togglePause" v-show="isRecording">
+            {{pauseButtonText}}
           </button>
           <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
         </div>
@@ -46,6 +49,7 @@
         liveEvents: [],
         recording: [],
         isRecording: false,
+        isPaused: false,
         isCopying: false,
         bus: null
       }
@@ -72,6 +76,16 @@
         this.isRecording = !this.isRecording
         this.storeState()
       },
+      togglePause () {
+        if (this.isPaused) {
+          this.bus.postMessage({ action: 'unpause' })
+          this.isPaused = false
+        } else {
+          this.bus.postMessage({ action: 'pause' })
+          this.isPaused = true
+        }
+        this.storeState()
+      },
       start () {
         this.restart()
         console.debug('start recorder')
@@ -96,7 +110,7 @@
 
         this.recording = this.liveEvents = []
         this.code = ''
-        this.showResultsTab = false
+        this.showResultsTab = this.isRecording = this.isPaused = false
         this.storeState()
       },
       openOptions () {
@@ -109,6 +123,7 @@
           console.debug('loaded controls', controls)
           if (controls) {
             this.isRecording = controls.isRecording
+            this.isPaused = controls.isPaused
           }
 
           if (code) {
@@ -121,7 +136,8 @@
         this.$chrome.storage.local.set({
           code: this.code,
           controls: {
-            isRecording: this.isRecording
+            isRecording: this.isRecording,
+            isPaused: this.isPaused
           }
         })
       },
@@ -131,8 +147,14 @@
       }
     },
     computed: {
+      recordingBadgeText () {
+        return this.isPaused ? 'paused' : 'recording'
+      },
       recordButtonText () {
         return this.isRecording ? 'Stop' : 'Record'
+      },
+      pauseButtonText () {
+        return this.isPaused ? 'Resume' : 'Pause'
       },
       copyLinkText () {
         return this.isCopying ? 'copied!' : 'copy to clipboard'

@@ -3,6 +3,7 @@ let boundedMessageHandler
 let boundedNavigationHandler
 let scriptInjected = false
 let badgeState = ''
+let isPaused = false
 
 function boot () {
   chrome.extension.onConnect.addListener(port => {
@@ -10,6 +11,9 @@ function boot () {
       if (msg.action && msg.action === 'start') start()
       if (msg.action && msg.action === 'stop') stop()
       if (msg.action && msg.action === 'restart') restart()
+      if (msg.action && msg.action === 'pause') pause()
+      if (msg.action && msg.action === 'unpause') unPause()
+
     })
   })
 }
@@ -44,13 +48,14 @@ function start () {
 
 function stop () {
   console.debug('stop recording')
-  badgeState = '1'
+  badgeState = recording.length > 0 ? '1' : ''
 
   chrome.runtime.onMessage.removeListener(boundedMessageHandler)
   chrome.webNavigation.onCompleted.removeListener(boundedNavigationHandler)
   chrome.browserAction.setIcon({ path: './images/icon-black.png' })
-  chrome.browserAction.setBadgeText({ text: badgeState })
-  chrome.browserAction.setBadgeBackgroundColor({ color: '#45C8F1' })
+  chrome.browserAction.setBadgeText({text: badgeState})
+  chrome.browserAction.setBadgeBackgroundColor({color: '#45C8F1'})
+
   chrome.storage.local.set({ recording: recording }, () => {
     console.debug('recording stored')
   })
@@ -65,15 +70,29 @@ function restart () {
   })
 }
 
+function pause () {
+  console.debug('pause')
+  badgeState = '❚❚'
+  chrome.browserAction.setBadgeText({ text: badgeState })
+  isPaused = true
+}
+
+function unPause () {
+  console.debug('unpause')
+  badgeState = 'rec'
+  chrome.browserAction.setBadgeText({ text: badgeState })
+  isPaused = false
+}
+
 function recordCurrentUrl (href) {
   handleMessage({ selector: undefined, value: undefined, action: 'goto*', href })
 }
 
 function handleMessage (msg) {
   console.debug('receiving message', msg)
-  if (msg.control) {
-    handleControlMessage(msg)
-  } else {
+  if (msg.control) return handleControlMessage(msg)
+
+  if (!isPaused) {
     recording.push(msg)
     chrome.storage.local.set({ recording: recording }, () => {
       console.debug('stored recording updated')

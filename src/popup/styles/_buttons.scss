@@ -23,6 +23,13 @@ button {
       background-color: $brand-primary;
       border-color: $brand-primary;
     }
+
+    &.btn-outline-primary {
+      color: $brand-primary;
+      background-color: transparent;
+      border-color: $brand-primary
+    }
+
     &.btn-danger {
       color: #fff;
       background-color: $brand-danger;
