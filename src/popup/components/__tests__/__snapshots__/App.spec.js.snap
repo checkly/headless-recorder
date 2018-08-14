@@ -8,9 +8,14 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
   <div
     class="header"
   >
+    <a
+      href="#"
+    >
+      
+      Puppeteer recorder
     
-    Puppeteer recorder
-    
+    </a>
+     
     <div
       class="left"
     >
@@ -27,7 +32,18 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
       </div>
        
       <a
-        class="options-button"
+        class="header-button"
+        href="#"
+      >
+        <img
+          alt="help"
+          src="/images/help.svg"
+          width="18px"
+        />
+      </a>
+       
+      <a
+        class="header-button"
         href="#"
       >
         <img
@@ -105,6 +121,10 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         </a>
       </div>
     </div>
+     
+    <helptab-stub
+      style="display: none;"
+    />
   </div>
 </div>
 `;
