@@ -5,19 +5,19 @@ Puppeteer recorder is a Chrome extension that records your browser interactions 
 [Puppeteer](https://github.com/GoogleChrome/puppeteer) script. This project is **very much in alpha stage**,
 but does the following already:
 
-- Records clicks and type events
-- Generates a Puppeteer script
-- Shows events being recorded
-- Copy to clipboard
-- Offers configuration options
+- Records clicks and type events.
+- Generates a Puppeteer script.
+- Shows which events are being recorded.
+- Copy to clipboard.
+- Offers configuration options.
 
 ## Usage
 
-- Click the icon and hit record.
+- Click the icon and hit Record.
 - Hit <kbd>tab</kbd> after you finish typing in an `input` element.
 - Click links, inputs and other elements.
 - Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png).
-
+- Click Pause when you want to navigate without recording anything. Hit Resume to continue recording. 
 ## Background
 
 Writing Puppeteer scripts for scraping, testing and monitoring can be tricky. A recorder / code generator can be helpful,
