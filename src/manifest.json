@@ -12,7 +12,8 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_action": {
     "default_icon": "images/icon-black.png",
-    "default_title": "Puppeteer Recorder"
+    "default_title": "Puppeteer Recorder",
+    "default_popup": "index.html"
   },
   "background": {
     "scripts": [

@@ -11,9 +11,6 @@ function boot () {
       if (msg.action && msg.action === 'restart') restart()
     })
   })
-  chrome.browserAction.onClicked.addListener(() => {
-    chrome.browserAction.setPopup({ popup: 'index.html' })
-  })
 }
 
 function start () {
