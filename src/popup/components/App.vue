@@ -73,8 +73,8 @@
         this.storeState()
       },
       start () {
+        this.restart()
         console.debug('start recorder')
-        this.code = ''
         this.bus.postMessage({ action: 'start' })
       },
       stop () {

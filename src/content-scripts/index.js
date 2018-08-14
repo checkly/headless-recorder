@@ -6,24 +6,20 @@ const selector = new Selector()
 
 class EventRecorder {
   start () {
-    if (!window.eventRecorder) {
-      console.debug('starting in EventRecorder')
-      const elements = document.querySelectorAll(elementsToBindTo.join(','))
+    console.debug('starting in EventRecorder')
+    const elements = document.querySelectorAll(elementsToBindTo.join(','))
 
-      for (let i = 0; i < elements.length; i++) {
-        for (let j = 0; j < eventsToRecord.length; j++) {
-          elements[i].addEventListener(eventsToRecord[j], recordEvent)
-        }
+    for (let i = 0; i < elements.length; i++) {
+      for (let j = 0; j < eventsToRecord.length; j++) {
+        elements[i].addEventListener(eventsToRecord[j], recordEvent)
       }
-
-      chrome.runtime.onMessage.addListener((msg, sender, resp) => {
-        console.debug('got message from background')
-        if (msg.action && msg.action === 'get-current-url') {
-          resp({ href: window.location.href })
-        }
-      })
-      window.hasEventRecorder = true
     }
+
+    chrome.runtime.onMessage.addListener((msg, sender, resp) => {
+      if (msg.action && msg.action === 'get-current-url') {
+        resp({ href: window.location.href })
+      }
+    })
   }
 }
 
@@ -51,7 +47,11 @@ function getCoordinates (evt) {
 
 function sendMessage (msg) {
   console.debug('sending message', msg)
-  chrome.runtime.sendMessage(msg)
+  try {
+    chrome.runtime.sendMessage(msg)
+  } catch (err) {
+    console.debug('caught err', err)
+  }
 }
 
 const eventRecorder = new EventRecorder()

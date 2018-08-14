@@ -55,11 +55,11 @@ function restart () {
   chrome.storage.local.remove('recording', () => {
     console.debug('stored recording cleared')
   })
-  chrome.runtime.reload()
+  // chrome.runtime.reload()
 }
 
 function sendCurrentUrl (href) {
-  handleEvent({ selector: undefined, value: undefined, action: 'click', href })
+  handleEvent({ selector: undefined, value: undefined, action: 'goto*', href })
 }
 
 function handleEvent (event) {
