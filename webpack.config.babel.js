@@ -87,12 +87,15 @@ const development = {
   plugins: [
     ...base.plugins,
     new webpack.HotModuleReplacementPlugin()
-    // new ChromeExtensionReloader()
   ]
 }
 
 const production = {
   ...base,
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].js'
+  },
   mode: 'production',
   devtool: '#source-map',
 

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
     "build": "NODE_ENV=production webpack",
+    "dist" :"NODE_ENV=production webpack && node scripts/zip.js",
     "test": "jest"
   },
   "repository": {
@@ -64,7 +65,8 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.16.5",
     "webpack-chrome-extension-reloader": "^0.8.3",
-    "webpack-cli": "^3.1.0"
+    "webpack-cli": "^3.1.0",
+    "zip-folder": "^1.0.0"
   },
   "standard": {
     "globals": [
