@@ -11,11 +11,12 @@ but does the following already:
 - Copy to clipboard
 - Offers configuration options
 
-## Tips
+## Usage
 
-- hit <kbd>tab</kbd> after you finish typing in an `input` element.
-- wait for full page loads on each navigation.
-
+- Click the icon and hit record.
+- Hit <kbd>tab</kbd> after you finish typing in an `input` element.
+- Click links, inputs and other elements.
+- Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png).
 
 ## Background
 
@@ -31,11 +32,6 @@ below) but add extensibility, configurability and a smoother UI.
 3. Make sure 'Developer mode' is checked
 4. Click Load unpacked extension...
 5. Browse to puppeteer-recorder/build and click Select
-
-## Known issues
-
-- When navigating between pages, the script is only injected when the full navigation is done, 'committed' in Chrome extension
-speak. This means you might be able to see the page and click on stuff, but no events are recorded.
 
 ## Credits & disclaimer
 
