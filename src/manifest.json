@@ -9,6 +9,9 @@
     "tabs",
     "*://*/"
   ],
+  "icons" : {
+    "128": "images/app_icon_128.png"
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_action": {
     "default_icon": "images/icon-black.png",
