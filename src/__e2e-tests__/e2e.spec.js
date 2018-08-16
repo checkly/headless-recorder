@@ -18,7 +18,9 @@ describe('build & install', () => {
       ignoreHTTPSErrors: true,
       args: [
         `--disable-extensions-except=${extensionPath}`,
-        `--load-extension=${extensionPath}`
+        `--load-extension=${extensionPath}`,
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
       ]
     }
     const browser = await puppeteer.launch(options)
