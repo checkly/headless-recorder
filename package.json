@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
     "build": "NODE_ENV=production webpack",
-    "dist" :"NODE_ENV=production webpack && node scripts/zip.js",
-    "test": "jest"
+    "dist": "NODE_ENV=production webpack && node scripts/zip.js",
+    "test": "npm run unit-test && npm run e2e-test",
+    "unit-test": "jest __tests__",
+    "e2e-test": "jest __e2e-tests__ --runInBand"
   },
   "repository": {
     "type": "git",
@@ -58,6 +60,7 @@
     "jest": "^23.5.0",
     "jest-vue-preprocessor": "^1.4.0",
     "node-sass": "^4.9.3",
+    "puppeteer": "^1.7.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.22.1",
     "vue-loader": "^15.3.0",
@@ -79,7 +82,8 @@
     },
     "moduleFileExtensions": [
       "js",
-      "vue"
+      "vue",
+      "json"
     ],
     "transform": {
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
