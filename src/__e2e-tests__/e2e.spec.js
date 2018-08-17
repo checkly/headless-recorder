@@ -16,6 +16,7 @@ describe('build & install', () => {
     const options = {
       headless: false,
       ignoreHTTPSErrors: true,
+      devtools: true,
       args: [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
@@ -25,6 +26,6 @@ describe('build & install', () => {
     }
     const browser = await puppeteer.launch(options)
     expect(browser).toBeTruthy()
-    await browser.close()
+    browser.close()
   }, 5000)
 })

@@ -133,7 +133,7 @@
           console.debug('loaded controls', controls)
           if (controls) {
             this.isRecording = controls.isRecording
-            this.isPaused = controls.isPaused
+            this.isPaused = controls._isPaused
           }
 
           if (code) {

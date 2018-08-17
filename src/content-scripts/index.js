@@ -56,5 +56,5 @@ function sendMessage (msg) {
   }
 }
 
-const eventRecorder = new EventRecorder()
-eventRecorder.start()
+window.eventRecorder = new EventRecorder()
+window.eventRecorder.start()

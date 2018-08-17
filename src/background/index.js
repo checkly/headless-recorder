@@ -22,7 +22,7 @@ class RecordingController {
   }
 
   start () {
-    console.debug('start _recording')
+    console.debug('start recording')
     this._badgeState = 'rec'
 
     if (!this._scriptInjected) {
@@ -50,7 +50,7 @@ class RecordingController {
   }
 
   stop () {
-    console.debug('stop _recording')
+    console.debug('stop recording')
     this._badgeState = this._recording.length > 0 ? '1' : ''
 
     chrome.runtime.onMessage.removeListener(this._boundedMessageHandler)
@@ -121,6 +121,6 @@ class RecordingController {
   }
 }
 
-console.debug('booting puppeteer-recorder')
+console.debug('booting recording controller')
 window.recordingController = new RecordingController()
 window.recordingController.boot()
