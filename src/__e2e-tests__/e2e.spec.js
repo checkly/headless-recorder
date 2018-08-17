@@ -10,7 +10,7 @@ describe('build & install', () => {
   test('it builds the extension', async () => {
     const { stderr } = await exec(scripts.dist)
     expect(stderr).toBeFalsy()
-  }, 15000)
+  }, 60000)
 
   test('it installs the extension', async () => {
     const options = {
