@@ -188,13 +188,7 @@
     font-size: 14px;
 
     .header {
-      background: $gray-lightest;
-      height: 48px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 0 $spacer;
-      font-weight: 500;
+      @include header();
 
       a {
         color: $gray-dark;

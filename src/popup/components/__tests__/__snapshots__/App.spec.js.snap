@@ -12,8 +12,14 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
       href="#"
     >
       
-      Puppeteer recorder
-    
+      Puppeteer recorder 
+      <span
+        class="text-muted"
+      >
+        <small>
+          0.1.0
+        </small>
+      </span>
     </a>
      
     <div
@@ -80,136 +86,6 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         <button
           class="btn btn-sm btn-primary btn-outline-primary"
           style="display: none;"
-        >
-          
-          Pause
-        
-        </button>
-         
-        <a
-          href="#"
-          style="display: none;"
-        >
-          view code
-        </a>
-      </div>
-       
-      <resultstab-stub
-        code=""
-        copy-link-text="copy to clipboard"
-        restart="function () { [native code] }"
-        set-copying="function () { [native code] }"
-        style="display: none;"
-      />
-       
-      <div
-        class="results-footer"
-        style="display: none;"
-      >
-        <button
-          class="btn btn-sm btn-primary"
-          style="display: none;"
-        >
-          Restart
-        </button>
-         
-        <a
-          href="#"
-          style="display: none;"
-        >
-          copy to clipboard
-        </a>
-      </div>
-    </div>
-     
-    <helptab-stub
-      style="display: none;"
-    />
-  </div>
-</div>
-`;
-
-exports[`App.vue it has the correct waiting for events  state 1`] = `
-<div
-  class="recorder"
-  id="puppeteer-recorder"
->
-  <div
-    class="header"
-  >
-    <a
-      href="#"
-    >
-      
-      Puppeteer recorder
-    
-    </a>
-     
-    <div
-      class="left"
-    >
-      <div
-        class="recording-badge"
-        style=""
-      >
-        <span
-          class="red-dot"
-        />
-        
-        recording
-      
-      </div>
-       
-      <a
-        class="header-button"
-        href="#"
-      >
-        <img
-          alt="help"
-          src="/images/help.svg"
-          width="18px"
-        />
-      </a>
-       
-      <a
-        class="header-button"
-        href="#"
-      >
-        <img
-          alt="settings"
-          src="/images/settings.svg"
-          width="18px"
-        />
-      </a>
-    </div>
-  </div>
-   
-  <div
-    class="main"
-  >
-    <div
-      class="tabs"
-    >
-      <recordingtab-stub
-        code=""
-        isrecording="true"
-        liveevents=""
-      />
-       
-      <div
-        class="recording-footer"
-      >
-        <button
-          class="btn btn-sm btn-danger"
-        >
-          
-          Stop
-        
-        </button>
-         
-        <button
-          class="btn btn-sm btn-primary btn-outline-primary"
-          style=""
         >
           
           Pause

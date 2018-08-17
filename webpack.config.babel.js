@@ -63,15 +63,15 @@ const base = {
       { from: './src/manifest.json', to: './manifest.json' },
       { from: './src/images', to: 'images' }
     ]),
-    new HtmlWebpackPlugin(
-      {
-        template: './src/popup/template.html',
-        chunks: ['popup']
-      },
-      {
-        template: './src/options/template.html',
-        chunks: ['options']
-      }),
+    new HtmlWebpackPlugin({
+      template: './src/popup/template.html',
+      chunks: ['popup']}),
+    new HtmlWebpackPlugin({
+      template: './src/options/template.html',
+      chunks: ['options'],
+      filename: 'options.html'
+
+    }),
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
