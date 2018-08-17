@@ -26,9 +26,4 @@ describe('App.vue', () => {
     const wrapper = shallowMount(App, { mocks, localVue })
     expect(wrapper.element).toMatchSnapshot()
   })
-  // test('it has the correct waiting for events  state', () => {
-  //   const wrapper = shallowMount(App, { mocks, localVue })
-  //   wrapper.setData({ isRecording: true })
-  //   expect(wrapper.element).toMatchSnapshot()
-  // })
 })
