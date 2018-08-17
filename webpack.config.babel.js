@@ -13,11 +13,11 @@ const base = {
     background: './src/background/index.js',
     'content-script': './src/content-scripts/index.js',
     popup: './src/popup/index.js',
-    options: './src/options/options.js'
+    options: './src/options/index.js'
   },
   resolve: {
     alias: {
-      styles: path.resolve(__dirname, './src/popup/styles/')
+      styles: path.resolve(__dirname, './src/styles/')
     }
   },
   output: {
@@ -61,13 +61,17 @@ const base = {
   plugins: [
     new CopyPlugin([
       { from: './src/manifest.json', to: './manifest.json' },
-      { from: './src/options/options.html', to: './options.html' },
       { from: './src/images', to: 'images' }
     ]),
-    new HtmlWebpackPlugin({
-      template: './src/popup/template.html',
-      chunks: ['popup']
-    }),
+    new HtmlWebpackPlugin(
+      {
+        template: './src/popup/template.html',
+        chunks: ['popup']
+      },
+      {
+        template: './src/options/template.html',
+        chunks: ['options']
+      }),
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
