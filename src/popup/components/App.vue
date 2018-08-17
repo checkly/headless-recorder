@@ -2,7 +2,7 @@
   <div id="puppeteer-recorder" class="recorder">
     <div class="header">
       <a href="#" @click="goHome">
-        Puppeteer recorder
+        Puppeteer recorder <span class="text-muted"><small>{{version}}</small></span>
       </a>
       <div class="left">
         <div class="recording-badge" v-show="isRecording">
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+  import { version } from '../../../package.json'
   import CodeGenerator from '../code-generator/CodeGenerator'
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
@@ -59,7 +60,8 @@
         isRecording: false,
         isPaused: false,
         isCopying: false,
-        bus: null
+        bus: null,
+        version
       }
     },
     mounted () {
