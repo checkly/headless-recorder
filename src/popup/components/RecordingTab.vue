@@ -9,7 +9,7 @@
       <div class="events" v-show="isRecording">
         <p class="text-muted text-center" v-show="liveEvents.length === 0">Waiting for events...</p>
         <ul class="event-list">
-          <li v-for="(event, index) in liveEvents" class="event-list-item">
+          <li v-for="(event, index) in liveEvents" :key="index" class="event-list-item">
             <div class="event-label">
               {{index + 1}}.
             </div>
