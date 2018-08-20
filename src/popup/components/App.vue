@@ -105,10 +105,12 @@
         console.debug('stop recorder')
         this.bus.postMessage({ action: 'stop' })
 
-        this.$chrome.storage.local.get(['recording', 'codeOptions'], ({ recording, codeOptions }) => {
+        this.$chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
           console.debug('loaded recording', recording)
+          console.debug('loaded code options', options.code)
+
           this.recording = recording
-          const codeGen = new CodeGenerator(codeOptions)
+          const codeGen = new CodeGenerator(options.code)
           this.code = codeGen.generate(this.recording)
           this.showResultsTab = true
           this.storeState()

@@ -15,18 +15,28 @@ const wrappedFooter = `
 })()`
 
 const defaults = {
-  asyncWrapper: true
+  wrapAsync: true,
+  headless: true
 }
 
 export default class CodeGenerator {
   constructor (options) {
     this._options = Object.assign(defaults, options)
-    this._header = this._options.asyncWrapper ? wrappedHeader : header
-    this._footer = this._options.asyncWrapper ? wrappedFooter : footer
   }
 
   generate (events) {
-    return importPuppeteer + this._header + this._parseEvents(events) + this._footer
+    return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
+  }
+
+  _getHeader () {
+    console.debug(this._options)
+    let hdr = this._options.wrapAsync ? wrappedHeader : header
+    hdr = this._options.headless ? hdr : hdr.replace('launch()', 'launch({ headless: false })')
+    return hdr
+  }
+
+  _getFooter () {
+    return this._options.wrapAsync ? wrappedFooter : footer
   }
 
   _parseEvents (events) {
