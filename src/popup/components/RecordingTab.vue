@@ -44,14 +44,15 @@
         padding: $spacer;
         text-align: center;
       }
-      .loading:after {
-        content: '.';
-        animation: dots 1s steps(5, end) infinite;
-      }
 
       .events {
         max-height: 400px;
         overflow-y: auto;
+
+        .loading:after {
+          content: '.';
+          animation: dots 1s steps(5, end) infinite;
+        }
 
         .event-list {
           list-style-type: none;
