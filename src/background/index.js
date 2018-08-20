@@ -23,33 +23,35 @@ class RecordingController {
 
   start () {
     console.debug('start recording')
-    this._badgeState = 'rec'
+    this.cleanUp(() => {
+      this._badgeState = 'rec'
 
-    // if (!this._scriptInjected) {
-    chrome.tabs.executeScript({file: 'content-script.js'})
-    // this._scriptInjected = true
-    // }
+      // if (!this._scriptInjected) {
+      chrome.tabs.executeScript({file: 'content-script.js'})
+      // this._scriptInjected = true
+      // }
 
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
-        if (response) this.recordCurrentViewportSize(response.value)
+      chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
+          if (response) this.recordCurrentViewportSize(response.value)
+        })
+        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' }, response => {
+          if (response) this.recordCurrentUrl(response.href)
+        })
       })
-      chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' }, response => {
-        if (response) this.recordCurrentUrl(response.href)
-      })
+
+      this._boundedMessageHandler = this.handleMessage.bind(this)
+      this._boundedNavigationHandler = this.handleNavigation.bind(this)
+      this._boundedWaitHandler = this.handleWait.bind(this)
+
+      chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
+      chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
+      chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
+
+      chrome.browserAction.setIcon({ path: './images/icon-green.png' })
+      chrome.browserAction.setBadgeText({ text: this._badgeState })
+      chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
     })
-
-    this._boundedMessageHandler = this.handleMessage.bind(this)
-    this._boundedNavigationHandler = this.handleNavigation.bind(this)
-    this._boundedWaitHandler = this.handleWait.bind(this)
-
-    chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
-    chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
-    chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
-
-    chrome.browserAction.setIcon({ path: './images/icon-green.png' })
-    chrome.browserAction.setBadgeText({ text: this._badgeState })
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
   }
 
   stop () {
@@ -83,12 +85,13 @@ class RecordingController {
     this._isPaused = false
   }
 
-  cleanUp () {
+  cleanUp (cb) {
     console.debug('cleanup')
     this._recording = []
     chrome.browserAction.setBadgeText({ text: '' })
     chrome.storage.local.remove('recording', () => {
       console.debug('stored recording cleared')
+      if (cb) cb()
     })
   }
 
