@@ -15,7 +15,7 @@
             </div>
             <div class="event-description">
               <div class="event-action">{{event.action}}</div>
-              <div class="event-props text-muted">{{event.selector || event.href }}</div>
+              <div class="event-props text-muted">{{event.selector || parseEventValue(event)}}</div>
             </div>
           </li>
         </ul>
@@ -29,6 +29,12 @@
     props: {
       isRecording: { type: Boolean, default: false },
       liveEvents: { type: Array, default: () => { return [] } }
+    },
+    methods: {
+      parseEventValue (event) {
+        if (event.action === 'viewport*') return `width: ${event.value.width}, height: ${event.value.height}`
+        if (event.action === 'goto*') return event.href
+      }
     }
   }
 </script>

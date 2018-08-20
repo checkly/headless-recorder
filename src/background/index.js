@@ -31,6 +31,9 @@ class RecordingController {
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+      chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
+        if (response) this.recordCurrentViewportSize(response.value)
+      })
       chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' }, response => {
         if (response) this.recordCurrentUrl(response.href)
       })
@@ -91,6 +94,10 @@ class RecordingController {
 
   recordCurrentUrl (href) {
     this.handleMessage({ selector: undefined, value: undefined, action: 'goto*', href })
+  }
+
+  recordCurrentViewportSize (value) {
+    this.handleMessage({ selector: undefined, value, action: 'viewport*' })
   }
 
   handleMessage (msg) {

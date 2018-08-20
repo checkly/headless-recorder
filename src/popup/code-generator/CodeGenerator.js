@@ -54,6 +54,9 @@ export default class CodeGenerator {
         case 'goto*':
           result += `  await page.goto('${href}')\n`
           break
+        case 'viewport*':
+          result += `  await page.setViewport({ width: ${value.width}, height: ${value.height} })\n`
+          break
         case 'reload':
           result += `  await page.reload()\n`
           break

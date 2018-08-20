@@ -18,6 +18,10 @@ class EventRecorder {
       if (msg.control && msg.control === 'get-current-url') {
         resp({ href: window.location.href })
       }
+
+      if (msg.control && msg.control === 'get-viewport-size') {
+        resp({ value: { width: window.innerWidth, height: window.innerHeight } })
+      }
     })
     const msg = { control: 'event-recorder-started' }
     sendMessage(msg)
