@@ -7,7 +7,7 @@
         <p class="text-muted">Click record to begin</p>
       </div>
       <div class="events" v-show="isRecording">
-        <p class="text-muted text-center" v-show="liveEvents.length === 0">Waiting for events...</p>
+        <p class="text-muted text-center loading" v-show="liveEvents.length === 0">Waiting for events</p>
         <ul class="event-list">
           <li v-for="(event, index) in liveEvents" :key="index" class="event-list-item">
             <div class="event-label">
@@ -33,6 +33,7 @@
   }
 </script>
 <style lang="scss" scoped>
+  @import "~styles/_animations.scss";
   @import "~styles/_variables.scss";
 
 
@@ -42,6 +43,10 @@
       .empty {
         padding: $spacer;
         text-align: center;
+      }
+      .loading:after {
+        content: '.';
+        animation: dots 1s steps(5, end) infinite;
       }
 
       .events {
