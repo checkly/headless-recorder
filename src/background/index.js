@@ -65,7 +65,7 @@ class RecordingController {
     chrome.browserAction.setBadgeBackgroundColor({color: '#45C8F1'})
 
     chrome.storage.local.set({ recording: this._recording }, () => {
-      console.debug('_recording stored')
+      console.debug('recording stored')
     })
   }
 
@@ -73,8 +73,8 @@ class RecordingController {
     console.debug('restart')
     this._recording = []
     chrome.browserAction.setBadgeText({ text: '' })
-    chrome.storage.local.remove('_recording', () => {
-      console.debug('stored _recording cleared')
+    chrome.storage.local.remove('recording', () => {
+      console.debug('stored recording cleared')
     })
   }
 
@@ -107,7 +107,7 @@ class RecordingController {
     if (!this._isPaused) {
       this._recording.push(msg)
       chrome.storage.local.set({ recording: this._recording }, () => {
-        console.debug('stored _recording updated')
+        console.debug('stored recording updated')
       })
     }
   }
