@@ -52,6 +52,7 @@
         .loading:after {
           content: '.';
           animation: dots 1s steps(5, end) infinite;
+          animation-delay: 1.5s;
         }
 
         .event-list {

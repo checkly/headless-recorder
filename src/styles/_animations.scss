@@ -149,3 +149,15 @@
     text-shadow:
       .25em 0 0 #8492A6,
       .5em 0 0 #8492A6;}}
+
+@keyframes recording {
+  0% {
+    box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+  }
+  65% {
+    box-shadow: 0px 0px 5px 5px rgba(173,0,0,.3);
+  }
+  90% {
+    box-shadow: 0px 0px 5px 5px rgba(173,0,0,0);
+  }
+}
