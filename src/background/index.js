@@ -14,7 +14,7 @@ class RecordingController {
       port.onMessage.addListener(msg => {
         if (msg.action && msg.action === 'start') this.start()
         if (msg.action && msg.action === 'stop') this.stop()
-        if (msg.action && msg.action === 'restart') this.restart()
+        if (msg.action && msg.action === 'cleanUp') this.cleanUp()
         if (msg.action && msg.action === 'pause') this.pause()
         if (msg.action && msg.action === 'unpause') this.unPause()
       })
@@ -25,10 +25,10 @@ class RecordingController {
     console.debug('start recording')
     this._badgeState = 'rec'
 
-    if (!this._scriptInjected) {
-      chrome.tabs.executeScript({file: 'content-script.js'})
-      this._scriptInjected = true
-    }
+    // if (!this._scriptInjected) {
+    chrome.tabs.executeScript({file: 'content-script.js'})
+    // this._scriptInjected = true
+    // }
 
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
       chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
@@ -69,15 +69,6 @@ class RecordingController {
     })
   }
 
-  restart () {
-    console.debug('restart')
-    this._recording = []
-    chrome.browserAction.setBadgeText({ text: '' })
-    chrome.storage.local.remove('recording', () => {
-      console.debug('stored recording cleared')
-    })
-  }
-
   pause () {
     console.debug('pause')
     this._badgeState = '❚❚'
@@ -90,6 +81,15 @@ class RecordingController {
     this._badgeState = 'rec'
     chrome.browserAction.setBadgeText({ text: this._badgeState })
     this._isPaused = false
+  }
+
+  cleanUp () {
+    console.debug('cleanup')
+    this._recording = []
+    chrome.browserAction.setBadgeText({ text: '' })
+    chrome.storage.local.remove('recording', () => {
+      console.debug('stored recording cleared')
+    })
   }
 
   recordCurrentUrl (href) {

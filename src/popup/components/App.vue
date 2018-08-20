@@ -97,7 +97,7 @@
         this.storeState()
       },
       start () {
-        this.restart()
+        this.cleanUp()
         console.debug('start recorder')
         this.bus.postMessage({ action: 'start' })
       },
@@ -118,8 +118,10 @@
       },
       restart () {
         console.log('restart')
-        this.bus.postMessage({ action: 'restart' })
-
+        this.cleanUp()
+        this.bus.postMessage({ action: 'cleanUp' })
+      },
+      cleanUp () {
         this.recording = this.liveEvents = []
         this.code = ''
         this.showResultsTab = this.isRecording = this.isPaused = false
