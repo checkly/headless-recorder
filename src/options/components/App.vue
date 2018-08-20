@@ -25,6 +25,12 @@
                 set <code>headless</code> in puppeteer launch options
               </label>
             </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation" @change="save">
+                add <code>waitForNavigation</code> lines on navigation
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -42,7 +48,8 @@
   const defaults = {
     code: {
       wrapAsync: true,
-      headless: true
+      headless: true,
+      waitForNavigation: true
     }
   }
 

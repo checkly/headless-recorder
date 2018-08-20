@@ -16,7 +16,8 @@ const wrappedFooter = `
 
 const defaults = {
   wrapAsync: true,
-  headless: true
+  headless: true,
+  waitForNavigation: true
 }
 
 export default class CodeGenerator {
@@ -41,35 +42,55 @@ export default class CodeGenerator {
 
   _parseEvents (events) {
     console.debug(`generating code for ${events.length} events`)
+    let lines = []
     let result = ''
+
     for (let event of events) {
-      const { action, selector, value, href, keyCode } = event
+      const {action, selector, value, href, keyCode} = event
       switch (action) {
         case 'keydown':
-          result += this._handleKeyDown(selector, value, keyCode)
+          lines.push({type: 'keydown', value: this._handleKeyDown(selector, value, keyCode)})
           break
         case 'click':
-          result += this._handleClick(selector, href)
+          lines.push({type: 'click', value: this._handleClick(selector, href)})
           break
         case 'goto*':
-          result += `  await page.goto('${href}')\n`
+          lines.push({type: 'goto*', value: `  await page.goto('${href}')`})
           break
         case 'viewport*':
-          result += `  await page.setViewport({ width: ${value.width}, height: ${value.height} })\n`
+          lines.push({
+            type: 'goto*', value: `  await page.setViewport({ width: ${value.width}, height: ${value.height} })`})
+          break
+        case 'navigation*':
+          lines = this._options.waitForNavigation ? this._handleWaitForNavigation(lines) : lines
           break
         case 'reload':
-          result += `  await page.reload()\n`
+          result += `  await page.reload()`
           break
       }
     }
+
+    for (let line of lines) {
+      result += line.value + '\n'
+    }
+
     return result
   }
+
   _handleKeyDown (selector, value, keyCode) {
-    if (keyCode === 9) return `  await page.type('${selector}', '${value}')\n`
+    if (keyCode === 9) return `  await page.type('${selector}', '${value}')`
     return ''
   }
 
   _handleClick (selector, href) {
-    return `  await page.click('${selector}')\n`
+    return `  await page.click('${selector}')`
+  }
+
+  _handleWaitForNavigation (lines) {
+    if (lines.filter(l => { return l.type === 'navigation*-promise' }).length === 0) {
+      lines.unshift({type: 'navigation*-promise', value: `  const navigationPromise = page.waitForNavigation()`})
+    }
+    lines.push({type: 'navigation*', value: `  await navigationPromise`})
+    return lines
   }
 }

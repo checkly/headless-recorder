@@ -120,7 +120,7 @@ exports[`RecordingTab.vue it has the correct recording DOM events state 1`] = `
 </div>
 `;
 
-exports[`RecordingTab.vue it has the correct recording Puppeter custom events state 1`] = `
+exports[`RecordingTab.vue it has the correct recording Puppeteer custom events state 1`] = `
 <div
   class="tab recording-tab"
 >
@@ -216,54 +216,6 @@ exports[`RecordingTab.vue it has the correct recording Puppeter custom events st
             </div>
           </div>
         </li>
-      </ul>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`RecordingTab.vue it has the correct recording events state 1`] = `
-<div
-  class="tab recording-tab"
->
-  <div
-    class="content"
-  >
-    <div
-      class="empty"
-      style="display: none;"
-    >
-      <img
-        alt="desert"
-        src="/images/Desert.svg"
-        width="78px"
-      />
-       
-      <h3>
-        No recorded events yet
-      </h3>
-       
-      <p
-        class="text-muted"
-      >
-        Click record to begin
-      </p>
-    </div>
-     
-    <div
-      class="events"
-      style=""
-    >
-      <p
-        class="text-muted text-center"
-        style="display: none;"
-      >
-        Waiting for events...
-      </p>
-       
-      <ul
-        class="event-list"
-      >
         <li
           class="event-list-item"
         >
@@ -271,7 +223,7 @@ exports[`RecordingTab.vue it has the correct recording events state 1`] = `
             class="event-label"
           >
             
-            1.
+            3.
           
           </div>
            
@@ -281,13 +233,13 @@ exports[`RecordingTab.vue it has the correct recording events state 1`] = `
             <div
               class="event-action"
             >
-              click
+              navigation*
             </div>
              
             <div
               class="event-props text-muted"
             >
-              .main &gt; a.link
+              
             </div>
           </div>
         </li>

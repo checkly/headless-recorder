@@ -100,6 +100,10 @@ class RecordingController {
     this.handleMessage({ selector: undefined, value, action: 'viewport*' })
   }
 
+  recordNavigation () {
+    this.handleMessage({ selector: undefined, value: undefined, action: 'navigation*' })
+  }
+
   handleMessage (msg) {
     console.debug('receiving message', msg)
     if (msg.control) return this.handleControlMessage(msg)
@@ -116,10 +120,11 @@ class RecordingController {
     if (msg.control === 'event-recorder-started') chrome.browserAction.setBadgeText({ text: this._badgeState })
   }
 
-  handleNavigation ({ url, frameId }) {
-    console.debug(`current frame ${frameId} with url ${url}`)
+  handleNavigation ({ frameId }) {
+    console.debug('frameId is:', frameId)
     if (frameId === 0) {
       chrome.tabs.executeScript({file: 'content-script.js'})
+      this.recordNavigation()
     }
   }
 

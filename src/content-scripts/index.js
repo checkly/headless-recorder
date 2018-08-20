@@ -29,7 +29,7 @@ class EventRecorder {
 
 function recordEvent (e) {
   const msg = {
-    selector: finder(e.target),
+    selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10}),
     value: e.target.value,
     action: e.type,
     keyCode: e.keyCode ? e.keyCode : null,

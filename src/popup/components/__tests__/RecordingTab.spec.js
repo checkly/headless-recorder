@@ -25,6 +25,9 @@ describe('RecordingTab.vue', () => {
         action: 'viewport*',
         selector: undefined,
         value: { width: 1280, height: 800 }
+      }, {
+        action: 'navigation*',
+        selector: undefined
       }]
     })
     expect(wrapper.element).toMatchSnapshot()

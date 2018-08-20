@@ -34,6 +34,7 @@
       parseEventValue (event) {
         if (event.action === 'viewport*') return `width: ${event.value.width}, height: ${event.value.height}`
         if (event.action === 'goto*') return event.href
+        if (event.action === 'navigation*') return ''
       }
     }
   }
