@@ -1,8 +1,6 @@
 import eventsToRecord from './events-to-record'
 import elementsToBindTo from './elements-to-bind-to'
-import Selector from 'css-selector-generator'
-
-const selector = new Selector()
+import finder from '@medv/finder'
 
 class EventRecorder {
   start () {
@@ -31,7 +29,7 @@ class EventRecorder {
 
 function recordEvent (e) {
   const msg = {
-    selector: selector.getSelector(e.target),
+    selector: finder(e.target),
     value: e.target.value,
     action: e.type,
     keyCode: e.keyCode ? e.keyCode : null,
