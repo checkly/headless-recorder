@@ -205,9 +205,9 @@
           color: $brand-danger;
           .red-dot {
             animation-name: recording;
-	          animation-duration: 1.5s;
-	          animation-iteration-count: infinite;
-	          animation-timing-function: linear;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
             height: 9px;
             width: 9px;
             background-color: $brand-danger;
