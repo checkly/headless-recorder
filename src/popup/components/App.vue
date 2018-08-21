@@ -107,10 +107,12 @@
 
         this.$chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
           console.debug('loaded recording', recording)
-          console.debug('loaded code options', options.code)
+          console.debug('loaded options', options)
 
           this.recording = recording
-          const codeGen = new CodeGenerator(options.code)
+          const codeOptions = options ? options.code : {}
+
+          const codeGen = new CodeGenerator(codeOptions)
           this.code = codeGen.generate(this.recording)
           this.showResultsTab = true
           this.storeState()
