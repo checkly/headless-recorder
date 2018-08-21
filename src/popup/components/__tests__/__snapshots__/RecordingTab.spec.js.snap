@@ -153,10 +153,10 @@ exports[`RecordingTab.vue it has the correct recording Puppeteer custom events s
       style=""
     >
       <p
-        class="text-muted text-center"
+        class="text-muted text-center loading"
         style="display: none;"
       >
-        Waiting for events...
+        Waiting for events
       </p>
        
       <ul
