@@ -4,7 +4,7 @@
 
 ![](src/images/recorder.png)
 Puppeteer recorder is a Chrome extension that records your browser interactions and generates a 
-[Puppeteer](https://github.com/GoogleChrome/puppeteer) script. This project is **very much in alpha stage**,
+[Puppeteer](https://github.com/GoogleChrome/puppeteer) script. This project is pretty fresh, 
 but does the following already:
 
 - Records clicks and type events.
