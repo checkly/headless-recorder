@@ -14,7 +14,7 @@ class RecordingController {
       port.onMessage.addListener(msg => {
         if (msg.action && msg.action === 'start') this.start()
         if (msg.action && msg.action === 'stop') this.stop()
-        if (msg.action && msg.action === 'restart') this.restart()
+        if (msg.action && msg.action === 'cleanUp') this.cleanUp()
         if (msg.action && msg.action === 'pause') this.pause()
         if (msg.action && msg.action === 'unpause') this.unPause()
       })
@@ -23,30 +23,35 @@ class RecordingController {
 
   start () {
     console.debug('start recording')
-    this._badgeState = 'rec'
+    this.cleanUp(() => {
+      this._badgeState = 'rec'
 
-    if (!this._scriptInjected) {
+      // if (!this._scriptInjected) {
       chrome.tabs.executeScript({file: 'content-script.js'})
-      this._scriptInjected = true
-    }
+      // this._scriptInjected = true
+      // }
 
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' }, response => {
-        if (response) this.recordCurrentUrl(response.href)
+      chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
+          if (response) this.recordCurrentViewportSize(response.value)
+        })
+        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' }, response => {
+          if (response) this.recordCurrentUrl(response.href)
+        })
       })
+
+      this._boundedMessageHandler = this.handleMessage.bind(this)
+      this._boundedNavigationHandler = this.handleNavigation.bind(this)
+      this._boundedWaitHandler = this.handleWait.bind(this)
+
+      chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
+      chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
+      chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
+
+      chrome.browserAction.setIcon({ path: './images/icon-green.png' })
+      chrome.browserAction.setBadgeText({ text: this._badgeState })
+      chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
     })
-
-    this._boundedMessageHandler = this.handleMessage.bind(this)
-    this._boundedNavigationHandler = this.handleNavigation.bind(this)
-    this._boundedWaitHandler = this.handleWait.bind(this)
-
-    chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
-    chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
-    chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
-
-    chrome.browserAction.setIcon({ path: './images/icon-green.png' })
-    chrome.browserAction.setBadgeText({ text: this._badgeState })
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
   }
 
   stop () {
@@ -62,16 +67,7 @@ class RecordingController {
     chrome.browserAction.setBadgeBackgroundColor({color: '#45C8F1'})
 
     chrome.storage.local.set({ recording: this._recording }, () => {
-      console.debug('_recording stored')
-    })
-  }
-
-  restart () {
-    console.debug('restart')
-    this._recording = []
-    chrome.browserAction.setBadgeText({ text: '' })
-    chrome.storage.local.remove('_recording', () => {
-      console.debug('stored _recording cleared')
+      console.debug('recording stored')
     })
   }
 
@@ -89,8 +85,26 @@ class RecordingController {
     this._isPaused = false
   }
 
+  cleanUp (cb) {
+    console.debug('cleanup')
+    this._recording = []
+    chrome.browserAction.setBadgeText({ text: '' })
+    chrome.storage.local.remove('recording', () => {
+      console.debug('stored recording cleared')
+      if (cb) cb()
+    })
+  }
+
   recordCurrentUrl (href) {
     this.handleMessage({ selector: undefined, value: undefined, action: 'goto*', href })
+  }
+
+  recordCurrentViewportSize (value) {
+    this.handleMessage({ selector: undefined, value, action: 'viewport*' })
+  }
+
+  recordNavigation () {
+    this.handleMessage({ selector: undefined, value: undefined, action: 'navigation*' })
   }
 
   handleMessage (msg) {
@@ -100,7 +114,7 @@ class RecordingController {
     if (!this._isPaused) {
       this._recording.push(msg)
       chrome.storage.local.set({ recording: this._recording }, () => {
-        console.debug('stored _recording updated')
+        console.debug('stored recording updated')
       })
     }
   }
@@ -109,10 +123,11 @@ class RecordingController {
     if (msg.control === 'event-recorder-started') chrome.browserAction.setBadgeText({ text: this._badgeState })
   }
 
-  handleNavigation ({ url, frameId }) {
-    console.debug(`current frame ${frameId} with url ${url}`)
+  handleNavigation ({ frameId }) {
+    console.debug('frameId is:', frameId)
     if (frameId === 0) {
       chrome.tabs.executeScript({file: 'content-script.js'})
+      this.recordNavigation()
     }
   }
 

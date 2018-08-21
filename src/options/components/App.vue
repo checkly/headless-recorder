@@ -13,10 +13,24 @@
             Code Generator settings
           </h4>
           <div class="settings-block-main">
-            <label>
-              <input id="options-code-wrapAsync" type="checkbox" v-model="options.code.wrapAsync" @change="save">
-              wrap code in async function
-            </label>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-wrapAsync" type="checkbox" v-model="options.code.wrapAsync" @change="save">
+                wrap code in async function
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-headless" type="checkbox" v-model="options.code.headless" @change="save">
+                set <code>headless</code> in puppeteer launch options
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation" @change="save">
+                add <code>waitForNavigation</code> lines on navigation
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -33,7 +47,9 @@
 <script>
   const defaults = {
     code: {
-      wrapAsync: true
+      wrapAsync: true,
+      headless: true,
+      waitForNavigation: true
     }
   }
 
@@ -128,6 +144,11 @@
         .settings-block-main {
           padding: $spacer 0;
           margin-bottom: $spacer;
+
+          .settings-group {
+            margin-bottom: $spacer;
+            display: block;
+          }
         }
       }
     }
