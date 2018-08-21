@@ -181,6 +181,7 @@
 </script>
 
 <style lang="scss" scoped>
+  @import "~styles/_animations.scss";
   @import "~styles/_variables.scss";
   @import "~styles/_mixins.scss";
 
@@ -189,7 +190,7 @@
 
     .header {
       @include header();
-
+      
       a {
         color: $gray-dark;
       }
@@ -203,8 +204,12 @@
         .recording-badge {
           color: $brand-danger;
           .red-dot {
-            height: 8px;
-            width: 8px;
+            animation-name: recording;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            height: 9px;
+            width: 9px;
             background-color: $brand-danger;
             border-radius: 50%;
             display: inline-block;

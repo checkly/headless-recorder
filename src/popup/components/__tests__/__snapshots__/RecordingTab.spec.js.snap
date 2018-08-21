@@ -32,9 +32,9 @@ exports[`RecordingTab.vue it has the correct pristine / empty state 1`] = `
       style="display: none;"
     >
       <p
-        class="text-muted text-center"
+        class="text-muted text-center loading"
       >
-        Waiting for events...
+        Waiting for events
       </p>
        
       <ul
@@ -78,10 +78,10 @@ exports[`RecordingTab.vue it has the correct recording events state 1`] = `
       style=""
     >
       <p
-        class="text-muted text-center"
+        class="text-muted text-center loading"
         style="display: none;"
       >
-        Waiting for events...
+        Waiting for events
       </p>
        
       <ul
@@ -153,9 +153,9 @@ exports[`RecordingTab.vue it has the correct waiting for events state 1`] = `
       style=""
     >
       <p
-        class="text-muted text-center"
+        class="text-muted text-center loading"
       >
-        Waiting for events...
+        Waiting for events
       </p>
        
       <ul
