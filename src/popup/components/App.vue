@@ -73,6 +73,10 @@
             this.liveEvents = recording
           })
         }
+
+        if (!this.isRecording && this.code) {
+          this.showResultsTab = true
+        }
       })
       this.bus = this.$chrome.extension.connect({ name: 'recordControls' })
     },
