@@ -59,6 +59,7 @@
     "jest": "^23.5.0",
     "jest-vue-preprocessor": "^1.4.0",
     "node-sass": "^4.9.3",
+    "pre-commit": "^1.2.2",
     "puppeteer": "^1.7.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.22.1",
