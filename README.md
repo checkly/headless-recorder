@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/checkly/puppeteer-recorder.svg?branch=develop)](https://travis-ci.org/checkly/puppeteer-recorder)
 
+[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/UJGejcNli)
+
 ![](src/images/recorder.png)
 Puppeteer recorder is a Chrome extension that records your browser interactions and generates a 
 [Puppeteer](https://github.com/GoogleChrome/puppeteer) script. This project is **very much in alpha stage**,
