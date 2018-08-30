@@ -31,6 +31,12 @@
                 add <code>waitForNavigation</code> lines on navigation
               </label>
             </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-waitForSelectorOnClick" type="checkbox" v-model="options.code.waitForSelectorOnClick" @change="save">
+                add <code>waitForSelector</code> lines before every <code>page.click()</code>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -49,7 +55,8 @@
     code: {
       wrapAsync: true,
       headless: true,
-      waitForNavigation: true
+      waitForNavigation: true,
+      waitForSelectorOnClick: true
     }
   }
 

@@ -17,7 +17,8 @@ const wrappedFooter = `
 const defaults = {
   wrapAsync: true,
   headless: true,
-  waitForNavigation: true
+  waitForNavigation: true,
+  waitForSelectorOnClick: true
 }
 
 export default class CodeGenerator {
@@ -52,7 +53,7 @@ export default class CodeGenerator {
           lines.push({type: 'keydown', value: this._handleKeyDown(selector, value, keyCode)})
           break
         case 'click':
-          lines.push({type: 'click', value: this._handleClick(selector, href)})
+          lines.push({type: 'click', value: this._handleClick(selector)})
           break
         case 'goto*':
           lines.push({type: 'goto*', value: `  await page.goto('${href}')`})
@@ -82,8 +83,12 @@ export default class CodeGenerator {
     return ''
   }
 
-  _handleClick (selector, href) {
-    return `  await page.click('${selector}')`
+  _handleClick (selector) {
+    if (this._options.waitForSelectorOnClick) {
+      return `  await page.waitForSelector('${selector}')\n` + `  await page.click('${selector}')`
+    } else {
+      return `  await page.click('${selector}')`
+    }
   }
 
   _handleWaitForNavigation (lines) {
