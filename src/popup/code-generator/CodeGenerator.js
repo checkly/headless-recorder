@@ -50,13 +50,13 @@ export default class CodeGenerator {
     let result = ''
 
     for (let event of events) {
-      const {action, selector, value, href, keyCode} = event
+      const {action, selector, value, href, keyCode, frameId, frameUrl} = event
       switch (action) {
         case 'keydown':
           lines.push({type: 'keydown', value: this._handleKeyDown(selector, value, keyCode)})
           break
         case 'click':
-          lines.push({type: 'click', value: this._handleClick(selector)})
+          lines.push({type: 'click', value: this._handleClick(selector, frameId, frameUrl)})
           break
         case 'goto*':
           lines.push({type: 'goto*', value: `await page.goto('${href}')`})
@@ -86,11 +86,19 @@ export default class CodeGenerator {
     return ''
   }
 
-  _handleClick (selector) {
+  _handleClick (selector, frameId, frameUrl) {
+    let frame = 'page'
+    let extra = ''
+    //
+    // if (frameId !== 0) {
+    //   frame = 'frame'
+    //   extra = this._addFrameSelector(frameUrl)
+    // }
+
     if (this._options.waitForSelectorOnClick) {
-      return `await page.waitForSelector('${selector}')` + newLine + indent + `await page.click('${selector}')`
+      return extra + `await ${frame}.waitForSelector('${selector}')` + newLine + indent + `await ${frame}.click('${selector}')`
     } else {
-      return `await page.click('${selector}')`
+      return extra + `await ${frame}.click('${selector}')`
     }
   }
 
@@ -100,5 +108,9 @@ export default class CodeGenerator {
     }
     lines.push({type: 'navigation*', value: `await navigationPromise`})
     return lines
+  }
+
+  _addFrameSelector (frameUrl) {
+    return `const frames = await page.frames()` + newLine + indent + `const frame = frames.find(f => f.url() === '${frameUrl}')` + newLine
   }
 }

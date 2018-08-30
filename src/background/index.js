@@ -25,12 +25,7 @@ class RecordingController {
     console.debug('start recording')
     this.cleanUp(() => {
       this._badgeState = 'rec'
-
-      // if (!this._scriptInjected) {
-      chrome.tabs.executeScript({file: 'content-script.js'})
-      // this._scriptInjected = true
-      // }
-
+      chrome.tabs.executeScript({ file: 'content-script.js', allFrames: true })
       chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
           if (response) this.recordCurrentViewportSize(response.value)
@@ -107,9 +102,13 @@ class RecordingController {
     this.handleMessage({ selector: undefined, value: undefined, action: 'navigation*' })
   }
 
-  handleMessage (msg) {
-    console.debug('receiving message', msg)
+  handleMessage (msg, sender) {
+    console.debug(`receiving message`)
     if (msg.control) return this.handleControlMessage(msg)
+
+    // to account for clicks etc. we need to record the frameId and url to later target the frame in playback
+    msg.frameId = sender ? sender.frameId : null
+    msg.frameUrl = sender ? sender.url : null
 
     if (!this._isPaused) {
       this._recording.push(msg)

@@ -35,6 +35,7 @@ function addAllListeners (elements) {
 }
 
 function recordEvent (e) {
+  console.debug(e)
   const msg = {
     selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
     value: e.target.value,
@@ -61,7 +62,7 @@ function sendMessage (msg) {
   try {
     chrome.runtime.sendMessage(msg)
   } catch (err) {
-    console.debug('caught err', err)
+    console.debug('caught error', err)
   }
 }
 
