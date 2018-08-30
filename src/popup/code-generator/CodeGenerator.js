@@ -14,6 +14,9 @@ const wrappedFooter = `
   await browser.close()
 })()`
 
+const indent = `  `
+const newLine = `\n`
+
 const defaults = {
   wrapAsync: true,
   headless: true,
@@ -56,46 +59,46 @@ export default class CodeGenerator {
           lines.push({type: 'click', value: this._handleClick(selector)})
           break
         case 'goto*':
-          lines.push({type: 'goto*', value: `  await page.goto('${href}')`})
+          lines.push({type: 'goto*', value: `await page.goto('${href}')`})
           break
         case 'viewport*':
           lines.push({
-            type: 'goto*', value: `  await page.setViewport({ width: ${value.width}, height: ${value.height} })`})
+            type: 'goto*', value: `await page.setViewport({ width: ${value.width}, height: ${value.height} })`})
           break
         case 'navigation*':
           lines = this._options.waitForNavigation ? this._handleWaitForNavigation(lines) : lines
           break
         case 'reload':
-          result += `  await page.reload()`
+          result += `await page.reload()`
           break
       }
     }
 
     for (let line of lines) {
-      result += line.value + '\n'
+      result += indent + line.value + newLine
     }
 
     return result
   }
 
   _handleKeyDown (selector, value, keyCode) {
-    if (keyCode === 9) return `  await page.type('${selector}', '${value}')`
+    if (keyCode === 9) return `await page.type('${selector}', '${value}')`
     return ''
   }
 
   _handleClick (selector) {
     if (this._options.waitForSelectorOnClick) {
-      return `  await page.waitForSelector('${selector}')\n` + `  await page.click('${selector}')`
+      return `await page.waitForSelector('${selector}')` + newLine + indent + `await page.click('${selector}')`
     } else {
-      return `  await page.click('${selector}')`
+      return `await page.click('${selector}')`
     }
   }
 
   _handleWaitForNavigation (lines) {
     if (lines.filter(l => { return l.type === 'navigation*-promise' }).length === 0) {
-      lines.unshift({type: 'navigation*-promise', value: `  const navigationPromise = page.waitForNavigation()`})
+      lines.unshift({type: 'navigation*-promise', value: `const navigationPromise = page.waitForNavigation()`})
     }
-    lines.push({type: 'navigation*', value: `  await navigationPromise`})
+    lines.push({type: 'navigation*', value: `await navigationPromise`})
     return lines
   }
 }
