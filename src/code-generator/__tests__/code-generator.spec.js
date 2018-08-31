@@ -38,4 +38,26 @@ describe('code-generator', () => {
     expect(result).not.toContain("await page.waitForSelector('a.link')")
     expect(result).toContain("await page.click('a.link')")
   })
+
+  test('it uses the default page frame when events originate from frame 0', () => {
+    const events = [{ action: 'click', selector: 'a.link', frameId: 0, frameUrl: 'https://some.site.com' }]
+    const codeGenerator = new CodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+    expect(result).toContain("await page.click('a.link')")
+  })
+
+  test('it uses a different frame when events originate from an iframe', () => {
+    const events = [{ action: 'click', selector: 'a.link', frameId: 123, frameUrl: 'https://some.iframe.com' }]
+    const codeGenerator = new CodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+    expect(result).toContain("await frame_123.click('a.link')")
+  })
+
+  test('it adds a frame selection preamble when events originate from an iframe', () => {
+    const events = [{ action: 'click', selector: 'a.link', frameId: 123, frameUrl: 'https://some.iframe.com' }]
+    const codeGenerator = new CodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+    expect(result).toContain('const frames = await page.frames()')
+    expect(result).toContain("const frame_123 = frames.find(f => f.url() === 'https://some.iframe.com'")
+  })
 })

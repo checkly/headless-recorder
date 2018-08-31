@@ -1,4 +1,3 @@
-// todo: split into blocks and lines.
 import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
 
@@ -32,6 +31,9 @@ export default class CodeGenerator {
   constructor (options) {
     this._options = Object.assign(defaults, options)
     this._blocks = []
+    this._frame = 'page'
+    this._frameId = 0
+    this._allFrames = {}
   }
 
   generate (events) {
@@ -50,11 +52,15 @@ export default class CodeGenerator {
   }
 
   _parseEvents (events) {
-    console.debug(`generating code for ${events.length} events`)
+    console.debug(`generating code for ${events ? events.length : 0} events`)
     let result = ''
 
     for (let event of events) {
-      const { action, selector, value, href, keyCode } = event
+      const { action, selector, value, href, keyCode, frameId, frameUrl } = event
+
+      // we need to keep a handle on what frames events originate from
+      this._setFrames(frameId, frameUrl)
+
       switch (action) {
         case 'keydown':
           this._blocks.push(this._handleKeyDown(selector, value, keyCode))
@@ -76,7 +82,8 @@ export default class CodeGenerator {
 
     this._postProcess()
 
-    for (let lines of this._blocks) {
+    for (let linesObject of this._blocks) {
+      const lines = linesObject.getLines()
       for (let line of lines) {
         result += indent + line.value + newLine
       }
@@ -85,14 +92,40 @@ export default class CodeGenerator {
     return result
   }
 
-  _postProcess () {
+  _setFrames (frameId, frameUrl) {
+    if (frameId && frameId !== 0) {
+      this._frameId = frameId
+      this._frame = `frame_${frameId}`
+      this._allFrames[frameId] = frameUrl
+    } else {
+      this._frameId = 0
+      this._frame = 'page'
+    }
+  }
 
+  _postProcess () {
     // we want to create only one navigationPromise
     if (this._options.waitForNavigation) {
-      for (let i = 0; i < this._blocks.length; i++) {
-        for (let j = 0; j < this._blocks[i].length; j++) {
-          if (this._blocks[i][j].type === pptrActions.NAVIGATION) {
-            this._blocks[i].unshift({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
+      for (let [i, linesWrapper] of this._blocks.entries()) {
+        const lines = linesWrapper.getLines()
+        for (let line of lines) {
+          if (line.type === pptrActions.NAVIGATION) {
+            this._blocks[i].addToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
+            break
+          }
+        }
+      }
+    }
+    // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
+    if (Object.keys(this._allFrames).length > 0) {
+      for (let [i, linesWrapper] of this._blocks.entries()) {
+        const lines = linesWrapper.getLines()
+        for (let line of lines) {
+          if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
+            const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
+            this._blocks[i].addToTop(({ type: pptrActions.FRAME_SET, value: declaration }))
+            this._blocks[i].addToTop({ type: pptrActions.FRAME_SET, value: 'let frames = await page.frames()' })
+            delete this._allFrames[line.frameId]
             break
           }
         }
@@ -101,9 +134,9 @@ export default class CodeGenerator {
   }
 
   _handleKeyDown (selector, value, keyCode) {
-    const lines = []
+    const lines = this._newLines(this._frameId)
     if (keyCode === 9) {
-      lines.push({ type: domEvents.KEYDOWN, value: `await page.type('${selector}', '${value}')` })
+      lines.push({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
     } else {
       lines.push({ type: domEvents.KEYDOWN, value: '' })
     }
@@ -111,31 +144,57 @@ export default class CodeGenerator {
   }
 
   _handleClick (selector) {
-    const lines = []
+    const lines = this._newLines(this._frameId)
     if (this._options.waitForSelectorOnClick) {
-      lines.push({ type: domEvents.CLICK, value: `await page.waitForSelector('${selector}')` })
+      lines.push({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
     }
-    lines.push({ type: domEvents.CLICK, value: `await page.click('${selector}')` })
+    lines.push({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
     return lines
   }
 
   _handleGoto (href) {
-    return [{ type: pptrActions.GOTO, value: `await page.goto('${href}')` }]
+    return this._newLines(this._frameId, { type: pptrActions.GOTO, value: `await ${this._frame}.goto('${href}')` })
   }
 
   _handleViewport (width, height) {
-    return [{ type: pptrActions.VIEWPORT, value: `await page.setViewport({ width: ${width}, height: ${height} })` }]
+    return this._newLines(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
   }
 
   _handleWaitForNavigation () {
-    const lines = []
+    const lines = this._newLines(this._frameId)
     if (this._options.waitForNavigation) {
       lines.push({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
     }
     return lines
   }
 
-  _addFrameSelector (frameUrl) {
-    return `const frames = await page.frames()` + newLine + indent + `const frame = frames.find(f => f.url() === '${frameUrl}')` + newLine
+  _newLines (frameId, line) {
+    class LinesWrapper {
+      constructor (frameId, line) {
+        this._lines = []
+        this._frameId = frameId
+
+        if (line) {
+          line.frameId = this._frameId
+          this._lines.push(line)
+        }
+      }
+
+      addToTop (line) {
+        line.frameId = this._frameId
+        this._lines.unshift(line)
+      }
+
+      push (line) {
+        line.frameId = this._frameId
+        this._lines.push(line)
+      }
+
+      getLines () {
+        return this._lines
+      }
+    }
+
+    return new LinesWrapper(frameId, line)
   }
 }
