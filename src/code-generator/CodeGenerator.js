@@ -1,6 +1,6 @@
 import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
-import LinesWrapper from './LinesWrapper'
+import Block from './Block'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
@@ -25,7 +25,8 @@ const defaults = {
   wrapAsync: true,
   headless: true,
   waitForNavigation: true,
-  waitForSelectorOnClick: true
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true
 }
 
 export default class CodeGenerator {
@@ -111,12 +112,13 @@ export default class CodeGenerator {
         const lines = linesWrapper.getLines()
         for (let line of lines) {
           if (line.type === pptrActions.NAVIGATION) {
-            this._blocks[i].addToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
+            this._blocks[i].addLineToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
             break
           }
         }
       }
     }
+
     // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
     if (Object.keys(this._allFrames).length > 0) {
       for (let [i, linesWrapper] of this._blocks.entries()) {
@@ -124,52 +126,54 @@ export default class CodeGenerator {
         for (let line of lines) {
           if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
             const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
-            this._blocks[i].addToTop(({ type: pptrActions.FRAME_SET, value: declaration }))
-            this._blocks[i].addToTop({ type: pptrActions.FRAME_SET, value: 'let frames = await page.frames()' })
+            this._blocks[i].addLineToTop(({ type: pptrActions.FRAME_SET, value: declaration }))
+            this._blocks[i].addLineToTop({ type: pptrActions.FRAME_SET, value: 'let frames = await page.frames()' })
             delete this._allFrames[line.frameId]
             break
           }
         }
       }
     }
+
+    // if (this._options.blankLinesBetweenBlocks) {
+    //   for (let block of this._blocks) {
+    //
+    //   }
+    // }
   }
 
   _handleKeyDown (selector, value, keyCode) {
-    const lines = this._newLines(this._frameId)
+    const block = new Block(this._frameId)
     if (keyCode === 9) {
-      lines.push({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
+      block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
     } else {
-      lines.push({ type: domEvents.KEYDOWN, value: '' })
+      block.addLine({ type: domEvents.KEYDOWN, value: '' })
     }
-    return lines
+    return block
   }
 
   _handleClick (selector) {
-    const lines = this._newLines(this._frameId)
+    const block = new Block(this._frameId)
     if (this._options.waitForSelectorOnClick) {
-      lines.push({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
+      block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
     }
-    lines.push({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
-    return lines
+    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
+    return block
   }
 
   _handleGoto (href) {
-    return this._newLines(this._frameId, { type: pptrActions.GOTO, value: `await ${this._frame}.goto('${href}')` })
+    return new Block(this._frameId, { type: pptrActions.GOTO, value: `await ${this._frame}.goto('${href}')` })
   }
 
   _handleViewport (width, height) {
-    return this._newLines(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
+    return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
   }
 
   _handleWaitForNavigation () {
-    const lines = this._newLines(this._frameId)
+    const block = new Block(this._frameId)
     if (this._options.waitForNavigation) {
-      lines.push({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
+      block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
     }
-    return lines
-  }
-
-  _newLines (frameId, line) {
-    return new LinesWrapper(frameId, line)
+    return block
   }
 }

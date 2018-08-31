@@ -37,6 +37,12 @@
                 add <code>waitForSelector</code> lines before every <code>page.click()</code>
               </label>
             </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-blankLinesBetweenBlocks" type="checkbox" v-model="options.code.blankLinesBetweenBlocks" @change="save">
+                add blank lines between code blocks
+              </label>
+            </div>
           </div>
         </div>
       </div>

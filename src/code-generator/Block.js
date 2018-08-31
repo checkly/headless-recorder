@@ -1,4 +1,4 @@
-export default class LinesWrapper {
+export default class Block {
   constructor (frameId, line) {
     this._lines = []
     this._frameId = frameId
@@ -9,12 +9,12 @@ export default class LinesWrapper {
     }
   }
 
-  addToTop (line) {
+  addLineToTop (line) {
     line.frameId = this._frameId
     this._lines.unshift(line)
   }
 
-  push (line) {
+  addLine (line) {
     line.frameId = this._frameId
     this._lines.push(line)
   }
