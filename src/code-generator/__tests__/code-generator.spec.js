@@ -57,7 +57,7 @@ describe('code-generator', () => {
     const events = [{ action: 'click', selector: 'a.link', frameId: 123, frameUrl: 'https://some.iframe.com' }]
     const codeGenerator = new CodeGenerator()
     const result = codeGenerator._parseEvents(events)
-    expect(result).toContain('const frames = await page.frames()')
+    expect(result).toContain('let frames = await page.frames()')
     expect(result).toContain("const frame_123 = frames.find(f => f.url() === 'https://some.iframe.com'")
   })
 })
