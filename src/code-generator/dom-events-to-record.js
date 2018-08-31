@@ -1,24 +1,13 @@
-export default [
-  'click',
-  //    'focus',
-  //    'blur',
-  'dblclick',
-  'change',
-  // 'keyup',
-  'keydown',
-  //    'keypress',
-  // 'mousedown',
-  //    'mousemove',
-  //    'mouseout',
-  //    'mouseover',
-  //    'mouseup'
-  //    'resize',
-  //    'scroll',
-  'select',
-  'submit',
-  'load',
-  'unload'
-]
+export default {
+  CLICK: 'click',
+  DBLCLICK: 'dblclick',
+  CHANGE: 'change',
+  KEYDOWN: 'keydown',
+  SELECT: 'select',
+  SUBMIT: 'submit',
+  LOAD: 'load',
+  UNLOAD: 'unload'
+}
 
 // const events = [
 //    abort,

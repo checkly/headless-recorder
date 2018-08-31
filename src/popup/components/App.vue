@@ -42,7 +42,7 @@
 
 <script>
   import { version } from '../../../package.json'
-  import CodeGenerator from '../code-generator/CodeGenerator'
+  import CodeGenerator from '../../code-generator/CodeGenerator'
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
   import HelpTab from "./HelpTab.vue";

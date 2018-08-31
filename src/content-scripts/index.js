@@ -1,5 +1,5 @@
-import eventsToRecord from './events-to-record'
-import elementsToBindTo from './elements-to-bind-to'
+import eventsToRecord from '../code-generator/dom-events-to-record'
+import elementsToBindTo from '../code-generator/elements-to-bind-to'
 import finder from '@medv/finder'
 
 class EventRecorder {
@@ -25,9 +25,9 @@ class EventRecorder {
 
 function addAllListeners (elements) {
   for (let i = 0; i < elements.length; i++) {
-    for (let j = 0; j < eventsToRecord.length; j++) {
+    for (let key in eventsToRecord) {
       if (!elements[i].getAttribute('data-pptr-rec')) {
-        elements[i].addEventListener(eventsToRecord[j], recordEvent, false)
+        elements[i].addEventListener(eventsToRecord[key], recordEvent, false)
         elements[i].setAttribute('data-pptr-rec', 'on')
       }
     }

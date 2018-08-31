@@ -1,10 +1,11 @@
+import pptrActions from '../code-generator/pptr-actions'
+
 class RecordingController {
   constructor () {
     this._recording = []
     this._boundedMessageHandler = null
     this._boundedNavigationHandler = null
     this._boundedWaitHandler = null
-    this._scriptInjected = false
     this._badgeState = ''
     this._isPaused = false
   }
@@ -91,15 +92,15 @@ class RecordingController {
   }
 
   recordCurrentUrl (href) {
-    this.handleMessage({ selector: undefined, value: undefined, action: 'goto*', href })
+    this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.GOTO, href })
   }
 
   recordCurrentViewportSize (value) {
-    this.handleMessage({ selector: undefined, value, action: 'viewport*' })
+    this.handleMessage({ selector: undefined, value, action: pptrActions.VIEWPORT })
   }
 
   recordNavigation () {
-    this.handleMessage({ selector: undefined, value: undefined, action: 'navigation*' })
+    this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.NAVIGATION })
   }
 
   handleMessage (msg, sender) {
