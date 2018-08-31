@@ -1,5 +1,6 @@
 import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
+import LinesWrapper from './LinesWrapper'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
@@ -169,32 +170,6 @@ export default class CodeGenerator {
   }
 
   _newLines (frameId, line) {
-    class LinesWrapper {
-      constructor (frameId, line) {
-        this._lines = []
-        this._frameId = frameId
-
-        if (line) {
-          line.frameId = this._frameId
-          this._lines.push(line)
-        }
-      }
-
-      addToTop (line) {
-        line.frameId = this._frameId
-        this._lines.unshift(line)
-      }
-
-      push (line) {
-        line.frameId = this._frameId
-        this._lines.push(line)
-      }
-
-      getLines () {
-        return this._lines
-      }
-    }
-
     return new LinesWrapper(frameId, line)
   }
 }
