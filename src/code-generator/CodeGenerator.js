@@ -16,9 +16,6 @@ const wrappedHeader = `(async () => {
 const wrappedFooter = `  await browser.close()
 })()`
 
-const indent = `  `
-const newLine = `\n`
-
 export const defaults = {
   wrapAsync: true,
   headless: true,
@@ -82,8 +79,11 @@ export default class CodeGenerator {
 
     this._postProcess()
 
-    for (let linesObject of this._blocks) {
-      const lines = linesObject.getLines()
+    const indent = this._options.wrapAsync ? '  ' : ''
+    const newLine = `\n`
+
+    for (let block of this._blocks) {
+      const lines = block.getLines()
       for (let line of lines) {
         result += indent + line.value + newLine
       }
