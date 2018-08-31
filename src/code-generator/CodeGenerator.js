@@ -108,8 +108,8 @@ export default class CodeGenerator {
   _postProcess () {
     // we want to create only one navigationPromise
     if (this._options.waitForNavigation) {
-      for (let [i, linesWrapper] of this._blocks.entries()) {
-        const lines = linesWrapper.getLines()
+      for (let [i, block] of this._blocks.entries()) {
+        const lines = block.getLines()
         for (let line of lines) {
           if (line.type === pptrActions.NAVIGATION) {
             this._blocks[i].addLineToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
@@ -121,8 +121,8 @@ export default class CodeGenerator {
 
     // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
     if (Object.keys(this._allFrames).length > 0) {
-      for (let [i, linesWrapper] of this._blocks.entries()) {
-        const lines = linesWrapper.getLines()
+      for (let [i, block] of this._blocks.entries()) {
+        const lines = block.getLines()
         for (let line of lines) {
           if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
             const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
