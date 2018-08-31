@@ -7,21 +7,19 @@ const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 const header = `const browser = await puppeteer.launch()
 const page = await browser.newPage()`
 
-const footer = `
-await browser.close()`
+const footer = `await browser.close()`
 
 const wrappedHeader = `(async () => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()\n`
 
-const wrappedFooter = `
-  await browser.close()
+const wrappedFooter = `await browser.close()
 })()`
 
 const indent = `  `
 const newLine = `\n`
 
-const defaults = {
+export const defaults = {
   wrapAsync: true,
   headless: true,
   waitForNavigation: true,
@@ -108,38 +106,17 @@ export default class CodeGenerator {
   _postProcess () {
     // we want to create only one navigationPromise
     if (this._options.waitForNavigation) {
-      for (let [i, block] of this._blocks.entries()) {
-        const lines = block.getLines()
-        for (let line of lines) {
-          if (line.type === pptrActions.NAVIGATION) {
-            this._blocks[i].addLineToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
-            break
-          }
-        }
-      }
+      this._postProcessWaitForNavigation()
     }
 
     // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
     if (Object.keys(this._allFrames).length > 0) {
-      for (let [i, block] of this._blocks.entries()) {
-        const lines = block.getLines()
-        for (let line of lines) {
-          if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
-            const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
-            this._blocks[i].addLineToTop(({ type: pptrActions.FRAME_SET, value: declaration }))
-            this._blocks[i].addLineToTop({ type: pptrActions.FRAME_SET, value: 'let frames = await page.frames()' })
-            delete this._allFrames[line.frameId]
-            break
-          }
-        }
-      }
+      this._postProcessSetFrames()
     }
 
-    // if (this._options.blankLinesBetweenBlocks) {
-    //   for (let block of this._blocks) {
-    //
-    //   }
-    // }
+    if (this._options.blankLinesBetweenBlocks && this._blocks.length > 0) {
+      this._postProcessAddBlankLines()
+    }
   }
 
   _handleKeyDown (selector, value, keyCode) {
@@ -175,5 +152,42 @@ export default class CodeGenerator {
       block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
     }
     return block
+  }
+
+  _postProcessWaitForNavigation () {
+    for (let [i, block] of this._blocks.entries()) {
+      const lines = block.getLines()
+      for (let line of lines) {
+        if (line.type === pptrActions.NAVIGATION) {
+          this._blocks[i].addLineToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
+          return
+        }
+      }
+    }
+  }
+
+  _postProcessSetFrames () {
+    for (let [i, block] of this._blocks.entries()) {
+      const lines = block.getLines()
+      for (let line of lines) {
+        if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
+          const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
+          this._blocks[i].addLineToTop(({ type: pptrActions.FRAME_SET, value: declaration }))
+          this._blocks[i].addLineToTop({ type: pptrActions.FRAME_SET, value: 'let frames = await page.frames()' })
+          delete this._allFrames[line.frameId]
+          break
+        }
+      }
+    }
+  }
+
+  _postProcessAddBlankLines () {
+    let i = 0
+    while (i <= this._blocks.length) {
+      const blankLine = new Block()
+      blankLine.addLine({ type: null, value: '' })
+      this._blocks.splice(i, 0, blankLine)
+      i += 2
+    }
   }
 }

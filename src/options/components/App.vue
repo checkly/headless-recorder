@@ -57,13 +57,10 @@
 </template>
 
 <script>
+  import { defaults as code } from '../../code-generator/CodeGenerator'
+
   const defaults = {
-    code: {
-      wrapAsync: true,
-      headless: true,
-      waitForNavigation: true,
-      waitForSelectorOnClick: true
-    }
+    code
   }
 
   export default {
