@@ -8,18 +8,30 @@ class EventRecorder {
 
     addAllListeners(elements)
 
-    chrome.runtime.onMessage.addListener((msg, sender, resp) => {
-      if (msg.control && msg.control === 'get-current-url') {
-        resp({ href: window.location.href })
-      }
+    if (!window.document.pptRecorderAddedControlListeners) {
+      console.debug('control listeners added:', this.addedControlListeners)
+      chrome.runtime.onMessage.addListener(getCurrentUrl)
+      chrome.runtime.onMessage.addListener(getViewPortSize)
+      window.document.pptRecorderAddedControlListeners = true
+    }
 
-      if (msg.control && msg.control === 'get-viewport-size') {
-        resp({ value: { width: window.innerWidth, height: window.innerHeight } })
-      }
-    })
     const msg = { control: 'event-recorder-started' }
     sendMessage(msg)
     console.debug('Puppeteer Recorder in-page EventRecorder started')
+  }
+}
+
+function getCurrentUrl (msg) {
+  if (msg.control && msg.control === 'get-current-url') {
+    console.debug('sending current url:', window.location.href)
+    sendMessage({ control: msg.control, href: window.location.href })
+  }
+}
+
+function getViewPortSize (msg) {
+  if (msg.control && msg.control === 'get-viewport-size') {
+    console.debug('sending current viewport size')
+    sendMessage({ control: msg.control, coordinates: { width: window.innerWidth, height: window.innerHeight } })
   }
 }
 

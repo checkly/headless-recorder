@@ -26,14 +26,11 @@ class RecordingController {
     console.debug('start recording')
     this.cleanUp(() => {
       this._badgeState = 'rec'
-      chrome.tabs.executeScript({ file: 'content-script.js', allFrames: true })
-      chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' }, response => {
-          if (response) this.recordCurrentViewportSize(response.value)
-        })
-        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' }, response => {
-          if (response) this.recordCurrentUrl(response.href)
-        })
+      this.injectScript()
+
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' })
+        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' })
       })
 
       this._boundedMessageHandler = this.handleMessage.bind(this)
@@ -92,6 +89,7 @@ class RecordingController {
   }
 
   recordCurrentUrl (href) {
+    console.debug('recording goto* for:', href)
     this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.GOTO, href })
   }
 
@@ -104,8 +102,7 @@ class RecordingController {
   }
 
   handleMessage (msg, sender) {
-    console.debug(`receiving message`)
-    if (msg.control) return this.handleControlMessage(msg)
+    if (msg.control) return this.handleControlMessage(msg, sender)
 
     // to account for clicks etc. we need to record the frameId and url to later target the frame in playback
     msg.frameId = sender ? sender.frameId : null
@@ -119,20 +116,26 @@ class RecordingController {
     }
   }
 
-  handleControlMessage (msg) {
+  handleControlMessage (msg, sender) {
     if (msg.control === 'event-recorder-started') chrome.browserAction.setBadgeText({ text: this._badgeState })
+    if (msg.control === 'get-viewport-size') this.recordCurrentViewportSize(msg.coordinates)
+    if (msg.control === 'get-current-url') this.recordCurrentUrl(msg.href)
   }
 
   handleNavigation ({ frameId }) {
     console.debug('frameId is:', frameId)
+    this.injectScript()
     if (frameId === 0) {
-      chrome.tabs.executeScript({file: 'content-script.js'})
       this.recordNavigation()
     }
   }
 
   handleWait () {
     chrome.browserAction.setBadgeText({ text: 'wait' })
+  }
+
+  injectScript () {
+    chrome.tabs.executeScript({ file: 'content-script.js', allFrames: false })
   }
 }
 

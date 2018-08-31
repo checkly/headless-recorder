@@ -2,5 +2,7 @@ export default [
   'input',
   'textarea',
   'a',
-  'button'
+  'button',
+  'li',
+  'tr'
 ]

@@ -13,7 +13,7 @@ const wrappedHeader = `(async () => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()\n`
 
-const wrappedFooter = `await browser.close()
+const wrappedFooter = `  await browser.close()
 })()`
 
 const indent = `  `
@@ -69,7 +69,7 @@ export default class CodeGenerator {
           this._blocks.push(this._handleClick(selector))
           break
         case 'goto*':
-          this._blocks.push(this._handleGoto(href))
+          this._blocks.push(this._handleGoto(href, frameId))
           break
         case 'viewport*':
           this._blocks.push((this._handleViewport(value.width, value.height)))
