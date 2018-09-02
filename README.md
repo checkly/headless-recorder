@@ -16,7 +16,7 @@ This project is pretty fresh, but does the following already:
 - Copy to clipboard.
 - Offers configuration options.
 
-> Note: we only record clicks etc. on a handful of elements, see [this file](https://github.com/checkly/puppeteer-recorder/blob/master/src/content-scripts/elements-to-bind-to.js) for which elements and [this file](https://github.com/checkly/puppeteer-recorder/blob/master/src/content-scripts/events-to-record.js) for which events. This collection will be expanded in future releases.
+> Note: we only record clicks etc. on a handful of elements, see the `elements-to-bind-to.js` and `dom-events-to-record.js` files in the code-generator folder for which events. This collection will be expanded in future releases.
 
 ## Usage
 

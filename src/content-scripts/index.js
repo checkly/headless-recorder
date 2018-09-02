@@ -1,15 +1,15 @@
 import eventsToRecord from '../code-generator/dom-events-to-record'
 import elementsToBindTo from '../code-generator/elements-to-bind-to'
 import finder from '@medv/finder'
+import debounce from 'lodash.debounce'
 
 class EventRecorder {
   start () {
     const elements = document.querySelectorAll(elementsToBindTo.join(','))
-
-    addAllListeners(elements)
+    const events = Object.values(eventsToRecord)
+    addAllListeners(elements, events)
 
     if (!window.document.pptRecorderAddedControlListeners) {
-      console.debug('control listeners added:', this.addedControlListeners)
       chrome.runtime.onMessage.addListener(getCurrentUrl)
       chrome.runtime.onMessage.addListener(getViewPortSize)
       window.document.pptRecorderAddedControlListeners = true
@@ -35,19 +35,19 @@ function getViewPortSize (msg) {
   }
 }
 
-function addAllListeners (elements) {
-  for (let i = 0; i < elements.length; i++) {
-    for (let key in eventsToRecord) {
-      if (!elements[i].getAttribute('data-pptr-rec')) {
-        elements[i].addEventListener(eventsToRecord[key], recordEvent, false)
-        elements[i].setAttribute('data-pptr-rec', 'on')
+function addAllListeners (elements, events) {
+  const debouncedRecordEvent = debounce(recordEvent, 10)
+  for (let element of elements) {
+    if (element.getAttribute('data-pptr-rec') !== 'on') {
+      for (let event of events) {
+        element.addEventListener(event, debouncedRecordEvent, false)
       }
     }
+    element.setAttribute('data-pptr-rec', 'on')
   }
 }
 
 function recordEvent (e) {
-  console.debug(e)
   const msg = {
     selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
     value: e.target.value,

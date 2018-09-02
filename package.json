@@ -28,6 +28,7 @@
   "homepage": "https://github.com/checkly/puppeteer-recorder#readme",
   "dependencies": {
     "@medv/finder": "^1.1.0",
+    "lodash.debounce": "^4.0.8",
     "vue": "^2.5.17",
     "vue-clipboard2": "^0.2.1",
     "vue-highlightjs": "^1.3.3"
