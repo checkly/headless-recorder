@@ -19,5 +19,5 @@ before_install:
 install:
 - npm install
 script:
-- npm build
+- npm run build
 - npm test
