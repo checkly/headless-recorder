@@ -1,7 +1,8 @@
 import puppeteer from 'puppeteer'
 import express from 'express'
 import path from 'path'
-import { launchPuppeteerWithExtension, waitForRecorderEvents, getEventLog, cleanEventLog } from './helpers'
+import { launchPuppeteerWithExtension } from '../../__e2e-tests__/helpers'
+import { waitForRecorderEvents, getEventLog, cleanEventLog } from './helpers'
 
 let server
 let browser
@@ -9,7 +10,7 @@ let page
 
 beforeAll(done => {
   const app = express()
-  const buildDir = process.env.NODE_ENV === 'development' ? '../../build' : '../../dist'
+  const buildDir = process.env.NODE_ENV === 'development' ? '../../../build' : '../../../dist'
   app.use('/build', express.static(path.join(__dirname, buildDir)))
   app.get('/', (req, res) => {
     res.status(200).sendFile('./fixtures/forms.html', { root: __dirname })

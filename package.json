@@ -8,7 +8,7 @@
     "build": "NODE_ENV=production webpack",
     "dist": "NODE_ENV=production webpack && node scripts/zip.js",
     "test": "npm run unit-test && npm run e2e-test",
-    "unit-test": "jest __tests__",
+    "unit-test": "jest __tests__/.*.spec.js ",
     "e2e-test": "jest __e2e-tests__ --runInBand"
   },
   "repository": {
