@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>forms</title>
+</head>
+<body>
+<form action="/handler" method="post">
+  <fieldset>
+    <legend>Inputs</legend>
+    <div>
+      <label for="name">text input</label>
+      <input type="text" id="name" name="user_name">
+    </div>
+    <div>
+      <label for="msg">text area</label>
+      <textarea id="msg" name="user_message"></textarea>
+    </div>
+    <div>
+      <label>radio</label>
+      <input type="radio" id="contactChoice1"
+             name="contact" value="email">
+      <label for="contactChoice1">Email</label>
+
+      <input type="radio" id="contactChoice2"
+             name="contact" value="phone">
+      <label for="contactChoice2">Phone</label>
+
+      <input type="radio" id="contactChoice3"
+             name="contact" value="mail">
+      <label for="contactChoice3">Mail</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Select</legend>
+    <select id="pet-select">
+      <option value="">--Please choose an option--</option>
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+      <option value="hamster">Hamster</option>
+      <option value="parrot">Parrot</option>
+      <option value="spider">Spider</option>
+      <option value="goldfish">Goldfish</option>
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Checkboxes</legend>
+    <div>
+      <input type="checkbox" id="coding" name="interest" value="coding">
+      <label for="coding">Coding</label>
+    </div>
+    <div>
+      <input type="checkbox" id="music" name="interest" value="music">
+      <label for="music">Music</label>
+    </div>
+  </fieldset>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+<script src="/build/content-script.js" ></script>
+</body>
+</html>

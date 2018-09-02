@@ -1,10 +1,9 @@
 import puppeteer from 'puppeteer'
-import path from 'path'
 import { scripts } from '../../package.json'
+import { launchPuppeteerWithExtension } from './helpers'
+
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
-
-const extensionPath = path.join(__dirname, '../../dist')
 
 describe('build & install', () => {
   test('it builds the extension', async () => {
@@ -13,18 +12,7 @@ describe('build & install', () => {
   }, 60000)
 
   test('it installs the extension', async () => {
-    const options = {
-      headless: false,
-      ignoreHTTPSErrors: true,
-      devtools: true,
-      args: [
-        `--disable-extensions-except=${extensionPath}`,
-        `--load-extension=${extensionPath}`,
-        '--no-sandbox',
-        '--disable-setuid-sandbox'
-      ]
-    }
-    const browser = await puppeteer.launch(options)
+    const browser = await launchPuppeteerWithExtension(puppeteer)
     expect(browser).toBeTruthy()
     browser.close()
   }, 5000)
