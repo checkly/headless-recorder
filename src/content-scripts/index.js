@@ -83,6 +83,10 @@ class EventRecorder {
   getEventLog () {
     return this.eventLog
   }
+
+  clearEventLog () {
+    this.eventLog = []
+  }
 }
 
 function getCoordinates (evt) {

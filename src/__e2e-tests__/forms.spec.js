@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
 import express from 'express'
 import path from 'path'
-import { launchPuppeteerWithExtension } from './helpers'
+import { launchPuppeteerWithExtension, waitForRecorderEvents, getEventLog, cleanEventLog } from './helpers'
 
 let server
 let browser
@@ -27,6 +27,8 @@ afterAll(done => {
 beforeEach(async () => {
   browser = await launchPuppeteerWithExtension(puppeteer)
   page = await browser.newPage()
+  await page.goto('http://localhost:3000/')
+  await cleanEventLog(page)
 })
 
 afterEach(async () => {
@@ -35,15 +37,13 @@ afterEach(async () => {
 
 describe('forms', () => {
   test('It should record clicks on text input elements', async () => {
-    await page.goto('http://localhost:3000/')
-
     const form = await page.$('form')
     expect(form).toBeTruthy()
-    const watchDog = page.waitForFunction('window.eventRecorder.getEventLog().length >= 2')
-    await page.click('input[type="text"]')
-    await watchDog
 
-    const eventLog = await page.evaluate(() => { return window.eventRecorder.getEventLog() })
-    expect(eventLog.length).toBeGreaterThan(1)
-  }, 20000)
+    await page.click('input[type="text"]')
+    await waitForRecorderEvents(page)
+    const eventLog = await getEventLog(page)
+
+    expect(eventLog.length).toBeGreaterThan(0)
+  })
 })
