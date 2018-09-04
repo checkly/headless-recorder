@@ -60,7 +60,9 @@ export default class CodeGenerator {
 
       switch (action) {
         case 'keydown':
-          this._blocks.push(this._handleKeyDown(selector, value, keyCode))
+          if (keyCode === 9) {
+            this._blocks.push(this._handleKeyDown(selector, value, keyCode))
+          }
           break
         case 'click':
           this._blocks.push(this._handleClick(selector))
@@ -119,13 +121,9 @@ export default class CodeGenerator {
     }
   }
 
-  _handleKeyDown (selector, value, keyCode) {
+  _handleKeyDown (selector, value) {
     const block = new Block(this._frameId)
-    if (keyCode === 9) {
-      block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
-    } else {
-      block.addLine({ type: domEvents.KEYDOWN, value: '' })
-    }
+    block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
     return block
   }
 
