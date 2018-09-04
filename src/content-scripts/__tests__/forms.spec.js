@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 import _ from 'lodash'
-import { launchPuppeteerWithExtension } from '../../__e2e-tests__/helpers'
+import {launchPuppeteerWithExtension, runDist} from '../../__e2e-tests__/helpers'
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
 let server
@@ -50,15 +50,7 @@ describe('forms', () => {
     expect(eventLog[0].tagName).toEqual('SELECT')
   })
 
-  test('it should checkbox input elements', async () => {
-    await page.click('#checkbox1')
-    await page.click('#checkbox2')
-    const eventLog = await waitForAndGetEvents(page, 2 + (2 * change))
-    expect(eventLog[0].value).toEqual('checkbox1')
-    expect(eventLog[2].value).toEqual('checkbox2')
-  })
-
-  test('it should checkbox input elements', async () => {
+  test('it should record checkbox input elements', async () => {
     await page.click('#checkbox1')
     await page.click('#checkbox2')
     const eventLog = await waitForAndGetEvents(page, 2 + (2 * change))
@@ -68,11 +60,12 @@ describe('forms', () => {
 })
 
 beforeAll(async (done) => {
+  await runDist()
   const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
   const fixture = './fixtures/forms.html'
   server = await startServer(buildDir, fixture)
   return done()
-})
+}, 20000)
 
 afterAll(done => {
   server.close(() => {

@@ -1,13 +1,9 @@
 import puppeteer from 'puppeteer'
-import { scripts } from '../../package.json'
-import { launchPuppeteerWithExtension } from './helpers'
-
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
+import { launchPuppeteerWithExtension, runDist } from './helpers'
 
 describe('build & install', () => {
   test('it builds the extension', async () => {
-    const { stderr } = await exec(scripts.dist)
+    const { stderr } = await runDist()
     expect(stderr).toBeFalsy()
   }, 60000)
 
