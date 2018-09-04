@@ -59,6 +59,7 @@ class EventRecorder {
     const msg = {
       selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
       value: e.target.value,
+      tagName: e.target.tagName,
       action: e.type,
       keyCode: e.keyCode ? e.keyCode : null,
       href: e.target.href ? e.target.href : null,

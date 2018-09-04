@@ -8,6 +8,8 @@ let browser
 let page
 
 describe('forms', () => {
+  const tab = 1
+  const change = 1
   test('it should load the form', async () => {
     const form = await page.$('form')
     expect(form).toBeTruthy()
@@ -18,7 +20,7 @@ describe('forms', () => {
     await page.type('input[type="text"]', string)
     await page.keyboard.press('Tab')
 
-    const eventLog = await waitForAndGetEvents(page, string.length)
+    const eventLog = await waitForAndGetEvents(page, string.length + tab + change)
     const event = _.find(eventLog, e => { return e.action === 'keydown' && e.keyCode === 9 })
     expect(event.value).toEqual(string)
   })
@@ -28,7 +30,7 @@ describe('forms', () => {
     await page.type('textarea', string)
     await page.keyboard.press('Tab')
 
-    const eventLog = await waitForAndGetEvents(page, string.length)
+    const eventLog = await waitForAndGetEvents(page, string.length + tab + change)
     const event = _.find(eventLog, e => { return e.action === 'keydown' && e.keyCode === 9 })
     expect(event.value).toEqual(string)
   })
@@ -36,9 +38,32 @@ describe('forms', () => {
   test('it should record radio input elements', async () => {
     await page.click('#radioChoice1')
     await page.click('#radioChoice3')
-    const eventLog = await waitForAndGetEvents(page, 2)
+    const eventLog = await waitForAndGetEvents(page, 2 + (2 * change))
     expect(eventLog[0].value).toEqual('radioChoice1')
-    expect(eventLog[1].value).toEqual('radioChoice3')
+    expect(eventLog[2].value).toEqual('radioChoice3')
+  })
+
+  test('it should record select and option elements', async () => {
+    await page.select('select', 'hamster')
+    const eventLog = await waitForAndGetEvents(page, 1)
+    expect(eventLog[0].value).toEqual('hamster')
+    expect(eventLog[0].tagName).toEqual('SELECT')
+  })
+
+  test('it should checkbox input elements', async () => {
+    await page.click('#checkbox1')
+    await page.click('#checkbox2')
+    const eventLog = await waitForAndGetEvents(page, 2 + (2 * change))
+    expect(eventLog[0].value).toEqual('checkbox1')
+    expect(eventLog[2].value).toEqual('checkbox2')
+  })
+
+  test('it should checkbox input elements', async () => {
+    await page.click('#checkbox1')
+    await page.click('#checkbox2')
+    const eventLog = await waitForAndGetEvents(page, 2 + (2 * change))
+    expect(eventLog[0].value).toEqual('checkbox1')
+    expect(eventLog[2].value).toEqual('checkbox2')
   })
 })
 
