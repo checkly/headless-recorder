@@ -20,4 +20,4 @@ install:
 - npm install
 script:
 - npm run build
-- npm test
+- NODE_ENV=production npm test
