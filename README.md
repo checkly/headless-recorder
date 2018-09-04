@@ -40,6 +40,19 @@ below) but add extensibility, configurability and a smoother UI.
 4. Click Load unpacked extension...
 5. Browse to puppeteer-recorder/build and click Select
 
+## Cutting a Release
+
+- bump versions in `package.json` and `manifest.json`
+- tag the code with the version, i.e. `git tag v0.4.0`
+- push with tags `git push --tags`
+
+Now generate a release with **gren**. Make sure all issues associated with the new version are linked to a milestone
+with the name of the tag.
+
+```
+gren release --override --data-source=milestones --milestone-match="{{tag_name}}"
+```
+
 ## Credits & disclaimer
 
 Puppeteer recorder is the spiritual successor & love child of segment.io's 
