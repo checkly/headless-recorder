@@ -7,6 +7,12 @@ describe('code-generator', () => {
     expect(codeGenerator._parseEvents(events)).toBeFalsy()
   })
 
+  test('it generates a page.select() only for select dropdowns', () => {
+    const events = [{ action: 'change', selector: 'select#animals', tagName: 'SELECT', value: 'hamster' }]
+    const codeGenerator = new CodeGenerator()
+    expect(codeGenerator._parseEvents(events)).toContain("await page.select('select#animals', 'hamster')")
+  })
+
   test('it generates the correct waitForNavigation code', () => {
     const events = [{ action: 'navigation*' }, { action: 'click', selector: 'a.link' }]
     const codeGenerator = new CodeGenerator()

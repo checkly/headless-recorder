@@ -53,7 +53,7 @@ export default class CodeGenerator {
     let result = ''
 
     for (let event of events) {
-      const { action, selector, value, href, keyCode, frameId, frameUrl } = event
+      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = event
 
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
@@ -66,6 +66,11 @@ export default class CodeGenerator {
           break
         case 'click':
           this._blocks.push(this._handleClick(selector))
+          break
+        case 'change':
+          if (tagName === 'SELECT') {
+            this._blocks.push(this._handleChange(selector, value))
+          }
           break
         case 'goto*':
           this._blocks.push(this._handleGoto(href, frameId))
@@ -135,7 +140,9 @@ export default class CodeGenerator {
     block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
     return block
   }
-
+  _handleChange (selector, value) {
+    return new Block(this._frameId, { type: domEvents.CHANGE, value: `await ${this._frame}.select('${selector}', '${value}')` })
+  }
   _handleGoto (href) {
     return new Block(this._frameId, { type: pptrActions.GOTO, value: `await ${this._frame}.goto('${href}')` })
   }
