@@ -69,11 +69,11 @@ class EventRecorder {
 
   addAllListeners (elements, events) {
     const boundedRecordEvent = this.recordEvent.bind(this)
-    const debouncedRecordEvent = debounce(boundedRecordEvent, 10)
+    const debouncedRecordEvent = debounce(boundedRecordEvent, 5)
     for (let element of elements) {
       if (element.getAttribute('data-pptr-rec') !== 'on') {
         for (let event of events) {
-          element.addEventListener(event, debouncedRecordEvent, false)
+          element.addEventListener(event, boundedRecordEvent, false)
         }
       }
       element.setAttribute('data-pptr-rec', 'on')

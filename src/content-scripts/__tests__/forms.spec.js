@@ -1,23 +1,52 @@
 import puppeteer from 'puppeteer'
-import express from 'express'
-import path from 'path'
+import _ from 'lodash'
 import { launchPuppeteerWithExtension } from '../../__e2e-tests__/helpers'
-import { waitForRecorderEvents, getEventLog, cleanEventLog } from './helpers'
+import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
 let server
 let browser
 let page
 
-beforeAll(done => {
-  const app = express()
-  const buildDir = process.env.NODE_ENV === 'development' ? '../../../build' : '../../../dist'
-  app.use('/build', express.static(path.join(__dirname, buildDir)))
-  app.get('/', (req, res) => {
-    res.status(200).sendFile('./fixtures/forms.html', { root: __dirname })
+describe('forms', () => {
+  test('it should load the form', async () => {
+    const form = await page.$('form')
+    expect(form).toBeTruthy()
   })
-  server = app.listen(3000, () => {
-    return done()
+
+  test('it should record text input elements', async () => {
+    const string = 'I like turtles'
+    await page.type('input[type="text"]', string)
+    await page.keyboard.press('Tab')
+
+    const eventLog = await waitForAndGetEvents(page, string.length)
+    const event = _.find(eventLog, e => { return e.action === 'keydown' && e.keyCode === 9 })
+    expect(event.value).toEqual(string)
   })
+
+  test('it should record textarea elements', async () => {
+    const string = 'I like turtles\n but also cats'
+    await page.type('textarea', string)
+    await page.keyboard.press('Tab')
+
+    const eventLog = await waitForAndGetEvents(page, string.length)
+    const event = _.find(eventLog, e => { return e.action === 'keydown' && e.keyCode === 9 })
+    expect(event.value).toEqual(string)
+  })
+
+  test('it should record radio input elements', async () => {
+    await page.click('#radioChoice1')
+    await page.click('#radioChoice3')
+    const eventLog = await waitForAndGetEvents(page, 2)
+    expect(eventLog[0].value).toEqual('radioChoice1')
+    expect(eventLog[1].value).toEqual('radioChoice3')
+  })
+})
+
+beforeAll(async (done) => {
+  const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
+  const fixture = './fixtures/forms.html'
+  server = await startServer(buildDir, fixture)
+  return done()
 })
 
 afterAll(done => {
@@ -35,17 +64,4 @@ beforeEach(async () => {
 
 afterEach(async () => {
   browser.close()
-})
-
-describe('forms', () => {
-  test('It should record clicks on text input elements', async () => {
-    const form = await page.$('form')
-    expect(form).toBeTruthy()
-
-    await page.click('input[type="text"]')
-    await waitForRecorderEvents(page)
-    const eventLog = await getEventLog(page)
-
-    expect(eventLog.length).toBeGreaterThan(0)
-  })
 })

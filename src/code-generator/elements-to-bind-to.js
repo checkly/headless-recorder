@@ -3,6 +3,6 @@ export default [
   'textarea',
   'a',
   'button',
-  'li',
-  'tr'
+  'select',
+  'option'
 ]
