@@ -25,6 +25,8 @@ This project is pretty fresh, but does the following already:
 - Click links, inputs and other elements.
 - Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png).
 - Click Pause when you want to navigate without recording anything. Hit Resume to continue recording. 
+- Output is a json string. store it as data.json
+- Use like this: `node src/GenericScript.js data.json`
 ## Background
 
 Writing Puppeteer scripts for scraping, testing and monitoring can be tricky. A recorder / code generator can be helpful,
