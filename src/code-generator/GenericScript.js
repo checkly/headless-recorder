@@ -65,7 +65,15 @@ async function run(events, options = {}, optionsForLaunch = {headless: false}) {
           await this._handleKeyDown(selector, key)
           break
         case 'keyup':
-          await this._handleKeyUp(selector, key)
+          if (events[i+1] && events[i+1].action === 'navigation*') {
+            const [response] = await Promise.all([
+              this.page.waitForNavigation(),
+              this._handleKeyUp(selector, key)
+            ]);
+            i++
+          } else {
+            await this._handleKeyUp(selector, key)
+          }
           break
         case 'click':
           if (events[i+1] && events[i+1].action === 'navigation*') {
@@ -96,6 +104,8 @@ async function run(events, options = {}, optionsForLaunch = {headless: false}) {
     }
   }
   await this._doEvents(events)
+  await this.page.screenshot({path: 'screenshot.png'})
+  await this.browser.close()
 }
 
 function main(){

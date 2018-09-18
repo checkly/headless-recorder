@@ -57,7 +57,7 @@ class EventRecorder {
   }
 
   recordEvent (e) {
-    if (this.prevEvent === e) {
+    if (this.prevEvent && this.prevEvent.timeStamp === e.timeStamp) {
       return
     }
     this.prevEvent = e
