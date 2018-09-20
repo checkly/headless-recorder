@@ -119,6 +119,18 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
           Restart
         </button>
          
+        <input
+          class="input-name"
+          placeholder="input record name"
+        />
+         
+        <button
+          class="btn btn-sm btn-primary"
+          style="display: none;"
+        >
+          Save
+        </button>
+         
         <a
           href="#"
           style="display: none;"
