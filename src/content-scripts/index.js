@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce'
 class EventRecorder {
   constructor () {
     this.eventLog = []
+    this.prevEvent = undefined
   }
 
   start () {
@@ -56,11 +57,17 @@ class EventRecorder {
   }
 
   recordEvent (e) {
+    if (this.prevEvent && this.prevEvent.timeStamp === e.timeStamp) {
+      return
+    }
+    this.prevEvent = e
     const msg = {
       selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
       value: e.target.value,
       tagName: e.target.tagName,
       action: e.type,
+      key: e.key || null,
+      code: e.code || null,
       keyCode: e.keyCode ? e.keyCode : null,
       href: e.target.href ? e.target.href : null,
       coordinates: getCoordinates(e)

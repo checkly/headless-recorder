@@ -17,7 +17,7 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         class="text-muted"
       >
         <small>
-          0.2.1
+          0.3.0
         </small>
       </span>
     </a>
@@ -117,6 +117,18 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
           style="display: none;"
         >
           Restart
+        </button>
+         
+        <input
+          class="input-name"
+          placeholder="input record name"
+        />
+         
+        <button
+          class="btn btn-sm btn-primary"
+          style="display: none;"
+        >
+          Save
         </button>
          
         <a

@@ -32,6 +32,8 @@
         <ResultsTab :code="code" :copy-link-text="copyLinkText" :restart="restart" :set-copying="setCopying" v-show="showResultsTab"/>
         <div class="results-footer" v-show="showResultsTab">
           <button class="btn btn-sm btn-primary" @click="restart" v-show="code">Restart</button>
+          <input class="input-name" v-model="name" placeholder="input record name">
+          <button class="btn btn-sm btn-primary" @click="save" v-show="code">Save</button>
           <a href="#" v-clipboard:copy='code' @click="setCopying" v-show="code">{{copyLinkText}}</a>
         </div>
       </div>
@@ -46,6 +48,7 @@
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
   import HelpTab from "./HelpTab.vue";
+  import gql from 'graphql-tag'
 
   export default {
     name: 'App',
@@ -61,7 +64,8 @@
         isPaused: false,
         isCopying: false,
         bus: null,
-        version
+        version,
+        name: new Date().toLocaleDateString() + new Date().toLocaleTimeString(),
       }
     },
     mounted () {
@@ -133,6 +137,29 @@
         this.showResultsTab = this.isRecording = this.isPaused = false
         this.storeState()
       },
+      save () {
+        this.$apollo.mutate({
+          // Query
+          mutation: gql`mutation ($name: String, $url: String, $events: JSON, $eventCount: Int) {
+            createRecord (input: {record: {name: $name, url: $url, events: $events, eventCount: $eventCount}}) {
+              clientMutationId
+            } 
+          }`,
+          // Parameters
+          variables: {
+            name: this.name,
+            url: this.url,
+            events: this.code,
+            eventCount: this.recording.length
+          },
+        }).then((data) => {
+          // Result
+          console.log(data)
+        }).catch((error) => {
+          // Error
+          console.error(error)
+        })
+      },
       openOptions () {
         if (this.$chrome.runtime.openOptionsPage) {
           this.$chrome.runtime.openOptionsPage()
@@ -185,7 +212,11 @@
       },
       copyLinkText () {
         return this.isCopying ? 'copied!' : 'copy to clipboard'
-      }
+      },
+      url () {
+        const goto = this.recording.filter(a => a.action=='goto*')
+        return goto.length > 0 ? goto[0].href : ''
+      },
     }
 }
 </script>
@@ -194,6 +225,13 @@
   @import "~styles/_animations.scss";
   @import "~styles/_variables.scss";
   @import "~styles/_mixins.scss";
+
+  .input-name {
+    width: 100px;
+    height: 27px;
+    border-radius: .2rem;
+    border: 1px solid #00000042;
+  }
 
   .recorder {
     font-size: 14px;

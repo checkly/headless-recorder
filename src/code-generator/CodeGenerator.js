@@ -34,7 +34,7 @@ export default class CodeGenerator {
   }
 
   generate (events) {
-    return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
+    return JSON.stringify(events)
   }
 
   _getHeader () {
