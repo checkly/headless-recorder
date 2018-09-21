@@ -5,6 +5,7 @@ import finder from '@medv/finder'
 class EventRecorder {
   constructor () {
     this.eventLog = []
+    this.previousEvent = null
   }
 
   start () {
@@ -64,6 +65,9 @@ class EventRecorder {
   }
 
   recordEvent (e) {
+    if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
+    this.previousEvent = e
+
     const msg = {
       selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
       value: e.target.value,
