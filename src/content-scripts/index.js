@@ -1,7 +1,6 @@
 import eventsToRecord from '../code-generator/dom-events-to-record'
 import elementsToBindTo from '../code-generator/elements-to-bind-to'
 import finder from '@medv/finder'
-import debounce from 'lodash.debounce'
 
 class EventRecorder {
   constructor () {
@@ -9,9 +8,11 @@ class EventRecorder {
   }
 
   start () {
-    const elements = document.querySelectorAll(elementsToBindTo.join(','))
     const events = Object.values(eventsToRecord)
-    this.addAllListeners(elements, events)
+    if (!window.pptRecorderAddedControlListeners) {
+      this.addAllListeners(elementsToBindTo, events)
+      window.pptRecorderAddedControlListeners = true
+    }
 
     if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
       const boundedGetCurrentUrl = this.getCurrentUrl.bind(this)
@@ -24,6 +25,13 @@ class EventRecorder {
     const msg = { control: 'event-recorder-started' }
     this.sendMessage(msg)
     console.debug('Puppeteer Recorder in-page EventRecorder started')
+  }
+
+  addAllListeners (elements, events) {
+    const boundedRecordEvent = this.recordEvent.bind(this)
+    events.forEach(type => {
+      window.addEventListener(type, boundedRecordEvent, true)
+    })
   }
 
   sendMessage (msg) {
@@ -66,19 +74,6 @@ class EventRecorder {
       coordinates: getCoordinates(e)
     }
     this.sendMessage(msg)
-  }
-
-  addAllListeners (elements, events) {
-    const boundedRecordEvent = this.recordEvent.bind(this)
-    const debouncedRecordEvent = debounce(boundedRecordEvent, 5)
-    for (let element of elements) {
-      if (element.getAttribute('data-pptr-rec') !== 'on') {
-        for (let event of events) {
-          element.addEventListener(event, boundedRecordEvent, false)
-        }
-      }
-      element.setAttribute('data-pptr-rec', 'on')
-    }
   }
 
   getEventLog () {
