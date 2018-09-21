@@ -8,11 +8,16 @@
 
 //reset
 
+html {
+  max-height: 500px;
+}
+
 body {
   margin: 0;
   font-size: 100%;
   color: $gray-dark;
   width: 350px;
+  max-height: 500px;
 }
 
 a {

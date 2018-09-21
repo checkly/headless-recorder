@@ -46,6 +46,9 @@
 
   .recording-tab {
     .content {
+      display:flex;
+      flex-direction:column;
+      height:100%;
       min-height: 200px;
       .empty {
         padding: $spacer;
@@ -53,13 +56,18 @@
       }
 
       .events {
-        max-height: 400px;
-        overflow-y: auto;
+        max-height: $max-content-height;
+        flex: 1;
+        height:100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column-reverse;
 
         .loading:after {
           content: '.';
           animation: dots 1s steps(5, end) infinite;
           animation-delay: 1.5s;
+          margin-bottom: auto;
         }
 
         .event-list {
