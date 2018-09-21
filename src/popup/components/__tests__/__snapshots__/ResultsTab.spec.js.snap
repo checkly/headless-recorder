@@ -7,14 +7,18 @@ exports[`RecordingTab.vue it has the correct pristine / empty state 1`] = `
   <div
     class="content"
   >
-    <pre>
-            
-      <code>
-        No code yet...
-      </code>
-      
+    <div
+      class="generated-code"
+    >
+      <pre>
+              
+        <code>
+          No code yet...
+        </code>
+        
     
-    </pre>
+      </pre>
+    </div>
   </div>
 </div>
 `;
@@ -26,11 +30,15 @@ exports[`RecordingTab.vue it show a code box when there is code 1`] = `
   <div
     class="content"
   >
-    <pre>
-      <code
-        class="javascript"
-      />
-    </pre>
+    <div
+      class="generated-code"
+    >
+      <pre>
+        <code
+          class="javascript"
+        />
+      </pre>
+    </div>
   </div>
 </div>
 `;
