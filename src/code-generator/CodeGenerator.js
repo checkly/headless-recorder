@@ -31,6 +31,7 @@ export default class CodeGenerator {
     this._frame = 'page'
     this._frameId = 0
     this._allFrames = {}
+    this._navigationPromiseSet = false
   }
 
   generate (events) {
@@ -52,8 +53,8 @@ export default class CodeGenerator {
     console.debug(`generating code for ${events ? events.length : 0} events`)
     let result = ''
 
-    for (let event of events) {
-      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = event
+    for (let i = 0; i < events.length; i++) {
+      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
 
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
@@ -65,7 +66,15 @@ export default class CodeGenerator {
           }
           break
         case 'click':
-          this._blocks.push(this._handleClick(selector))
+          const next = i + 1
+          if (events[next] && events[next].action === 'navigation*' && this._options.waitForNavigation && !this._navigationPromiseSet) {
+            const block = new Block(this._frameId)
+            block.addLine({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
+            this._blocks.push(block)
+            this._navigationPromiseSet = true
+          }
+
+          this._blocks.push(this._handleClick(selector, events))
           break
         case 'change':
           if (tagName === 'SELECT') {
@@ -112,7 +121,7 @@ export default class CodeGenerator {
 
   _postProcess () {
     // we want to create only one navigationPromise
-    if (this._options.waitForNavigation) {
+    if (this._options.waitForNavigation && !this._navigationPromiseSet) {
       this._postProcessWaitForNavigation()
     }
 
