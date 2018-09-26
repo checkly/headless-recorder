@@ -78,8 +78,10 @@ export default class CodeGenerator {
 
       switch (action) {
         case 'keydown':
-          if (keyCode == 13) {
+          if (keyCode == 17) {
             this._blocks.push(this._handleKeyDown(selector, value, keyCode))
+          }
+          if (keyCode == 13) {
             this._blocks.push(this._handleEnter(selector))
           }
           break
