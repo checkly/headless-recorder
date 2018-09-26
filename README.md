@@ -21,7 +21,7 @@ This project is pretty fresh, but does the following already:
 ## Usage
 
 - Click the icon and hit Record.
-- Hit <kbd>enter</kbd> after you finish typing in an `input` element.
+- Hit <kbd>control</kbd> after you finish typing in an `input` element.
 - Click links, inputs and other elements.
 - Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png).
 - Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
