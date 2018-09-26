@@ -18,8 +18,13 @@ class RecordingController {
         if (msg.action && msg.action === 'cleanUp') this.cleanUp()
         if (msg.action && msg.action === 'pause') this.pause()
         if (msg.action && msg.action === 'unpause') this.unPause()
+        if (msg.action && msg.action === 'add-wait') this.addWait()
       })
     })
+  }
+
+  addWait(){
+    this.handleMessage({ action: pptrActions.ADD_WAIT });
   }
 
   start () {

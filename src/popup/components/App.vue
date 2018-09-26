@@ -29,6 +29,11 @@
           </button>
           <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
         </div>
+        <div class="recording-footer" v-show="isRecording">
+          <button class="btn btn-sm btn-primary" @click="addWait" v-show="isRecording">
+            {{addWaitButtonText}}
+          </button>
+        </div>
         <ResultsTab :code="code" :copy-link-text="copyLinkText" :restart="restart" :set-copying="setCopying" v-show="showResultsTab"/>
         <div class="results-footer" v-show="showResultsTab">
           <button class="btn btn-sm btn-primary" @click="restart" v-show="code">Restart</button>
@@ -99,6 +104,10 @@
           this.isPaused = true
         }
         this.storeState()
+      },
+      addWait () {
+        console.debug('adding wait')
+        this.bus.postMessage({ action: 'add-wait' })
       },
       start () {
         this.cleanUp()
@@ -179,6 +188,9 @@
       },
       recordButtonText () {
         return this.isRecording ? 'Stop' : 'Record'
+      },
+      addWaitButtonText () {
+        return 'Add Wait'
       },
       pauseButtonText () {
         return this.isPaused ? 'Resume' : 'Pause'

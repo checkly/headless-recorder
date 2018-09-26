@@ -14,5 +14,11 @@ export default [
   'h6',
   'div',
   'span',
-  'img'
+  'img',
+  'nav-side-bar-item-name',
+  'view-list-item-name',
+  'nav-side-bar-option',
+  'search-result',
+  'compose-side-bar-search-box',
+  'dropdown'
 ]

@@ -4,6 +4,23 @@ import Block from './Block'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
+const methodWaitTillVisible = `const waitTillVisible = function(selector, innerText) {
+    const elements = document.querySelectorAll(selector);
+    if (elements.length == 0) return false;
+    for (var i in elements) {
+        var e = elements[i];
+        const style = window.getComputedStyle(e);
+        if(style && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && e.offsetHeight){
+            if(innerText && e.innerText.trim() != innerText) {
+              return false
+            }
+            return e;
+        } else {
+            return false;
+        }
+    }
+}\n\n`
+
 const header = `const browser = await puppeteer.launch()
 const page = await browser.newPage()`
 
@@ -21,7 +38,8 @@ export const defaults = {
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true
+  blankLinesBetweenBlocks: true,
+  addWait: 2000
 }
 
 export default class CodeGenerator {
@@ -35,7 +53,7 @@ export default class CodeGenerator {
   }
 
   generate (events) {
-    return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
+    return importPuppeteer + methodWaitTillVisible + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
   _getHeader () {
@@ -54,15 +72,15 @@ export default class CodeGenerator {
     let result = ''
 
     for (let i = 0; i < events.length; i++) {
-      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
-
+      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl, altKey, innerText } = events[i]
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
 
       switch (action) {
         case 'keydown':
-          if (keyCode === 9) {
+          if (keyCode == 13) {
             this._blocks.push(this._handleKeyDown(selector, value, keyCode))
+            this._blocks.push(this._handleEnter(selector))
           }
           break
         case 'click':
@@ -73,8 +91,11 @@ export default class CodeGenerator {
             this._blocks.push(block)
             this._navigationPromiseSet = true
           }
-
-          this._blocks.push(this._handleClick(selector, events))
+          if(altKey){
+            this._blocks.push(this._handleClickText(tagName, innerText))
+          } else {
+            this._blocks.push(this._handleClick(selector))
+          }
           break
         case 'change':
           if (tagName === 'SELECT') {
@@ -89,6 +110,9 @@ export default class CodeGenerator {
           break
         case 'navigation*':
           this._blocks.push(this._handleWaitForNavigation())
+          break
+        case 'add-wait*':
+          this._blocks.push(this._handleAddWait(this._options.addWait))
           break
       }
     }
@@ -135,18 +159,48 @@ export default class CodeGenerator {
     }
   }
 
+  _handleAddWait(period) {
+    const block = new Block(this._frameId)
+    block.addLine({ value: `await page.waitFor(${period});`})
+    return block
+  }
+
+  _handleClickText(selector, innerText) {
+    const block = new Block(this._frameId)
+    this._addWaitTillVisible(block, selector, innerText)
+    block.addLine({ value: `await item.asElement().click()`})
+    return block
+  }
+
+  _handleEnter(selector) {
+    const block = new Block(this._frameId)
+    block.addLine({value: `await page.keyboard.press('Enter');`})
+    return block
+  }
+
+  _addWaitTillVisible(block, selector, innerText) {
+    if(innerText) {
+      block.addLine({ value: `var item = await ${this._frame}.waitFor(waitTillVisible, {}, '${selector}', '${innerText}')`})
+    } else {
+      block.addLine({ value: `var item = await ${this._frame}.waitFor(waitTillVisible, {}, '${selector}')`})
+    }
+  }
+
   _handleKeyDown (selector, value) {
     const block = new Block(this._frameId)
-    block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
+    this._addWaitTillVisible(block, selector)
+    block.addLine({ value: `await item.asElement().type('${value}')`})
     return block
   }
 
   _handleClick (selector) {
     const block = new Block(this._frameId)
     if (this._options.waitForSelectorOnClick) {
-      block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
+      this._addWaitTillVisible(block, selector)
+      block.addLine({ value: `await item.asElement().click()`})
+    } else {
+      block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
     }
-    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
     return block
   }
   _handleChange (selector, value) {
