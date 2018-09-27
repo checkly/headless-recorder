@@ -19,12 +19,17 @@ class RecordingController {
         if (msg.action && msg.action === 'pause') this.pause()
         if (msg.action && msg.action === 'unpause') this.unPause()
         if (msg.action && msg.action === 'add-wait') this.addWait()
+        if (msg.action && msg.action === 'text-click') this.textClick()
       })
     })
   }
 
   addWait(){
     this.handleMessage({ action: pptrActions.ADD_WAIT });
+  }
+
+  textClick(){
+    this.handleMessage({ action: pptrActions.TEXT_CLICK });
   }
 
   start () {

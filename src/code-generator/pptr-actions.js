@@ -5,5 +5,6 @@ export default {
   NAVIGATION: 'navigation*',
   NAVIGATION_PROMISE: 'navigation-promise*',
   FRAME_SET: 'frame-set*',
-  ADD_WAIT: 'add-wait*'
+  ADD_WAIT: 'add-wait*',
+  TEXT_CLICK: 'text-click*'
 }

@@ -19,8 +19,8 @@ describe('code-generator', () => {
     const code = codeGenerator._parseEvents(events)
     const lines = code.split('\n')
     expect(lines[1].trim()).toEqual('const navigationPromise = page.waitForNavigation()')
-    expect(lines[3].trim()).toEqual("var item = await page.waitFor(waitTillVisible, {}, 'a.link')")
-    expect(lines[4].trim()).toEqual("await item.asElement().click()")
+    expect(lines[3].trim()).toEqual("await page.waitForSelector('a.link')")
+    expect(lines[4].trim()).toEqual("await page.click('a.link')")
     expect(lines[6].trim()).toEqual('await navigationPromise')
   })
 
@@ -36,8 +36,8 @@ describe('code-generator', () => {
     const codeGenerator = new CodeGenerator()
     const result = codeGenerator._parseEvents(events)
 
-    expect(result).toContain("var item = await page.waitFor(waitTillVisible, {}, 'a.link')")
-    expect(result).toContain("await item.asElement().click()")
+    expect(result).toContain("await page.waitForSelector('a.link')")
+    expect(result).toContain("await page.click('a.link')")
   })
 
   test('it does not generate the waitForSelector code before clicks when turned off', () => {

@@ -112,6 +112,15 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
           Add Wait
         
         </button>
+         
+        <button
+          class="btn btn-sm btn-primary"
+          style="display: none;"
+        >
+          
+          Text Click
+        
+        </button>
       </div>
        
       <resultstab-stub

@@ -34,6 +34,12 @@
             <div class="settings-group">
               <label>
                 <input id="options-code-waitForSelectorOnClick" type="checkbox" v-model="options.code.waitForSelectorOnClick" @change="save">
+                add <code>waitForSelector</code> lines before every <code>page.click()</code>
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-waitTillVisibleOnClick" type="checkbox" v-model="options.code.waitTillVisibleOnClick" @change="save">
                 add <code>waitTillVisible</code> lines before every <code>page.click()</code>
               </label>
             </div>
@@ -47,6 +53,12 @@
               <label>
                 <input id="options-code-addWait" type="textbox" v-model="options.code.addWait" @change="save">
                 the timeout value for <code>page.waitFor(timeout)</code>
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-typingTerminator" type="textbox" v-model="options.code.typingTerminator" @change="save">
+                the keycode that indicates that the user is done typing and emit the <code>type()</code> instruction
               </label>
             </div>
           </div>

@@ -38,8 +38,10 @@ export const defaults = {
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
+  waitTillVisibleOnClick: false,
   blankLinesBetweenBlocks: true,
-  addWait: 2000
+  addWait: 2000,
+  typingTerminator: 9
 }
 
 export default class CodeGenerator {
@@ -72,13 +74,13 @@ export default class CodeGenerator {
     let result = ''
 
     for (let i = 0; i < events.length; i++) {
-      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl, altKey, innerText } = events[i]
+      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl, altKey, ctrlKey, innerText } = events[i]
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
 
       switch (action) {
         case 'keydown':
-          if (keyCode == 17) {
+          if (keyCode == this._options.typingTerminator) {
             this._blocks.push(this._handleKeyDown(selector, value, keyCode))
           }
           if (keyCode == 13) {
@@ -87,13 +89,14 @@ export default class CodeGenerator {
           break
         case 'click':
           const next = i + 1
+          const previous = i - 1
           if (events[next] && events[next].action === 'navigation*' && this._options.waitForNavigation && !this._navigationPromiseSet) {
             const block = new Block(this._frameId)
             block.addLine({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
             this._blocks.push(block)
             this._navigationPromiseSet = true
           }
-          if(altKey){
+          if(events[previous] && events[previous].action == 'text-click*'){
             this._blocks.push(this._handleClickText(tagName, innerText))
           } else {
             this._blocks.push(this._handleClick(selector))
@@ -188,6 +191,11 @@ export default class CodeGenerator {
     }
   }
 
+  _addWaitForSelector(block, selector) {
+    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
+    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
+  }
+
   _handleKeyDown (selector, value) {
     const block = new Block(this._frameId)
     this._addWaitTillVisible(block, selector)
@@ -198,9 +206,11 @@ export default class CodeGenerator {
   _handleClick (selector) {
     const block = new Block(this._frameId)
     if (this._options.waitForSelectorOnClick) {
+      this._addWaitForSelector(block, selector)
+    } else if (this._options.waitTillVisibleOnClick) {
       this._addWaitTillVisible(block, selector)
       block.addLine({ value: `await item.asElement().click()`})
-    } else {
+    }else {
       block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
     }
     return block

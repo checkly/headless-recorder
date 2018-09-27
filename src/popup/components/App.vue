@@ -33,6 +33,9 @@
           <button class="btn btn-sm btn-primary" @click="addWait" v-show="isRecording">
             {{addWaitButtonText}}
           </button>
+          <button class="btn btn-sm btn-primary" @click="textClick" v-show="isRecording">
+            {{textClickButtonText}}
+          </button>
         </div>
         <ResultsTab :code="code" :copy-link-text="copyLinkText" :restart="restart" :set-copying="setCopying" v-show="showResultsTab"/>
         <div class="results-footer" v-show="showResultsTab">
@@ -108,6 +111,10 @@
       addWait () {
         console.debug('adding wait')
         this.bus.postMessage({ action: 'add-wait' })
+      },
+      textClick() {
+        console.debug('text click')
+        this.bus.postMessage({ action: 'text-click' })
       },
       start () {
         this.cleanUp()
@@ -191,6 +198,9 @@
       },
       addWaitButtonText () {
         return 'Add Wait'
+      },
+      textClickButtonText () {
+        return 'Text Click'
       },
       pauseButtonText () {
         return this.isPaused ? 'Resume' : 'Pause'
