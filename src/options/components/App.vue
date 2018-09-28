@@ -61,6 +61,18 @@
                 the keycode that indicates that the user is done typing and emit the <code>type()</code> instruction
               </label>
             </div>
+            <div class="settings-group">
+              <label>
+                <textarea id="options-code-cookies" v-model="options.code.cookies" @change="save"></textarea>
+                a json value that defines the cookies to add to the page.
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <textarea id="options-code-localStorage" v-model="options.code.localStorage" @change="save"></textarea>
+                a json value that defines the local storage values to add to the page.
+              </label>
+            </div>
           </div>
         </div>
       </div>

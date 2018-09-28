@@ -5,7 +5,7 @@ import Block from './Block'
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
 const header = `const browser = await puppeteer.launch()
-const page = await browser.newPage()`
+const page = await browser.newPage()\n`
 
 const footer = `await browser.close()`
 
@@ -26,7 +26,9 @@ export const defaults = {
   waitTillVisible: false,
   blankLinesBetweenBlocks: true,
   wait: 2000,
-  typingTerminator: 9
+  typingTerminator: 9,
+  cookies: "[]",
+  localStorage: "{}"
 }
 
 export default class CodeGenerator {
@@ -43,10 +45,22 @@ export default class CodeGenerator {
     return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
+  addCookies(){
+    let script = ""
+    let spacing = this._options.wrapAsync ? "  " : "";
+    var cookies = JSON.parse(this._options.cookies)
+    for (var key in cookies) {
+      var keyValue = JSON.stringify(cookies[key])
+      script = script + spacing + `await page.setCookie(${keyValue})\n`
+    }
+    return script;
+  }
+
   _getHeader () {
     console.debug(this._options)
     let hdr = this._options.wrapAsync ? wrappedHeader : header
     hdr = this._options.headless ? hdr : hdr.replace('launch()', 'launch({ headless: false })')
+    hdr = hdr + this.addCookies();
     return hdr
   }
 
@@ -106,6 +120,9 @@ export default class CodeGenerator {
         case 'wait*':
           this._blocks.push(this._handleAddWait(this._options.wait))
           break
+        case 'set-local-storage*':
+          this._blocks.push(this._handleSetLocalStorage())
+          break
       }
     }
 
@@ -149,6 +166,22 @@ export default class CodeGenerator {
     if (this._options.blankLinesBetweenBlocks && this._blocks.length > 0) {
       this._postProcessAddBlankLines()
     }
+  }
+
+  _handleSetLocalStorage() {
+    const block = new Block(this._frameId)
+    let script = ""
+    let spacing = this._options.wrapAsync ? "  " : "";
+    var storage = JSON.parse(this._options.localStorage)
+    if(Object.keys(storage).length > 0){
+      block.addLine({ value: `await page.evaluate(() => {`})
+      for (var key in storage) {
+        var keyValue = storage[key]
+        block.addLine({ value: `  localStorage.setItem("${key}", "${keyValue}")`})
+      }
+      block.addLine({ value: `})`})
+    }
+    return block
   }
 
   _handleAddWait(period) {

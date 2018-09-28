@@ -7,5 +7,6 @@ export default {
   FRAME_SET: 'frame-set*',
   WAIT: 'wait*',
   WAIT_FOR: 'wait-for*',
-  TEXT_CLICK: 'text-click*'
+  TEXT_CLICK: 'text-click*',
+  SET_LOCAL_STORAGE: 'set-local-storage*'
 }
