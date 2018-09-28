@@ -30,8 +30,11 @@
           <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
         </div>
         <div class="recording-footer" v-show="isRecording">
-          <button class="btn btn-sm btn-primary" @click="addWait" v-show="isRecording">
-            {{addWaitButtonText}}
+          <button class="btn btn-sm btn-primary" @click="wait" v-show="isRecording">
+            {{waitButtonText}}
+          </button>
+          <button class="btn btn-sm btn-primary" @click="waitFor" v-show="isRecording">
+            {{waitForButtonText}}
           </button>
           <button class="btn btn-sm btn-primary" @click="textClick" v-show="isRecording">
             {{textClickButtonText}}
@@ -108,9 +111,13 @@
         }
         this.storeState()
       },
-      addWait () {
+      wait () {
         console.debug('adding wait')
-        this.bus.postMessage({ action: 'add-wait' })
+        this.bus.postMessage({ action: 'wait' })
+      },
+      waitFor () {
+        console.debug('wait for')
+        this.bus.postMessage({ action: 'wait-for' })
       },
       textClick() {
         console.debug('text click')
@@ -196,8 +203,11 @@
       recordButtonText () {
         return this.isRecording ? 'Stop' : 'Record'
       },
-      addWaitButtonText () {
-        return 'Add Wait'
+      waitForButtonText () {
+        return 'Wait For'
+      },
+      waitButtonText () {
+        return 'Wait'
       },
       textClickButtonText () {
         return 'Text Click'

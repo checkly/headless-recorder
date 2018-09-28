@@ -109,7 +109,16 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
           style="display: none;"
         >
           
-          Add Wait
+          Wait
+        
+        </button>
+         
+        <button
+          class="btn btn-sm btn-primary"
+          style="display: none;"
+        >
+          
+          Wait For
         
         </button>
          

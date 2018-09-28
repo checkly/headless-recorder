@@ -4,29 +4,14 @@ import Block from './Block'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
-const methodWaitTillVisible = `const waitTillVisible = function(selector, innerText) {
-    const elements = document.querySelectorAll(selector);
-    if (elements.length == 0) return false;
-    for (var i in elements) {
-        var e = elements[i];
-        const style = window.getComputedStyle(e);
-        if(style && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && e.offsetHeight){
-            if(innerText && e.innerText.trim() != innerText) {
-              return false
-            }
-            return e;
-        } else {
-            return false;
-        }
-    }
-}\n\n`
-
 const header = `const browser = await puppeteer.launch()
 const page = await browser.newPage()`
 
 const footer = `await browser.close()`
 
-const wrappedHeader = `(async () => {
+const asyncOpener = `(async () => {\n`
+
+const wrappedHeader = asyncOpener + `
   const browser = await puppeteer.launch()
   const page = await browser.newPage()\n`
 
@@ -38,9 +23,9 @@ export const defaults = {
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
-  waitTillVisibleOnClick: false,
+  waitTillVisible: false,
   blankLinesBetweenBlocks: true,
-  addWait: 2000,
+  wait: 2000,
   typingTerminator: 9
 }
 
@@ -55,7 +40,7 @@ export default class CodeGenerator {
   }
 
   generate (events) {
-    return importPuppeteer + methodWaitTillVisible + this._getHeader() + this._parseEvents(events) + this._getFooter()
+    return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
   _getHeader () {
@@ -98,6 +83,8 @@ export default class CodeGenerator {
           }
           if(events[previous] && events[previous].action == 'text-click*'){
             this._blocks.push(this._handleClickText(tagName, innerText))
+          } else if(events[previous] && events[previous].action == 'wait-for*'){
+            this._blocks.push(this._handleWaitFor(tagName, innerText))
           } else {
             this._blocks.push(this._handleClick(selector))
           }
@@ -116,8 +103,8 @@ export default class CodeGenerator {
         case 'navigation*':
           this._blocks.push(this._handleWaitForNavigation())
           break
-        case 'add-wait*':
-          this._blocks.push(this._handleAddWait(this._options.addWait))
+        case 'wait*':
+          this._blocks.push(this._handleAddWait(this._options.wait))
           break
       }
     }
@@ -170,10 +157,16 @@ export default class CodeGenerator {
     return block
   }
 
-  _handleClickText(selector, innerText) {
+  _handleClickText(tagName, innerText) {
     const block = new Block(this._frameId)
-    this._addWaitTillVisible(block, selector, innerText)
+    block.addLine({ value: `var item = await ${this._frame}.waitForXPath('//${tagName}[normalize-space() = "${innerText}"]', {visible: ${this._options.waitTillVisible}})`})
     block.addLine({ value: `await item.asElement().click()`})
+    return block
+  }
+
+  _handleWaitFor(tagName, innerText) {
+    const block = new Block(this._frameId)
+    block.addLine({ value: `var item = await ${this._frame}.waitForXPath('//${tagName}[normalize-space() = "${innerText}"]', {visible: ${this._options.waitTillVisible}})`})
     return block
   }
 
@@ -183,22 +176,14 @@ export default class CodeGenerator {
     return block
   }
 
-  _addWaitTillVisible(block, selector, innerText) {
-    if(innerText) {
-      block.addLine({ value: `var item = await ${this._frame}.waitFor(waitTillVisible, {}, '${selector}', '${innerText}')`})
-    } else {
-      block.addLine({ value: `var item = await ${this._frame}.waitFor(waitTillVisible, {}, '${selector}')`})
-    }
-  }
-
   _addWaitForSelector(block, selector) {
-    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
-    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
+    block.addLine({ type: domEvents.CLICK, value: `var item = await ${this._frame}.waitForSelector('${selector}', {visible: ${this._options.waitTillVisible}})` })
+    block.addLine({ type: domEvents.CLICK, value: `await item.asElement().click('${selector}')` })
   }
 
   _handleKeyDown (selector, value) {
     const block = new Block(this._frameId)
-    this._addWaitTillVisible(block, selector)
+    block.addLine({ value: `var item = await ${this._frame}.waitForSelector('${selector}', {visible: ${this._options.waitTillVisible}})` })
     block.addLine({ value: `await item.asElement().type('${value}')`})
     return block
   }
@@ -206,12 +191,10 @@ export default class CodeGenerator {
   _handleClick (selector) {
     const block = new Block(this._frameId)
     if (this._options.waitForSelectorOnClick) {
-      this._addWaitForSelector(block, selector)
-    } else if (this._options.waitTillVisibleOnClick) {
-      this._addWaitTillVisible(block, selector)
-      block.addLine({ value: `await item.asElement().click()`})
-    }else {
-      block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
+      block.addLine({ value: `var item = await ${this._frame}.waitForSelector('${selector}', {visible: ${this._options.waitTillVisible}})` })
+      block.addLine({ value: `await item.asElement().click('${selector}')` })
+    } else {
+      block.addLine({ value: `await ${this._frame}.click('${selector}')` })
     }
     return block
   }

@@ -39,8 +39,8 @@
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-waitTillVisibleOnClick" type="checkbox" v-model="options.code.waitTillVisibleOnClick" @change="save">
-                add <code>waitTillVisible</code> lines before every <code>page.click()</code>
+                <input id="options-code-waitTillVisible" type="checkbox" v-model="options.code.waitTillVisible" @change="save">
+                 <code>waitForSelector</code> will also wait till the element is considered visible
               </label>
             </div>
             <div class="settings-group">
@@ -51,7 +51,7 @@
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-addWait" type="textbox" v-model="options.code.addWait" @change="save">
+                <input id="options-code-wait" type="textbox" v-model="options.code.wait" @change="save">
                 the timeout value for <code>page.waitFor(timeout)</code>
               </label>
             </div>

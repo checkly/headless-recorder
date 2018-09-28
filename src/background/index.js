@@ -18,14 +18,19 @@ class RecordingController {
         if (msg.action && msg.action === 'cleanUp') this.cleanUp()
         if (msg.action && msg.action === 'pause') this.pause()
         if (msg.action && msg.action === 'unpause') this.unPause()
-        if (msg.action && msg.action === 'add-wait') this.addWait()
+        if (msg.action && msg.action === 'wait') this.wait()
+        if (msg.action && msg.action === 'wait-for') this.waitFor()
         if (msg.action && msg.action === 'text-click') this.textClick()
       })
     })
   }
 
-  addWait(){
-    this.handleMessage({ action: pptrActions.ADD_WAIT });
+  wait(){
+    this.handleMessage({ action: pptrActions.WAIT });
+  }
+
+  waitFor() {
+    this.handleMessage({ action: pptrActions.WAIT_FOR });
   }
 
   textClick(){
