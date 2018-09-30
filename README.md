@@ -59,4 +59,4 @@ Puppeteer recorder is the spiritual successor & love child of segment.io's
 [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder).
 
 ## License
-MIT
+Apache 2
