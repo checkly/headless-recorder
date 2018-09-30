@@ -70,12 +70,16 @@ class EventRecorder {
 
     const msg = {
       selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
+      altKey: e.altKey,
+      shiftKey: e.shiftKey,
+      ctrlKey: e.ctrlKey,
       value: e.target.value,
       tagName: e.target.tagName,
       action: e.type,
       keyCode: e.keyCode ? e.keyCode : null,
       href: e.target.href ? e.target.href : null,
-      coordinates: getCoordinates(e)
+      coordinates: getCoordinates(e),
+      innerText: e.target.innerText
     }
     this.sendMessage(msg)
   }

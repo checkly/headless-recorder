@@ -18,8 +18,23 @@ class RecordingController {
         if (msg.action && msg.action === 'cleanUp') this.cleanUp()
         if (msg.action && msg.action === 'pause') this.pause()
         if (msg.action && msg.action === 'unpause') this.unPause()
+        if (msg.action && msg.action === 'wait') this.wait()
+        if (msg.action && msg.action === 'wait-for') this.waitFor()
+        if (msg.action && msg.action === 'text-click') this.textClick()
       })
     })
+  }
+
+  wait(){
+    this.handleMessage({ action: pptrActions.WAIT });
+  }
+
+  waitFor() {
+    this.handleMessage({ action: pptrActions.WAIT_FOR });
+  }
+
+  textClick(){
+    this.handleMessage({ action: pptrActions.TEXT_CLICK });
   }
 
   start () {
@@ -91,6 +106,7 @@ class RecordingController {
   recordCurrentUrl (href) {
     console.debug('recording goto* for:', href)
     this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.GOTO, href })
+    this.handleMessage({ action: pptrActions.SET_LOCAL_STORAGE })
   }
 
   recordCurrentViewportSize (value) {
@@ -103,7 +119,6 @@ class RecordingController {
 
   handleMessage (msg, sender) {
     if (msg.control) return this.handleControlMessage(msg, sender)
-
     // to account for clicks etc. we need to record the frameId and url to later target the frame in playback
     msg.frameId = sender ? sender.frameId : null
     msg.frameUrl = sender ? sender.url : null

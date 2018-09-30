@@ -29,6 +29,17 @@
           </button>
           <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
         </div>
+        <div class="recording-footer" v-show="isRecording">
+          <button class="btn btn-sm btn-primary" @click="wait" v-show="isRecording">
+            {{waitButtonText}}
+          </button>
+          <button class="btn btn-sm btn-primary" @click="waitFor" v-show="isRecording">
+            {{waitForButtonText}}
+          </button>
+          <button class="btn btn-sm btn-primary" @click="textClick" v-show="isRecording">
+            {{textClickButtonText}}
+          </button>
+        </div>
         <ResultsTab :code="code" :copy-link-text="copyLinkText" :restart="restart" :set-copying="setCopying" v-show="showResultsTab"/>
         <div class="results-footer" v-show="showResultsTab">
           <button class="btn btn-sm btn-primary" @click="restart" v-show="code">Restart</button>
@@ -99,6 +110,18 @@
           this.isPaused = true
         }
         this.storeState()
+      },
+      wait () {
+        console.debug('adding wait')
+        this.bus.postMessage({ action: 'wait' })
+      },
+      waitFor () {
+        console.debug('wait for')
+        this.bus.postMessage({ action: 'wait-for' })
+      },
+      textClick() {
+        console.debug('text click')
+        this.bus.postMessage({ action: 'text-click' })
       },
       start () {
         this.cleanUp()
@@ -179,6 +202,15 @@
       },
       recordButtonText () {
         return this.isRecording ? 'Stop' : 'Record'
+      },
+      waitForButtonText () {
+        return 'Wait For'
+      },
+      waitButtonText () {
+        return 'Wait'
+      },
+      textClickButtonText () {
+        return 'Text Click'
       },
       pauseButtonText () {
         return this.isPaused ? 'Resume' : 'Pause'

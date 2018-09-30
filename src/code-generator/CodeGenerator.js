@@ -5,11 +5,13 @@ import Block from './Block'
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
 const header = `const browser = await puppeteer.launch()
-const page = await browser.newPage()`
+const page = await browser.newPage()\n`
 
 const footer = `await browser.close()`
 
-const wrappedHeader = `(async () => {
+const asyncOpener = `(async () => {\n`
+
+const wrappedHeader = asyncOpener + `
   const browser = await puppeteer.launch()
   const page = await browser.newPage()\n`
 
@@ -21,7 +23,12 @@ export const defaults = {
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true
+  waitTillVisible: false,
+  blankLinesBetweenBlocks: true,
+  wait: 2000,
+  typingTerminator: 9,
+  cookies: "[]",
+  localStorage: "{}"
 }
 
 export default class CodeGenerator {
@@ -38,10 +45,22 @@ export default class CodeGenerator {
     return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
+  addCookies(){
+    let script = ""
+    let spacing = this._options.wrapAsync ? "  " : "";
+    var cookies = JSON.parse(this._options.cookies)
+    for (var key in cookies) {
+      var keyValue = JSON.stringify(cookies[key])
+      script = script + spacing + `await page.setCookie(${keyValue})\n`
+    }
+    return script;
+  }
+
   _getHeader () {
     console.debug(this._options)
     let hdr = this._options.wrapAsync ? wrappedHeader : header
     hdr = this._options.headless ? hdr : hdr.replace('launch()', 'launch({ headless: false })')
+    hdr = hdr + this.addCookies();
     return hdr
   }
 
@@ -54,27 +73,35 @@ export default class CodeGenerator {
     let result = ''
 
     for (let i = 0; i < events.length; i++) {
-      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
-
+      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl, altKey, ctrlKey, innerText } = events[i]
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
 
       switch (action) {
         case 'keydown':
-          if (keyCode === 9) {
+          if (keyCode == this._options.typingTerminator) {
             this._blocks.push(this._handleKeyDown(selector, value, keyCode))
+          }
+          if (keyCode == 13) {
+            this._blocks.push(this._handleEnter(selector))
           }
           break
         case 'click':
           const next = i + 1
+          const previous = i - 1
           if (events[next] && events[next].action === 'navigation*' && this._options.waitForNavigation && !this._navigationPromiseSet) {
             const block = new Block(this._frameId)
             block.addLine({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
             this._blocks.push(block)
             this._navigationPromiseSet = true
           }
-
-          this._blocks.push(this._handleClick(selector, events))
+          if(events[previous] && events[previous].action == 'text-click*'){
+            this._blocks.push(this._handleClickText(tagName, innerText))
+          } else if(events[previous] && events[previous].action == 'wait-for*'){
+            this._blocks.push(this._handleWaitFor(tagName, innerText))
+          } else {
+            this._blocks.push(this._handleClick(selector))
+          }
           break
         case 'change':
           if (tagName === 'SELECT') {
@@ -89,6 +116,12 @@ export default class CodeGenerator {
           break
         case 'navigation*':
           this._blocks.push(this._handleWaitForNavigation())
+          break
+        case 'wait*':
+          this._blocks.push(this._handleAddWait(this._options.wait))
+          break
+        case 'set-local-storage*':
+          this._blocks.push(this._handleSetLocalStorage())
           break
       }
     }
@@ -135,18 +168,67 @@ export default class CodeGenerator {
     }
   }
 
+  _handleSetLocalStorage() {
+    const block = new Block(this._frameId)
+    let script = ""
+    let spacing = this._options.wrapAsync ? "  " : "";
+    var storage = JSON.parse(this._options.localStorage)
+    if(Object.keys(storage).length > 0){
+      block.addLine({ value: `await page.evaluate(() => {`})
+      for (var key in storage) {
+        var keyValue = storage[key]
+        block.addLine({ value: `  localStorage.setItem("${key}", "${keyValue}")`})
+      }
+      block.addLine({ value: `})`})
+    }
+    return block
+  }
+
+  _handleAddWait(period) {
+    const block = new Block(this._frameId)
+    block.addLine({ value: `await page.waitFor(${period});`})
+    return block
+  }
+
+  _handleClickText(tagName, innerText) {
+    const block = new Block(this._frameId)
+    block.addLine({ value: `var item = await ${this._frame}.waitForXPath('//${tagName}[normalize-space() = "${innerText}"]', {visible: ${this._options.waitTillVisible}})`})
+    block.addLine({ value: `await item.asElement().click()`})
+    return block
+  }
+
+  _handleWaitFor(tagName, innerText) {
+    const block = new Block(this._frameId)
+    block.addLine({ value: `var item = await ${this._frame}.waitForXPath('//${tagName}[normalize-space() = "${innerText}"]', {visible: ${this._options.waitTillVisible}})`})
+    return block
+  }
+
+  _handleEnter(selector) {
+    const block = new Block(this._frameId)
+    block.addLine({value: `await page.keyboard.press('Enter');`})
+    return block
+  }
+
+  _addWaitForSelector(block, selector) {
+    block.addLine({ type: domEvents.CLICK, value: `var item = await ${this._frame}.waitForSelector('${selector}', {visible: ${this._options.waitTillVisible}})` })
+    block.addLine({ type: domEvents.CLICK, value: `await item.asElement().click('${selector}')` })
+  }
+
   _handleKeyDown (selector, value) {
     const block = new Block(this._frameId)
-    block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
+    block.addLine({ value: `var item = await ${this._frame}.waitForSelector('${selector}', {visible: ${this._options.waitTillVisible}})` })
+    block.addLine({ value: `await item.asElement().type('${value}')`})
     return block
   }
 
   _handleClick (selector) {
     const block = new Block(this._frameId)
     if (this._options.waitForSelectorOnClick) {
-      block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.waitForSelector('${selector}')` })
+      block.addLine({ value: `var item = await ${this._frame}.waitForSelector('${selector}', {visible: ${this._options.waitTillVisible}})` })
+      block.addLine({ value: `await item.asElement().click('${selector}')` })
+    } else {
+      block.addLine({ value: `await ${this._frame}.click('${selector}')` })
     }
-    block.addLine({ type: domEvents.CLICK, value: `await ${this._frame}.click('${selector}')` })
     return block
   }
   _handleChange (selector, value) {

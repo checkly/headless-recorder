@@ -39,8 +39,38 @@
             </div>
             <div class="settings-group">
               <label>
+                <input id="options-code-waitTillVisible" type="checkbox" v-model="options.code.waitTillVisible" @change="save">
+                 <code>waitForSelector</code> will also wait till the element is considered visible
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
                 <input id="options-code-blankLinesBetweenBlocks" type="checkbox" v-model="options.code.blankLinesBetweenBlocks" @change="save">
                 add blank lines between code blocks
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-wait" type="textbox" v-model="options.code.wait" @change="save">
+                the timeout value for <code>page.waitFor(timeout)</code>
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-typingTerminator" type="textbox" v-model="options.code.typingTerminator" @change="save">
+                the keycode that indicates that the user is done typing and emit the <code>type()</code> instruction
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <textarea id="options-code-cookies" v-model="options.code.cookies" @change="save"></textarea>
+                a json value that defines the cookies to add to the page.
+              </label>
+            </div>
+            <div class="settings-group">
+              <label>
+                <textarea id="options-code-localStorage" v-model="options.code.localStorage" @change="save"></textarea>
+                a json value that defines the local storage values to add to the page.
               </label>
             </div>
           </div>
