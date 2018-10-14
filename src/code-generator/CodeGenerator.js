@@ -31,7 +31,8 @@ export default class CodeGenerator {
     this._frame = 'page'
     this._frameId = 0
     this._allFrames = {}
-    this._navigationPromiseSet = false
+
+    this._hasNavigation = false
   }
 
   generate (events) {
@@ -66,14 +67,6 @@ export default class CodeGenerator {
           }
           break
         case 'click':
-          const next = i + 1
-          if (events[next] && events[next].action === 'navigation*' && this._options.waitForNavigation && !this._navigationPromiseSet) {
-            const block = new Block(this._frameId)
-            block.addLine({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
-            this._blocks.push(block)
-            this._navigationPromiseSet = true
-          }
-
           this._blocks.push(this._handleClick(selector, events))
           break
         case 'change':
@@ -89,10 +82,18 @@ export default class CodeGenerator {
           break
         case 'navigation*':
           this._blocks.push(this._handleWaitForNavigation())
+          this._hasNavigation = true
           break
       }
     }
 
+    if (this._hasNavigation && this._options.waitForNavigation) {
+      console.debug('Adding navigationPromise declaration')
+      const block = new Block(this._frameId, { type: pptrActions.NAVIGATION_PROMISE, value: 'const navigationPromise = page.waitForNavigation()' })
+      this._blocks.unshift(block)
+    }
+
+    console.debug('post processing blocks:', this._blocks)
     this._postProcess()
 
     const indent = this._options.wrapAsync ? '  ' : ''
@@ -120,11 +121,6 @@ export default class CodeGenerator {
   }
 
   _postProcess () {
-    // we want to create only one navigationPromise
-    if (this._options.waitForNavigation && !this._navigationPromiseSet) {
-      this._postProcessWaitForNavigation()
-    }
-
     // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
     if (Object.keys(this._allFrames).length > 0) {
       this._postProcessSetFrames()
@@ -166,18 +162,6 @@ export default class CodeGenerator {
       block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
     }
     return block
-  }
-
-  _postProcessWaitForNavigation () {
-    for (let [i, block] of this._blocks.entries()) {
-      const lines = block.getLines()
-      for (let line of lines) {
-        if (line.type === pptrActions.NAVIGATION) {
-          this._blocks[i].addLineToTop({type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation()`})
-          return
-        }
-      }
-    }
   }
 
   _postProcessSetFrames () {
