@@ -41,15 +41,13 @@
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation"
-                       @change="save">
+                <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation" @change="save">
                 add <code>waitForNavigation</code> lines on navigation
               </label>
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-waitForSelectorOnClick" type="checkbox"
-                       v-model="options.code.waitForSelectorOnClick" @change="save">
+                <input id="options-code-waitForSelectorOnClick" type="checkbox" v-model="options.code.waitForSelectorOnClick" @change="save">
                 add <code>waitForSelector</code> lines before every <code>page.click()</code>
               </label>
             </div>
@@ -74,7 +72,7 @@
 </template>
 
 <script>
-  import {defaults as code} from '../../code-generator/CodeGenerator'
+  import { defaults as code } from '../../code-generator/CodeGenerator'
 
   const defaults = {
     code
@@ -95,7 +93,7 @@
     methods: {
       save () {
         this.saving = true
-        this.$chrome.storage.local.set({options: this.options}, () => {
+        this.$chrome.storage.local.set({ options: this.options }, () => {
           console.debug('saved options')
           setTimeout(() => {
             this.saving = false
