@@ -15,8 +15,7 @@
           <div class="settings-block-main">
             <div class="settings-group">
               <label>
-                <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save"
-                       placeholder="Custom data-id selector">
+                <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save" placeholder="Custom data-id selector">
                 Define a data-id attribute that we'll attempt to use when selecting the elements.
               </label>
             </div>
@@ -53,8 +52,7 @@
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-blankLinesBetweenBlocks" type="checkbox"
-                       v-model="options.code.blankLinesBetweenBlocks" @change="save">
+                <input id="options-code-blankLinesBetweenBlocks" type="checkbox" v-model="options.code.blankLinesBetweenBlocks" @change="save">
                 add blank lines between code blocks
               </label>
             </div>
@@ -101,7 +99,7 @@
         })
       },
       load () {
-        this.$chrome.storage.local.get('options', ({options}) => {
+        this.$chrome.storage.local.get('options', ({ options }) => {
           if (options) {
             console.debug('loaded options', JSON.stringify(options))
             this.options = options

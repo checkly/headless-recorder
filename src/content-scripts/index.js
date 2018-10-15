@@ -88,7 +88,6 @@ class EventRecorder {
       href: e.target.href ? e.target.href : null,
       coordinates: getCoordinates(e)
     }
-
     this.sendMessage(msg)
   }
 
