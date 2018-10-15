@@ -10,6 +10,20 @@
       <div class="content" v-if="!loading">
         <div class="settings-block">
           <h4 class="settings-block-title">
+            Code Recorder settings
+          </h4>
+          <div class="settings-block-main">
+            <div class="settings-group">
+              <label>
+                <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save"
+                       placeholder="Custom data-id selector">
+                Define a data-id attribute that we'll attempt to use when selecting the elements.
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h4 class="settings-block-title">
             Code Generator settings
           </h4>
           <div class="settings-block-main">
@@ -27,19 +41,22 @@
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation" @change="save">
+                <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation"
+                       @change="save">
                 add <code>waitForNavigation</code> lines on navigation
               </label>
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-waitForSelectorOnClick" type="checkbox" v-model="options.code.waitForSelectorOnClick" @change="save">
+                <input id="options-code-waitForSelectorOnClick" type="checkbox"
+                       v-model="options.code.waitForSelectorOnClick" @change="save">
                 add <code>waitForSelector</code> lines before every <code>page.click()</code>
               </label>
             </div>
             <div class="settings-group">
               <label>
-                <input id="options-code-blankLinesBetweenBlocks" type="checkbox" v-model="options.code.blankLinesBetweenBlocks" @change="save">
+                <input id="options-code-blankLinesBetweenBlocks" type="checkbox"
+                       v-model="options.code.blankLinesBetweenBlocks" @change="save">
                 add blank lines between code blocks
               </label>
             </div>
@@ -57,7 +74,7 @@
 </template>
 
 <script>
-  import { defaults as code } from '../../code-generator/CodeGenerator'
+  import {defaults as code} from '../../code-generator/CodeGenerator'
 
   const defaults = {
     code
@@ -78,7 +95,7 @@
     methods: {
       save () {
         this.saving = true
-        this.$chrome.storage.local.set({ options: this.options }, () => {
+        this.$chrome.storage.local.set({options: this.options}, () => {
           console.debug('saved options')
           setTimeout(() => {
             this.saving = false
@@ -86,7 +103,7 @@
         })
       },
       load () {
-        this.$chrome.storage.local.get('options', ({ options }) => {
+        this.$chrome.storage.local.get('options', ({options}) => {
           if (options) {
             console.debug('loaded options', JSON.stringify(options))
             this.options = options
@@ -159,6 +176,16 @@
             margin-bottom: $spacer;
             display: block;
           }
+        }
+        input[type="text"] {
+          margin-bottom: 10px;
+          width: 100%;
+          border: 1px solid $gray-light;
+          padding-left: 15px;
+          height: 38px;
+          font-size: 14px;
+          border-radius: 10px;
+          -webkit-box-sizing: border-box;
         }
       }
     }

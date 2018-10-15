@@ -21,7 +21,8 @@ export const defaults = {
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true
+  blankLinesBetweenBlocks: true,
+  dataAttribute: ''
 }
 
 export default class CodeGenerator {
