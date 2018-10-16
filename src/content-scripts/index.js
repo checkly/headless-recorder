@@ -75,7 +75,7 @@ class EventRecorder {
     if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
     this.previousEvent = e
 
-    const selector = e.target.hasAttribute(this.dataAttribute)
+    const selector = e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
       ? formatDataSelector(e.target, this.dataAttribute)
       : finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 })
 
