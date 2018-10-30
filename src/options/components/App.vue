@@ -10,6 +10,19 @@
       <div class="content" v-if="!loading">
         <div class="settings-block">
           <h4 class="settings-block-title">
+            Code Recorder settings
+          </h4>
+          <div class="settings-block-main">
+            <div class="settings-group">
+              <label>
+                <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save" placeholder="Custom data-id selector">
+                Define a data-id attribute that we'll attempt to use when selecting the elements.
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h4 class="settings-block-title">
             Code Generator settings
           </h4>
           <div class="settings-block-main">
@@ -159,6 +172,16 @@
             margin-bottom: $spacer;
             display: block;
           }
+        }
+        input[type="text"] {
+          margin-bottom: 10px;
+          width: 100%;
+          border: 1px solid $gray-light;
+          padding-left: 15px;
+          height: 38px;
+          font-size: 14px;
+          border-radius: 10px;
+          -webkit-box-sizing: border-box;
         }
       }
     }
