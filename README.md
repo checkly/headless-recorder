@@ -15,6 +15,7 @@ This project is pretty fresh, but does the following already:
 - Shows which events are being recorded.
 - Copy to clipboard.
 - Offers configuration options.
+- Allows data-id configuration for element selection.
 
 > Note: we only record clicks etc. on a handful of elements, see the `elements-to-bind-to.js` and `dom-events-to-record.js` files in the code-generator folder for which events. This collection will be expanded in future releases.
 

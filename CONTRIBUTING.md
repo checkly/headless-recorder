@@ -1,9 +1,15 @@
 # Contributing
 
-Thanks you for your interest in Puppeteer Recorder! We'd love to accept your patches and contributions, but please remember that this project
-was started first an foremost to serve the users of the Checkly API and Site transaction monitoring service.
+HI! Thanks you for your interest in Puppeteer Recorder! We'd love to accept your patches and contributions, but please remember that this project was started first and foremost to serve the users of the Checkly API and Site transaction monitoring service.
 
-## Getting setup
+## New feature guidelines
+
+When authoring new features or extending existing ones, consider the following:
+- All new features should be accompanied first with a Github issues describing the feature and its necessity.
+- We aim for simplicity. Too many options, buttons, panels etc. detract from that.
+- Features should serve the general public. Very specific things for your use case are frowned upon.
+
+## Getting set up
 
 1. Clone this repository
 
@@ -37,14 +43,6 @@ To run code linter, use:
 ```bash
 npm run lint
 ```
-
-## Feature guidelines
-
-When authoring new features methods, consider the following:
-- All new features should be accompanied first with a Github issues describing the feature and its necessity.
-- We aim for simplicity. Too many options, buttons, panel etc. detract from that.
-- Features should serve the general public. Very specific things for your usecase only are not that.
-
 ## Commit Messages
 
 Commit messages should follow the Semantic Commit Messages format:

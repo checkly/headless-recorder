@@ -7,7 +7,7 @@ let server
 let browser
 let page
 
-describe('forms', () => {
+describe.skip('forms', () => {
   const tab = 1
   const change = 1
   test('it should load the form', async () => {

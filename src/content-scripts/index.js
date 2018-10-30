@@ -9,23 +9,30 @@ class EventRecorder {
   }
 
   start () {
-    const events = Object.values(eventsToRecord)
-    if (!window.pptRecorderAddedControlListeners) {
-      this.addAllListeners(elementsToBindTo, events)
-      window.pptRecorderAddedControlListeners = true
-    }
+    chrome.storage.local.get(['options'], ({ options }) => {
+      const {dataAttribute} = options ? options.code : {}
+      if (dataAttribute) {
+        this.dataAttribute = dataAttribute
+      }
 
-    if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-      const boundedGetCurrentUrl = this.getCurrentUrl.bind(this)
-      const boundedGetViewPortSize = this.getViewPortSize.bind(this)
-      chrome.runtime.onMessage.addListener(boundedGetCurrentUrl)
-      chrome.runtime.onMessage.addListener(boundedGetViewPortSize)
-      window.document.pptRecorderAddedControlListeners = true
-    }
+      const events = Object.values(eventsToRecord)
+      if (!window.pptRecorderAddedControlListeners) {
+        this.addAllListeners(elementsToBindTo, events)
+        window.pptRecorderAddedControlListeners = true
+      }
 
-    const msg = { control: 'event-recorder-started' }
-    this.sendMessage(msg)
-    console.debug('Puppeteer Recorder in-page EventRecorder started')
+      if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
+        const boundedGetCurrentUrl = this.getCurrentUrl.bind(this)
+        const boundedGetViewPortSize = this.getViewPortSize.bind(this)
+        chrome.runtime.onMessage.addListener(boundedGetCurrentUrl)
+        chrome.runtime.onMessage.addListener(boundedGetViewPortSize)
+        window.document.pptRecorderAddedControlListeners = true
+      }
+
+      const msg = { control: 'event-recorder-started' }
+      this.sendMessage(msg)
+      console.debug('Puppeteer Recorder in-page EventRecorder started')
+    })
   }
 
   addAllListeners (elements, events) {
@@ -68,8 +75,12 @@ class EventRecorder {
     if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
     this.previousEvent = e
 
+    const selector = e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
+      ? formatDataSelector(e.target, this.dataAttribute)
+      : finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 })
+
     const msg = {
-      selector: finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 }),
+      selector: selector,
       value: e.target.value,
       tagName: e.target.tagName,
       action: e.type,
@@ -97,6 +108,10 @@ function getCoordinates (evt) {
     mouseover: true
   }
   return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null
+}
+
+function formatDataSelector (element, attribute) {
+  return `[${attribute}=${element.getAttribute(attribute)}]`
 }
 
 window.eventRecorder = new EventRecorder()
