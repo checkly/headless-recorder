@@ -14,10 +14,10 @@
           </h4>
           <div class="settings-block-main">
             <div class="settings-group">
-              <label>
-                <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save" placeholder="Custom data-id selector">
-                Define a data-id attribute that we'll attempt to use when selecting the elements.
-              </label>
+              <label class="settings-label">custom data attribute</label>
+              <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save" placeholder="your custom data-* attribute">
+              <small>Define a <code>data-*</code> attribute that we'll attempt to use when selecting the elements. This is handy
+                when React or Vue based apps generate random class names.</small>
             </div>
           </div>
         </div>
@@ -159,6 +159,15 @@
       }
 
       .settings-block {
+
+        .settings-label {
+          display: block;
+          text-transform: uppercase;
+          font-size: .75rem;
+          font-weight: 500;
+          margin-bottom: $spacer;
+        }
+
         .settings-block-title {
           margin: 0;
           padding-bottom: $spacer;
