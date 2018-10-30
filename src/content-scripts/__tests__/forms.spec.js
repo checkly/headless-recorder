@@ -8,6 +8,32 @@ let browser
 let page
 
 describe.skip('forms', () => {
+
+  beforeAll(async (done) => {
+    await runDist()
+    const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
+    const fixture = './fixtures/forms.html'
+    server = await startServer(buildDir, fixture)
+    return done()
+  }, 20000)
+
+  afterAll(done => {
+    server.close(() => {
+      return done()
+    })
+  })
+
+  beforeEach(async () => {
+    browser = await launchPuppeteerWithExtension(puppeteer)
+    page = await browser.newPage()
+    await page.goto('http://localhost:3000/')
+    await cleanEventLog(page)
+  })
+
+  afterEach(async () => {
+    browser.close()
+  })
+
   const tab = 1
   const change = 1
   test('it should load the form', async () => {
@@ -57,29 +83,4 @@ describe.skip('forms', () => {
     expect(eventLog[0].value).toEqual('checkbox1')
     expect(eventLog[2].value).toEqual('checkbox2')
   })
-})
-
-beforeAll(async (done) => {
-  await runDist()
-  const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
-  const fixture = './fixtures/forms.html'
-  server = await startServer(buildDir, fixture)
-  return done()
-}, 20000)
-
-afterAll(done => {
-  server.close(() => {
-    return done()
-  })
-})
-
-beforeEach(async () => {
-  browser = await launchPuppeteerWithExtension(puppeteer)
-  page = await browser.newPage()
-  await page.goto('http://localhost:3000/')
-  await cleanEventLog(page)
-})
-
-afterEach(async () => {
-  browser.close()
 })

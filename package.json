@@ -1,6 +1,6 @@
 {
   "name": "puppeteer-recorder",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A Chrome extension for recording browser interaction and generating Puppeteer scripts",
   "main": "index.js",
   "scripts": {
