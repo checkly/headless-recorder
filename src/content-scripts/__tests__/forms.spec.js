@@ -7,7 +7,7 @@ let server
 let browser
 let page
 
-describe.skip('forms', () => {
+describe('forms', () => {
 
   beforeAll(async (done) => {
     await runDist()

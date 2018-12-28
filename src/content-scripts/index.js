@@ -6,33 +6,42 @@ class EventRecorder {
   constructor () {
     this.eventLog = []
     this.previousEvent = null
+    this.dataAttribute = null
   }
 
   start () {
-    chrome.storage.local.get(['options'], ({ options }) => {
-      const {dataAttribute} = options ? options.code : {}
-      if (dataAttribute) {
-        this.dataAttribute = dataAttribute
-      }
+    // We need to check the existence of chrome for testing purposes
+    if (chrome.storage && chrome.storage.local) {
+      chrome.storage.local.get(['options'], ({options}) => {
+        const { dataAttribute } = options ? options.code : {}
+        if (dataAttribute) {
+          this.dataAttribute = dataAttribute
+        }
+        this._initializeRecorder()
+      })
+    } else {
+      this._initializeRecorder()
+    }
+  }
 
-      const events = Object.values(eventsToRecord)
-      if (!window.pptRecorderAddedControlListeners) {
-        this.addAllListeners(elementsToBindTo, events)
-        window.pptRecorderAddedControlListeners = true
-      }
+  _initializeRecorder () {
+    const events = Object.values(eventsToRecord)
+    if (!window.pptRecorderAddedControlListeners) {
+      this.addAllListeners(elementsToBindTo, events)
+      window.pptRecorderAddedControlListeners = true
+    }
 
-      if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-        const boundedGetCurrentUrl = this.getCurrentUrl.bind(this)
-        const boundedGetViewPortSize = this.getViewPortSize.bind(this)
-        chrome.runtime.onMessage.addListener(boundedGetCurrentUrl)
-        chrome.runtime.onMessage.addListener(boundedGetViewPortSize)
-        window.document.pptRecorderAddedControlListeners = true
-      }
+    if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
+      const boundedGetCurrentUrl = this.getCurrentUrl.bind(this)
+      const boundedGetViewPortSize = this.getViewPortSize.bind(this)
+      chrome.runtime.onMessage.addListener(boundedGetCurrentUrl)
+      chrome.runtime.onMessage.addListener(boundedGetViewPortSize)
+      window.document.pptRecorderAddedControlListeners = true
+    }
 
-      const msg = { control: 'event-recorder-started' }
-      this.sendMessage(msg)
-      console.debug('Puppeteer Recorder in-page EventRecorder started')
-    })
+    const msg = { control: 'event-recorder-started' }
+    this.sendMessage(msg)
+    console.debug('Puppeteer Recorder in-page EventRecorder started')
   }
 
   addAllListeners (elements, events) {
