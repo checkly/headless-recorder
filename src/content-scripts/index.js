@@ -120,7 +120,7 @@ function getCoordinates (evt) {
 }
 
 function formatDataSelector (element, attribute) {
-  return `[${attribute}=${element.getAttribute(attribute)}]`
+  return `[${attribute}="${element.getAttribute(attribute)}"]`
 }
 
 window.eventRecorder = new EventRecorder()
