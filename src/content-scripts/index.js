@@ -1,5 +1,4 @@
 import eventsToRecord from '../code-generator/dom-events-to-record'
-import elementsToBindTo from '../code-generator/elements-to-bind-to'
 import finder from '@medv/finder'
 
 class EventRecorder {
@@ -17,7 +16,7 @@ class EventRecorder {
 
       const events = Object.values(eventsToRecord)
       if (!window.pptRecorderAddedControlListeners) {
-        this.addAllListeners(elementsToBindTo, events)
+        this.addAllListeners(events)
         window.pptRecorderAddedControlListeners = true
       }
 
@@ -35,7 +34,7 @@ class EventRecorder {
     })
   }
 
-  addAllListeners (elements, events) {
+  addAllListeners (events) {
     const boundedRecordEvent = this.recordEvent.bind(this)
     events.forEach(type => {
       window.addEventListener(type, boundedRecordEvent, true)
