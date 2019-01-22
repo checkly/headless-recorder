@@ -35,8 +35,7 @@ class EventRecorder {
       window.document.pptRecorderAddedControlListeners = true
     }
 
-    const msg = { control: 'event-recorder-started' }
-    this.sendMessage(msg)
+    this.sendMessage({ control: 'event-recorder-started' })
     this.sendMessage({ control: 'get-current-url', href: window.location.href })
     this.sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
     console.debug('Puppeteer Recorder in-page EventRecorder started')
