@@ -12,6 +12,7 @@ class RecordingController {
 
   boot () {
     chrome.extension.onConnect.addListener(port => {
+      console.debug('listeners connected')
       port.onMessage.addListener(msg => {
         if (msg.action && msg.action === 'start') this.start()
         if (msg.action && msg.action === 'stop') this.stop()
@@ -29,6 +30,7 @@ class RecordingController {
       this.injectScript()
 
       chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        console.debug('found tabs', tabs)
         chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' })
         chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' })
       })
