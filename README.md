@@ -30,7 +30,7 @@ This project is pretty fresh, but does the following already:
 
 Writing Puppeteer scripts for scraping, testing and monitoring can be tricky. A recorder / code generator can be helpful,
 even if the code isn't perfect. This project builds on other projects (see [disclaimer](#user-content-credits--disclaimer) 
-below) but add extensibility, configurability and a smoother UI.
+below) but adds extensibility, configurability and a smoother UI.
 
 ## Development
 
