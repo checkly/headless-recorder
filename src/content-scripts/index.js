@@ -1,5 +1,4 @@
 import eventsToRecord from '../code-generator/dom-events-to-record'
-import elementsToBindTo from '../code-generator/elements-to-bind-to'
 import finder from '@medv/finder'
 
 class EventRecorder {
@@ -41,7 +40,7 @@ class EventRecorder {
     console.debug('Puppeteer Recorder in-page EventRecorder started')
   }
 
-  addAllListeners (elements, events) {
+  addAllListeners (events) {
     const boundedRecordEvent = this.recordEvent.bind(this)
     events.forEach(type => {
       window.addEventListener(type, boundedRecordEvent, true)

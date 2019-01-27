@@ -7,8 +7,8 @@ let server
 let browser
 let page
 
-describe('forms', () => {
 
+describe('forms', () => {
   beforeAll(async (done) => {
     await runDist()
     const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
