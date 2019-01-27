@@ -5,33 +5,39 @@ class EventRecorder {
   constructor () {
     this.eventLog = []
     this.previousEvent = null
+    this.dataAttribute = null
   }
 
   start () {
-    chrome.storage.local.get(['options'], ({ options }) => {
-      const {dataAttribute} = options ? options.code : {}
-      if (dataAttribute) {
-        this.dataAttribute = dataAttribute
-      }
+    // We need to check the existence of chrome for testing purposes
+    if (chrome.storage && chrome.storage.local) {
+      chrome.storage.local.get(['options'], ({options}) => {
+        const { dataAttribute } = options ? options.code : {}
+        if (dataAttribute) {
+          this.dataAttribute = dataAttribute
+        }
+        this._initializeRecorder()
+      })
+    } else {
+      this._initializeRecorder()
+    }
+  }
 
-      const events = Object.values(eventsToRecord)
-      if (!window.pptRecorderAddedControlListeners) {
-        this.addAllListeners(events)
-        window.pptRecorderAddedControlListeners = true
-      }
+  _initializeRecorder () {
+    const events = Object.values(eventsToRecord)
+    if (!window.pptRecorderAddedControlListeners) {
+      this.addAllListeners(elementsToBindTo, events)
+      window.pptRecorderAddedControlListeners = true
+    }
 
-      if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-        const boundedGetCurrentUrl = this.getCurrentUrl.bind(this)
-        const boundedGetViewPortSize = this.getViewPortSize.bind(this)
-        chrome.runtime.onMessage.addListener(boundedGetCurrentUrl)
-        chrome.runtime.onMessage.addListener(boundedGetViewPortSize)
-        window.document.pptRecorderAddedControlListeners = true
-      }
+    if (!window.document.pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
+      window.document.pptRecorderAddedControlListeners = true
+    }
 
-      const msg = { control: 'event-recorder-started' }
-      this.sendMessage(msg)
-      console.debug('Puppeteer Recorder in-page EventRecorder started')
-    })
+    this.sendMessage({ control: 'event-recorder-started' })
+    this.sendMessage({ control: 'get-current-url', href: window.location.href })
+    this.sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
+    console.debug('Puppeteer Recorder in-page EventRecorder started')
   }
 
   addAllListeners (events) {
@@ -56,38 +62,28 @@ class EventRecorder {
     }
   }
 
-  getCurrentUrl (msg) {
-    if (msg.control && msg.control === 'get-current-url') {
-      console.debug('sending current url:', window.location.href)
-      this.sendMessage({ control: msg.control, href: window.location.href })
-    }
-  }
-
-  getViewPortSize (msg) {
-    if (msg.control && msg.control === 'get-viewport-size') {
-      console.debug('sending current viewport size')
-      this.sendMessage({ control: msg.control, coordinates: { width: window.innerWidth, height: window.innerHeight } })
-    }
-  }
-
   recordEvent (e) {
     if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
     this.previousEvent = e
 
-    const selector = e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
-      ? formatDataSelector(e.target, this.dataAttribute)
-      : finder(e.target, { seedMinLength: 5, optimizedMinLength: 10 })
+    // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
+    // for these events we cannot generate selectors, which is OK
+    try {
+      const selector = this.dataAttribute && e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
+        ? formatDataSelector(e.target, this.dataAttribute)
+        : finder(e.target, {seedMinLength: 5, optimizedMinLength: 10})
 
-    const msg = {
-      selector: selector,
-      value: e.target.value,
-      tagName: e.target.tagName,
-      action: e.type,
-      keyCode: e.keyCode ? e.keyCode : null,
-      href: e.target.href ? e.target.href : null,
-      coordinates: getCoordinates(e)
-    }
-    this.sendMessage(msg)
+      const msg = {
+        selector: selector,
+        value: e.target.value,
+        tagName: e.target.tagName,
+        action: e.type,
+        keyCode: e.keyCode ? e.keyCode : null,
+        href: e.target.href ? e.target.href : null,
+        coordinates: getCoordinates(e)
+      }
+      this.sendMessage(msg)
+    } catch (e) {}
   }
 
   getEventLog () {
@@ -110,7 +106,7 @@ function getCoordinates (evt) {
 }
 
 function formatDataSelector (element, attribute) {
-  return `[${attribute}=${element.getAttribute(attribute)}]`
+  return `[${attribute}="${element.getAttribute(attribute)}"]`
 }
 
 window.eventRecorder = new EventRecorder()

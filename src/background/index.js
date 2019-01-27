@@ -8,10 +8,16 @@ class RecordingController {
     this._boundedWaitHandler = null
     this._badgeState = ''
     this._isPaused = false
+
+    // Some events are sent double on page navigations to simplify the event recorder.
+    // We keep some simple state to disregard events if needed.
+    this._hasGoto = false
+    this._hasViewPort = false
   }
 
   boot () {
     chrome.extension.onConnect.addListener(port => {
+      console.debug('listeners connected')
       port.onMessage.addListener(msg => {
         if (msg.action && msg.action === 'start') this.start()
         if (msg.action && msg.action === 'stop') this.stop()
@@ -26,12 +32,11 @@ class RecordingController {
     console.debug('start recording')
     this.cleanUp(() => {
       this._badgeState = 'rec'
-      this.injectScript()
 
-      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-viewport-size' })
-        chrome.tabs.sendMessage(tabs[0].id, { control: 'get-current-url' })
-      })
+      this._hasGoto = false
+      this._hasViewPort = false
+
+      this.injectScript()
 
       this._boundedMessageHandler = this.handleMessage.bind(this)
       this._boundedNavigationHandler = this.handleNavigation.bind(this)
@@ -89,12 +94,18 @@ class RecordingController {
   }
 
   recordCurrentUrl (href) {
-    console.debug('recording goto* for:', href)
-    this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.GOTO, href })
+    if (!this._hasGoto) {
+      console.debug('recording goto* for:', href)
+      this.handleMessage({selector: undefined, value: undefined, action: pptrActions.GOTO, href})
+      this._hasGoto = true
+    }
   }
 
   recordCurrentViewportSize (value) {
-    this.handleMessage({ selector: undefined, value, action: pptrActions.VIEWPORT })
+    if (!this._hasViewPort) {
+      this.handleMessage({selector: undefined, value, action: pptrActions.VIEWPORT})
+      this._hasViewPort = true
+    }
   }
 
   recordNavigation () {
