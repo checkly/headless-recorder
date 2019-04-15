@@ -7,7 +7,6 @@ let server
 let browser
 let page
 
-
 describe('forms', () => {
   beforeAll(async (done) => {
     await runDist()

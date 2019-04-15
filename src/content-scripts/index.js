@@ -6,6 +6,7 @@ class EventRecorder {
     this.eventLog = []
     this.previousEvent = null
     this.dataAttribute = null
+    this.isTopFrame = (window.location === window.parent.location)
   }
 
   start () {
@@ -26,7 +27,7 @@ class EventRecorder {
   _initializeRecorder () {
     const events = Object.values(eventsToRecord)
     if (!window.pptRecorderAddedControlListeners) {
-      this.addAllListeners(elementsToBindTo, events)
+      this.addAllListeners(events)
       window.pptRecorderAddedControlListeners = true
     }
 
@@ -34,10 +35,12 @@ class EventRecorder {
       window.document.pptRecorderAddedControlListeners = true
     }
 
-    this.sendMessage({ control: 'event-recorder-started' })
-    this.sendMessage({ control: 'get-current-url', href: window.location.href })
-    this.sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
-    console.debug('Puppeteer Recorder in-page EventRecorder started')
+    if (this.isTopFrame) {
+      this.sendMessage({ control: 'event-recorder-started' })
+      this.sendMessage({ control: 'get-current-url', href: window.location.href })
+      this.sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
+      console.debug('Puppeteer Recorder in-page EventRecorder started')
+    }
   }
 
   addAllListeners (events) {

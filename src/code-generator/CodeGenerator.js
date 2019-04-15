@@ -63,7 +63,7 @@ export default class CodeGenerator {
 
       switch (action) {
         case 'keydown':
-          if (keyCode === 9) {
+          if (keyCode === 9) { // tab key
             this._blocks.push(this._handleKeyDown(selector, value, keyCode))
           }
           break
