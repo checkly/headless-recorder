@@ -64,7 +64,7 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^23.5.0",
     "jest-vue-preprocessor": "^1.4.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "node-sass": "^4.9.3",
     "pre-commit": "^1.2.2",
     "puppeteer": "^1.7.0",
