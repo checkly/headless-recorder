@@ -43,11 +43,11 @@
 <script>
   import { version } from '../../../package.json'
   import CodeGenerator from '../../code-generator/CodeGenerator'
-  import RecordingTab from "./RecordingTab.vue"
-  import ResultsTab from "./ResultsTab.vue";
-  import HelpTab from "./HelpTab.vue";
+  import RecordingTab from './RecordingTab.vue'
+  import ResultsTab from './ResultsTab.vue'
+  import HelpTab from './HelpTab.vue'
 
-  export default {
+export default {
     name: 'App',
     components: { ResultsTab, RecordingTab, HelpTab },
     data () {
