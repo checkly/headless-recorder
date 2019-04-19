@@ -9,7 +9,7 @@ class EventRecorder {
     this.isTopFrame = (window.location === window.parent.location)
   }
 
-  start () {
+  boot () {
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(['options'], ({options}) => {
@@ -72,9 +72,10 @@ class EventRecorder {
     // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
     // for these events we cannot generate selectors, which is OK
     try {
+      const optimizedMinLength = (e.target.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
       const selector = this.dataAttribute && e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
         ? formatDataSelector(e.target, this.dataAttribute)
-        : finder(e.target, {seedMinLength: 5, optimizedMinLength: 10})
+        : finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength})
 
       const msg = {
         selector: selector,
@@ -113,4 +114,4 @@ function formatDataSelector (element, attribute) {
 }
 
 window.eventRecorder = new EventRecorder()
-window.eventRecorder.start()
+window.eventRecorder.boot()
