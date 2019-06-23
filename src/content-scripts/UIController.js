@@ -1,4 +1,4 @@
-const BORDER_THICKNESS = 4
+const BORDER_THICKNESS = 2
 
 class UIController {
   constructor () {
@@ -59,8 +59,9 @@ class UIController {
       this.outline.style.height = this.dimensions.height + 'px'
     }
   }
-  _mouseup () {
+  _mouseup (e) {
     console.debug('UIController: overlay:', this.overlay)
+    console.debug('UIController: event:', e)
     document.body.removeEventListener('mousemove', this._mousemove, false)
     document.body.removeEventListener('mouseup', this._mouseup, false)
   }
