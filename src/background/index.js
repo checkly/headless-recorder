@@ -1,4 +1,5 @@
 import pptrActions from '../code-generator/pptr-actions'
+import actions from '../models/actions'
 
 class RecordingController {
   constructor () {
@@ -19,12 +20,46 @@ class RecordingController {
     chrome.extension.onConnect.addListener(port => {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === 'start') this.start()
-        if (msg.action && msg.action === 'stop') this.stop()
-        if (msg.action && msg.action === 'cleanUp') this.cleanUp()
-        if (msg.action && msg.action === 'pause') this.pause()
-        if (msg.action && msg.action === 'unpause') this.unPause()
+        if (msg.action && msg.action === actions.start) this.start()
+        if (msg.action && msg.action === actions.start) this.stop()
+        if (msg.action && msg.action === actions.cleanUp) this.cleanUp()
+        if (msg.action && msg.action === actions.pause) this.pause()
+        if (msg.action && msg.action === actions.unPause) this.unPause()
       })
+    })
+
+    /**
+     * Right click menu setup
+     */
+
+    const menuId = 'PUPPETEER_RECORDER_CONTEXT_MENU'
+    const menuOptions = {
+      SCREENSHOT: '_SCREENSHOT'
+    }
+
+    chrome.contextMenus.removeAll()
+
+    // add the parent and its children
+
+    chrome.contextMenus.create({
+      id: menuId,
+      title: 'Puppeteer Recorder',
+      contexts: ['all']
+    })
+
+    chrome.contextMenus.create({
+      id: menuId + menuOptions.SCREENSHOT,
+      title: 'Take screen shot',
+      parentId: menuId,
+      contexts: ['all']
+    })
+
+    // add the handlers
+
+    chrome.contextMenus.onClicked.addListener((info, tab) => {
+      if (info.menuItemId === menuId + menuOptions.SCREENSHOT) {
+        this.toggleScreenShotMode()
+      }
     })
   }
 
@@ -90,6 +125,13 @@ class RecordingController {
     chrome.storage.local.remove('recording', () => {
       console.debug('stored recording cleared')
       if (cb) cb()
+    })
+  }
+
+  toggleScreenShotMode () {
+    console.debug('toggling screenshot mode')
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+      chrome.tabs.sendMessage(tabs[0].id, { action: actions.toggleScreenshotMode })
     })
   }
 

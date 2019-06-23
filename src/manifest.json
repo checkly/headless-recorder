@@ -7,9 +7,11 @@
     "storage",
     "webNavigation",
     "tabs",
+    "contextMenus",
     "*://*/"
   ],
   "icons" : {
+    "16": "images/app_icon_16.png",
     "128": "images/app_icon_128.png"
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
