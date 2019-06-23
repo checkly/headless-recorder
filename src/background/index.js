@@ -21,7 +21,7 @@ class RecordingController {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
         if (msg.action && msg.action === actions.start) this.start()
-        if (msg.action && msg.action === actions.start) this.stop()
+        if (msg.action && msg.action === actions.stop) this.stop()
         if (msg.action && msg.action === actions.cleanUp) this.cleanUp()
         if (msg.action && msg.action === actions.pause) this.pause()
         if (msg.action && msg.action === actions.unPause) this.unPause()
