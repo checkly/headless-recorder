@@ -85,6 +85,9 @@ export default class CodeGenerator {
           this._blocks.push(this._handleWaitForNavigation())
           this._hasNavigation = true
           break
+        case 'screenshot*':
+          this._blocks.push((this._handleScreenshot(value.width, value.height)))
+          break
       }
     }
 
@@ -155,6 +158,10 @@ export default class CodeGenerator {
 
   _handleViewport (width, height) {
     return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
+  }
+
+  _handleScreenshot (width, height) {
+    return new Block(this._frameId, { type: pptrActions.SCREENSHOT, value: `await ${this._frame}.screenshot({ path: 'screenshot.png', width: ${width}, height: ${height} })` })
   }
 
   _handleWaitForNavigation () {

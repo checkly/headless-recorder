@@ -5,6 +5,7 @@ import finder from '@medv/finder'
 
 export default class EventRecorder {
   constructor () {
+    this.boundedMessageListener = null
     this.eventLog = []
     this.previousEvent = null
     this.dataAttribute = null
@@ -32,6 +33,8 @@ export default class EventRecorder {
     const events = Object.values(eventsToRecord)
     if (!window.pptRecorderAddedControlListeners) {
       this.addAllListeners(events)
+      this.boundedMessageListener = this.boundedMessageListener || this.handleBackgroundMessage.bind(this)
+      chrome.runtime.onMessage.addListener(this.boundedMessageListener)
       window.pptRecorderAddedControlListeners = true
     }
 
@@ -45,21 +48,18 @@ export default class EventRecorder {
       this.sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
       console.debug('Puppeteer Recorder in-page EventRecorder started')
     }
+  }
 
-    this.uiController = new UIController()
-
-    // add listener for actions like recording a screen shot and other right clicky things
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-      console.debug('content-script: message from background', msg)
-      if (msg && msg.action) {
-        switch (msg.action) {
-          case actions.toggleScreenshotMode:
-            this.handleScreenshotMode(msg, sender, sendResponse)
-            break
-          default:
-        }
+  handleBackgroundMessage (msg, sender, sendResponse) {
+    console.debug('content-script: message from background', msg)
+    if (msg && msg.action) {
+      switch (msg.action) {
+        case actions.toggleScreenshotMode:
+          this.handleScreenshotMode(msg, sender, sendResponse)
+          break
+        default:
       }
-    })
+    }
   }
 
   addAllListeners (events) {
@@ -117,13 +117,22 @@ export default class EventRecorder {
   }
 
   handleScreenshotMode (msg, sender, sendResponse) {
+    this.uiController = new UIController()
     this.screenShotMode = !this.screenShotMode
+
     console.debug('screenshot mode:', this.screenShotMode)
+
     if (this.screenShotMode) {
-      this.uiController.showScreenshotSelector()
+      this.uiController.showSelector()
     } else {
-      this.uiController.hideScreenshotSelector()
+      this.uiController.hideSelector()
     }
+
+    this.uiController.on('click', e => {
+      console.debug('event-recorder', e)
+      this.screenShotMode = false
+      this.sendMessage({ control: 'screenshot', coordinates: { width: e.innerWidth, height: e.innerHeight } })
+    })
   }
 
   static _getCoordinates (evt) {

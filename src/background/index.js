@@ -7,6 +7,7 @@ class RecordingController {
     this._boundedMessageHandler = null
     this._boundedNavigationHandler = null
     this._boundedWaitHandler = null
+    this._boundedMenuHandler = null
     this._badgeState = ''
     this._isPaused = false
 
@@ -14,6 +15,11 @@ class RecordingController {
     // We keep some simple state to disregard events if needed.
     this._hasGoto = false
     this._hasViewPort = false
+
+    this._menuId = 'PUPPETEER_RECORDER_CONTEXT_MENU'
+    this._menuOptions = {
+      SCREENSHOT: '_SCREENSHOT'
+    }
   }
 
   boot () {
@@ -26,40 +32,6 @@ class RecordingController {
         if (msg.action && msg.action === actions.pause) this.pause()
         if (msg.action && msg.action === actions.unPause) this.unPause()
       })
-    })
-
-    /**
-     * Right click menu setup
-     */
-
-    const menuId = 'PUPPETEER_RECORDER_CONTEXT_MENU'
-    const menuOptions = {
-      SCREENSHOT: '_SCREENSHOT'
-    }
-
-    chrome.contextMenus.removeAll()
-
-    // add the parent and its children
-
-    chrome.contextMenus.create({
-      id: menuId,
-      title: 'Puppeteer Recorder',
-      contexts: ['all']
-    })
-
-    chrome.contextMenus.create({
-      id: menuId + menuOptions.SCREENSHOT,
-      title: 'Take screen shot',
-      parentId: menuId,
-      contexts: ['all']
-    })
-
-    // add the handlers
-
-    chrome.contextMenus.onClicked.addListener((info, tab) => {
-      if (info.menuItemId === menuId + menuOptions.SCREENSHOT) {
-        this.toggleScreenShotMode()
-      }
     })
   }
 
@@ -76,6 +48,7 @@ class RecordingController {
       this._boundedMessageHandler = this.handleMessage.bind(this)
       this._boundedNavigationHandler = this.handleNavigation.bind(this)
       this._boundedWaitHandler = this.handleWait.bind(this)
+      this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
 
       chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
       chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
@@ -84,6 +57,31 @@ class RecordingController {
       chrome.browserAction.setIcon({ path: './images/icon-green.png' })
       chrome.browserAction.setBadgeText({ text: this._badgeState })
       chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
+
+      /**
+       * Right click menu setup
+       */
+
+      chrome.contextMenus.removeAll()
+
+      // add the parent and its children
+
+      chrome.contextMenus.create({
+        id: this._menuId,
+        title: 'Puppeteer Recorder',
+        contexts: ['all']
+      })
+
+      chrome.contextMenus.create({
+        id: this._menuId + this._menuOptions.SCREENSHOT,
+        title: 'Take screenshot',
+        parentId: this._menuId,
+        contexts: ['all']
+      })
+
+      // add the handlers
+
+      chrome.contextMenus.onClicked.addListener(this._boundedMenuHandler)
     })
   }
 
@@ -94,6 +92,7 @@ class RecordingController {
     chrome.runtime.onMessage.removeListener(this._boundedMessageHandler)
     chrome.webNavigation.onCompleted.removeListener(this._boundedNavigationHandler)
     chrome.webNavigation.onBeforeNavigate.removeListener(this._boundedWaitHandler)
+    chrome.contextMenus.onClicked.removeListener(this._boundedMenuHandler)
 
     chrome.browserAction.setIcon({ path: './images/icon-black.png' })
     chrome.browserAction.setBadgeText({text: this._badgeState})
@@ -128,13 +127,6 @@ class RecordingController {
     })
   }
 
-  toggleScreenShotMode () {
-    console.debug('toggling screenshot mode')
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: actions.toggleScreenshotMode })
-    })
-  }
-
   recordCurrentUrl (href) {
     if (!this._hasGoto) {
       console.debug('recording goto* for:', href)
@@ -152,6 +144,10 @@ class RecordingController {
 
   recordNavigation () {
     this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.NAVIGATION })
+  }
+
+  recordScreenshot (value) {
+    this.handleMessage({ selector: undefined, value, action: pptrActions.SCREENSHOT })
   }
 
   handleMessage (msg, sender) {
@@ -173,6 +169,7 @@ class RecordingController {
     if (msg.control === 'event-recorder-started') chrome.browserAction.setBadgeText({ text: this._badgeState })
     if (msg.control === 'get-viewport-size') this.recordCurrentViewportSize(msg.coordinates)
     if (msg.control === 'get-current-url') this.recordCurrentUrl(msg.href)
+    if (msg.control === 'screenshot') this.recordScreenshot(msg.coordinates)
   }
 
   handleNavigation ({ frameId }) {
@@ -181,6 +178,20 @@ class RecordingController {
     if (frameId === 0) {
       this.recordNavigation()
     }
+  }
+
+  handleMenuInteraction (info, tab) {
+    console.debug('context menu clicked')
+    if (info.menuItemId === this._menuId + this._menuOptions.SCREENSHOT) {
+      this.toggleScreenShotMode()
+    }
+  }
+
+  toggleScreenShotMode () {
+    console.debug('toggling screenshot mode')
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+      chrome.tabs.sendMessage(tabs[0].id, { action: actions.toggleScreenshotMode })
+    })
   }
 
   handleWait () {
