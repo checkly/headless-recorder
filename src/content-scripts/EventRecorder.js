@@ -32,8 +32,8 @@ export default class EventRecorder {
   _initializeRecorder () {
     const events = Object.values(eventsToRecord)
     if (!window.pptRecorderAddedControlListeners) {
-      this.addAllListeners(events)
-      this.boundedMessageListener = this.boundedMessageListener || this.handleBackgroundMessage.bind(this)
+      this._addAllListeners(events)
+      this.boundedMessageListener = this.boundedMessageListener || this._handleBackgroundMessage.bind(this)
       chrome.runtime.onMessage.addListener(this.boundedMessageListener)
       window.pptRecorderAddedControlListeners = true
     }
@@ -43,38 +43,38 @@ export default class EventRecorder {
     }
 
     if (this.isTopFrame) {
-      this.sendMessage({ control: 'event-recorder-started' })
-      this.sendMessage({ control: 'get-current-url', href: window.location.href })
-      this.sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
+      this._sendMessage({ control: 'event-recorder-started' })
+      this._sendMessage({ control: 'get-current-url', href: window.location.href })
+      this._sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
       console.debug('Puppeteer Recorder in-page EventRecorder started')
     }
   }
 
-  handleBackgroundMessage (msg, sender, sendResponse) {
+  _handleBackgroundMessage (msg, sender, sendResponse) {
     console.debug('content-script: message from background', msg)
     if (msg && msg.action) {
       switch (msg.action) {
         case actions.toggleScreenshotMode:
-          this.handleScreenshotMode(msg, sender, sendResponse)
+          this._handleScreenshotMode(msg, sender, sendResponse)
           break
         default:
       }
     }
   }
 
-  addAllListeners (events) {
-    const boundedRecordEvent = this.recordEvent.bind(this)
+  _addAllListeners (events) {
+    const boundedRecordEvent = this._recordEvent.bind(this)
     events.forEach(type => {
       window.addEventListener(type, boundedRecordEvent, true)
     })
   }
 
-  sendMessage (msg) {
+  _sendMessage (msg) {
     try {
       // poor man's way of detecting whether this script was injected by an actual extension, or is loaded for
       // testing purposes
       if (chrome.runtime && chrome.runtime.onMessage) {
-        chrome.runtime.sendMessage(msg)
+        chrome.runtime._sendMessage(msg)
       } else {
         this.eventLog.push(msg)
       }
@@ -83,7 +83,7 @@ export default class EventRecorder {
     }
   }
 
-  recordEvent (e) {
+  _recordEvent (e) {
     if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
     this.previousEvent = e
 
@@ -104,19 +104,19 @@ export default class EventRecorder {
         href: e.target.href ? e.target.href : null,
         coordinates: EventRecorder._getCoordinates(e)
       }
-      this.sendMessage(msg)
+      this._sendMessage(msg)
     } catch (e) {}
   }
 
-  getEventLog () {
+  _getEventLog () {
     return this.eventLog
   }
 
-  clearEventLog () {
+  _clearEventLog () {
     this.eventLog = []
   }
 
-  handleScreenshotMode (msg, sender, sendResponse) {
+  _handleScreenshotMode (msg, sender, sendResponse) {
     this.uiController = new UIController()
     this.screenShotMode = !this.screenShotMode
 
@@ -131,7 +131,7 @@ export default class EventRecorder {
     this.uiController.on('click', e => {
       console.debug('event-recorder', e)
       this.screenShotMode = false
-      this.sendMessage({ control: 'screenshot', coordinates: { width: e.innerWidth, height: e.innerHeight } })
+      this._sendMessage({ control: 'screenshot', coordinates: { width: e.innerWidth, height: e.innerHeight } })
     })
   }
 
