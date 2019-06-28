@@ -11,11 +11,11 @@ export const waitForRecorderEvents = function (page, amount) {
 }
 
 export const getEventLog = function (page) {
-  return page.evaluate(() => { return window.eventRecorder.getEventLog() })
+  return page.evaluate(() => { return window.eventRecorder._getEventLog() })
 }
 
 export const cleanEventLog = function (page) {
-  return page.evaluate(() => { return window.eventRecorder.clearEventLog() })
+  return page.evaluate(() => { return window.eventRecorder._clearEventLog() })
 }
 
 export const startServer = function (buildDir, file) {

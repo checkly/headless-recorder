@@ -32,6 +32,7 @@ export default class CodeGenerator {
     this._frame = 'page'
     this._frameId = 0
     this._allFrames = {}
+    this._screenshotCounter = 1
 
     this._hasNavigation = false
   }
@@ -86,7 +87,7 @@ export default class CodeGenerator {
           this._hasNavigation = true
           break
         case 'screenshot*':
-          this._blocks.push((this._handleScreenshot(value.width, value.height)))
+          this._blocks.push((this._handleScreenshot(value)))
           break
       }
     }
@@ -160,8 +161,19 @@ export default class CodeGenerator {
     return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
   }
 
-  _handleScreenshot (width, height) {
-    return new Block(this._frameId, { type: pptrActions.SCREENSHOT, value: `await ${this._frame}.screenshot({ path: 'screenshot.png', width: ${width}, height: ${height} })` })
+  _handleScreenshot (options) {
+    let block
+
+    if (options.x && options.y && options.width && options.height) {
+      block = new Block(this._frameId, {
+        type: pptrActions.SCREENSHOT,
+        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', clip: { x: ${options.x}, y: ${options.y}, width: ${options.width}, height: ${options.height} } })` })
+    } else {
+      block = new Block(this._frameId, { type: pptrActions.SCREENSHOT, value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png' })` })
+    }
+
+    this._screenshotCounter++
+    return block
   }
 
   _handleWaitForNavigation () {

@@ -190,7 +190,7 @@ class RecordingController {
   toggleScreenShotMode () {
     console.debug('toggling screenshot mode')
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: actions.toggleScreenshotMode })
+      chrome.tabs._sendMessage(tabs[0].id, { action: actions.toggleScreenshotMode })
     })
   }
 

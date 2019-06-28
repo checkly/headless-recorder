@@ -69,4 +69,20 @@ describe('code-generator', () => {
     expect(result).toContain('let frames = await page.frames()')
     expect(result).toContain("const frame_123 = frames.find(f => f.url() === 'https://some.iframe.com'")
   })
+
+  test('it generates the correct current page screenshot code', () => {
+    const events = [{ action: 'screenshot*' }]
+    const codeGenerator = new CodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+
+    expect(result).toContain("await page.screenshot({ path: 'screenshot_1.png' })")
+  })
+
+  test('it generates the correct clipped page screenshot code', () => {
+    const events = [{ action: 'screenshot*', value: { x: 10, y: 300, width: 800, height: 600 } }]
+    const codeGenerator = new CodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+
+    expect(result).toContain("await page.screenshot({ path: 'screenshot_1.png', clip: { x: 10, y: 300, width: 800, height: 600 } })")
+  })
 })
