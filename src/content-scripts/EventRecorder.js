@@ -1,17 +1,18 @@
 import eventsToRecord from '../code-generator/dom-events-to-record'
 import UIController from './UIController'
-import actions from '../models/actions'
+import actions from '../models/extension-ui-actions'
+import ctrl from '../models/extension-control-messages'
 import finder from '@medv/finder'
 
 export default class EventRecorder {
   constructor () {
-    this.boundedMessageListener = null
-    this.eventLog = []
-    this.previousEvent = null
-    this.dataAttribute = null
-    this.uiController = null
-    this.screenShotMode = false
-    this.isTopFrame = (window.location === window.parent.location)
+    this._boundedMessageListener = null
+    this._eventLog = []
+    this._previousEvent = null
+    this._dataAttribute = null
+    this._uiController = null
+    this._screenShotMode = false
+    this._isTopFrame = (window.location === window.parent.location)
   }
 
   boot () {
@@ -20,7 +21,7 @@ export default class EventRecorder {
       chrome.storage.local.get(['options'], ({options}) => {
         const { dataAttribute } = options ? options.code : {}
         if (dataAttribute) {
-          this.dataAttribute = dataAttribute
+          this._dataAttribute = dataAttribute
         }
         this._initializeRecorder()
       })
@@ -33,8 +34,8 @@ export default class EventRecorder {
     const events = Object.values(eventsToRecord)
     if (!window.pptRecorderAddedControlListeners) {
       this._addAllListeners(events)
-      this.boundedMessageListener = this.boundedMessageListener || this._handleBackgroundMessage.bind(this)
-      chrome.runtime.onMessage.addListener(this.boundedMessageListener)
+      this._boundedMessageListener = this._boundedMessageListener || this._handleBackgroundMessage.bind(this)
+      chrome.runtime.onMessage.addListener(this._boundedMessageListener)
       window.pptRecorderAddedControlListeners = true
     }
 
@@ -42,10 +43,10 @@ export default class EventRecorder {
       window.document.pptRecorderAddedControlListeners = true
     }
 
-    if (this.isTopFrame) {
-      this._sendMessage({ control: 'event-recorder-started' })
-      this._sendMessage({ control: 'get-current-url', href: window.location.href })
-      this._sendMessage({ control: 'get-viewport-size', coordinates: { width: window.innerWidth, height: window.innerHeight } })
+    if (this._isTopFrame) {
+      this._sendMessage({ control: ctrl.EVENT_RECORDER_STARTED })
+      this._sendMessage({ control: ctrl.GET_CURRENT_URL, href: window.location.href })
+      this._sendMessage({ control: ctrl.GET_VIEWPORT_SIZE, coordinates: { width: window.innerWidth, height: window.innerHeight } })
       console.debug('Puppeteer Recorder in-page EventRecorder started')
     }
   }
@@ -54,7 +55,7 @@ export default class EventRecorder {
     console.debug('content-script: message from background', msg)
     if (msg && msg.action) {
       switch (msg.action) {
-        case actions.toggleScreenshotMode:
+        case actions.TOGGLE_SCREENSHOT_MODE:
           this._handleScreenshotMode(msg, sender, sendResponse)
           break
         default:
@@ -74,9 +75,9 @@ export default class EventRecorder {
       // poor man's way of detecting whether this script was injected by an actual extension, or is loaded for
       // testing purposes
       if (chrome.runtime && chrome.runtime.onMessage) {
-        chrome.runtime._sendMessage(msg)
+        chrome.runtime.sendMessage(msg)
       } else {
-        this.eventLog.push(msg)
+        this._eventLog.push(msg)
       }
     } catch (err) {
       console.debug('caught error', err)
@@ -84,15 +85,15 @@ export default class EventRecorder {
   }
 
   _recordEvent (e) {
-    if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
-    this.previousEvent = e
+    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) return
+    this._previousEvent = e
 
     // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
     // for these events we cannot generate selectors, which is OK
     try {
       const optimizedMinLength = (e.target.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
-      const selector = this.dataAttribute && e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
-        ? EventRecorder._formatDataSelector(e.target, this.dataAttribute)
+      const selector = this._dataAttribute && e.target.hasAttribute && e.target.hasAttribute(this._dataAttribute)
+        ? EventRecorder._formatDataSelector(e.target, this._dataAttribute)
         : finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength})
 
       const msg = {
@@ -109,29 +110,28 @@ export default class EventRecorder {
   }
 
   _getEventLog () {
-    return this.eventLog
+    return this._eventLog
   }
 
   _clearEventLog () {
-    this.eventLog = []
+    this._eventLog = []
   }
 
-  _handleScreenshotMode (msg, sender, sendResponse) {
-    this.uiController = new UIController()
-    this.screenShotMode = !this.screenShotMode
+  _handleScreenshotMode () {
+    this._uiController = new UIController()
+    this._screenShotMode = !this._screenShotMode
 
-    console.debug('screenshot mode:', this.screenShotMode)
+    console.debug('screenshot mode:', this._screenShotMode)
 
-    if (this.screenShotMode) {
-      this.uiController.showSelector()
+    if (this._screenShotMode) {
+      this._uiController.showSelector()
     } else {
-      this.uiController.hideSelector()
+      this._uiController.hideSelector()
     }
 
-    this.uiController.on('click', e => {
-      console.debug('event-recorder', e)
-      this.screenShotMode = false
-      this._sendMessage({ control: 'screenshot', coordinates: { width: e.innerWidth, height: e.innerHeight } })
+    this._uiController.on('click', event => {
+      this._screenShotMode = false
+      this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip })
     })
   }
 

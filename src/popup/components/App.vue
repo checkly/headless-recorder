@@ -47,7 +47,7 @@
   import ResultsTab from './ResultsTab.vue'
   import HelpTab from './HelpTab.vue'
 
-  import actions from '../../models/actions'
+  import actions from '../../models/extension-ui-actions'
 
 export default {
     name: 'App',
@@ -94,10 +94,10 @@ export default {
       },
       togglePause () {
         if (this.isPaused) {
-          this.bus.postMessage({ action: actions.unPause })
+          this.bus.postMessage({ action: actions.UN_PAUSE })
           this.isPaused = false
         } else {
-          this.bus.postMessage({ action: actions.pause })
+          this.bus.postMessage({ action: actions.PAUSE })
           this.isPaused = true
         }
         this.storeState()
@@ -105,11 +105,11 @@ export default {
       start () {
         this.cleanUp()
         console.debug('start recorder')
-        this.bus.postMessage({ action: actions.start })
+        this.bus.postMessage({ action: actions.START })
       },
       stop () {
         console.debug('stop recorder')
-        this.bus.postMessage({ action: actions.stop })
+        this.bus.postMessage({ action: actions.STOP })
 
         this.$chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
           console.debug('loaded recording', recording)
@@ -127,7 +127,7 @@ export default {
       restart () {
         console.log('restart')
         this.cleanUp()
-        this.bus.postMessage({ action: actions.cleanUp })
+        this.bus.postMessage({ action: actions.CLEAN_UP })
       },
       cleanUp () {
         this.recording = this.liveEvents = []

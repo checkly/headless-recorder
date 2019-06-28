@@ -1,9 +1,9 @@
 export default {
-  GOTO: 'goto*',
-  VIEWPORT: 'viewport*',
-  WAITFORSELECTOR: 'waitForSelector*',
-  NAVIGATION: 'navigation*',
-  NAVIGATION_PROMISE: 'navigation-promise*',
-  FRAME_SET: 'frame-set*',
-  SCREENSHOT: 'screenshot*'
+  GOTO: 'GOTO',
+  VIEWPORT: 'VIEWPORT',
+  WAITFORSELECTOR: 'WAITFORSELECTOR',
+  NAVIGATION: 'NAVIGATION',
+  NAVIGATION_PROMISE: 'NAVIGATION_PROMISE',
+  FRAME_SET: 'FRAME_SET',
+  SCREENSHOT: 'SCREENSHOT'
 }

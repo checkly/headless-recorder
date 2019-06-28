@@ -66,14 +66,26 @@ class UIController extends EventEmitter {
       this.outline.style.left = (this.dimensions.left - BORDER_THICKNESS) + 'px'
       this.outline.style.width = this.dimensions.width + 'px'
       this.outline.style.height = this.dimensions.height + 'px'
-      // console.debug(`x: ${this.outline.style.top}, y:${this.outline.style.left}, w: ${this.outline.style.width }, h:${this.outline.style.height}`)
+
+      console.debug(`top: ${this.outline.style.top}, left: ${this.outline.style.left}, width: ${this.outline.style.width}, height: ${this.outline.style.height}`)
     }
   }
   _mouseup (e) {
-    // console.debug('UIController: overlay:', this.overlay)
-    // console.debug('UIController: event:', e)
-    this._cleanup()
-    this.emit('click', e)
+    this.overlay.style.backgroundColor = 'white'
+    setTimeout(() => {
+      this.overlay.style.backgroundColor = 'none'
+      this._cleanup()
+      this.emit('click', {
+        clip: {
+          x: this.outline.style.left,
+          y: this.outline.style.top,
+          width: this.outline.style.width,
+          height: this.outline.style.height
+        },
+        raw: e
+      }
+      )
+    }, 100)
   }
 
   _cleanup () {

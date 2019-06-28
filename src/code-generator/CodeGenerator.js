@@ -76,18 +76,18 @@ export default class CodeGenerator {
             this._blocks.push(this._handleChange(selector, value))
           }
           break
-        case 'goto*':
+        case pptrActions.GOTO:
           this._blocks.push(this._handleGoto(href, frameId))
           break
-        case 'viewport*':
+        case pptrActions.VIEWPORT:
           this._blocks.push((this._handleViewport(value.width, value.height)))
           break
-        case 'navigation*':
+        case pptrActions.NAVIGATION:
           this._blocks.push(this._handleWaitForNavigation())
           this._hasNavigation = true
           break
-        case 'screenshot*':
-          this._blocks.push((this._handleScreenshot(value)))
+        case pptrActions.SCREENSHOT:
+          this._blocks.push(this._handleScreenshot(value))
           break
       }
     }

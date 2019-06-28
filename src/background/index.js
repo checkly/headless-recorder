@@ -1,5 +1,6 @@
 import pptrActions from '../code-generator/pptr-actions'
-import actions from '../models/actions'
+import ctrl from '../models/extension-control-messages'
+import actions from '../models/extension-ui-actions'
 
 class RecordingController {
   constructor () {
@@ -26,11 +27,11 @@ class RecordingController {
     chrome.extension.onConnect.addListener(port => {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === actions.start) this.start()
-        if (msg.action && msg.action === actions.stop) this.stop()
-        if (msg.action && msg.action === actions.cleanUp) this.cleanUp()
-        if (msg.action && msg.action === actions.pause) this.pause()
-        if (msg.action && msg.action === actions.unPause) this.unPause()
+        if (msg.action && msg.action === actions.START) this.start()
+        if (msg.action && msg.action === actions.STOP) this.stop()
+        if (msg.action && msg.action === actions.CLEAN_UP) this.cleanUp()
+        if (msg.action && msg.action === actions.PAUSE) this.pause()
+        if (msg.action && msg.action === actions.UN_PAUSE) this.unPause()
       })
     })
   }
@@ -166,10 +167,10 @@ class RecordingController {
   }
 
   handleControlMessage (msg, sender) {
-    if (msg.control === 'event-recorder-started') chrome.browserAction.setBadgeText({ text: this._badgeState })
-    if (msg.control === 'get-viewport-size') this.recordCurrentViewportSize(msg.coordinates)
-    if (msg.control === 'get-current-url') this.recordCurrentUrl(msg.href)
-    if (msg.control === 'screenshot') this.recordScreenshot(msg.coordinates)
+    if (msg.control === ctrl.EVENT_RECORDER_STARTED) chrome.browserAction.setBadgeText({ text: this._badgeState })
+    if (msg.control === ctrl.GET_VIEWPORT_SIZE) this.recordCurrentViewportSize(msg.coordinates)
+    if (msg.control === ctrl.GET_CURRENT_URL) this.recordCurrentUrl(msg.href)
+    if (msg.control === ctrl.GET_SCREENSHOT) this.recordScreenshot(msg.value)
   }
 
   handleNavigation ({ frameId }) {
@@ -190,7 +191,7 @@ class RecordingController {
   toggleScreenShotMode () {
     console.debug('toggling screenshot mode')
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      chrome.tabs._sendMessage(tabs[0].id, { action: actions.toggleScreenshotMode })
+      chrome.tabs.sendMessage(tabs[0].id, { action: actions.TOGGLE_SCREENSHOT_MODE })
     })
   }
 
