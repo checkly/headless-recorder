@@ -4,6 +4,8 @@ import actions from '../models/extension-ui-actions'
 import ctrl from '../models/extension-control-messages'
 import finder from '@medv/finder'
 
+const DEFAULT_MOUSE_CURSOR = 'default'
+
 export default class EventRecorder {
   constructor () {
     this._boundedMessageListener = null
@@ -57,7 +59,10 @@ export default class EventRecorder {
     if (msg && msg.action) {
       switch (msg.action) {
         case actions.TOGGLE_SCREENSHOT_MODE:
-          this._handleScreenshotMode(msg, sender, sendResponse)
+          this._handleScreenshotMode(false)
+          break
+        case actions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
+          this._handleScreenshotMode(true)
           break
         default:
       }
@@ -121,10 +126,11 @@ export default class EventRecorder {
     this._eventLog = []
   }
 
-  _handleScreenshotMode () {
+  _handleScreenshotMode (isClipped) {
     this._disableClickRecording()
-    this._uiController = new UIController()
+    this._uiController = new UIController({ showSelector: isClipped })
     this._screenShotMode = !this._screenShotMode
+    document.body.style.cursor = 'crosshair'
 
     console.debug('screenshot mode:', this._screenShotMode)
 
@@ -136,6 +142,7 @@ export default class EventRecorder {
 
     this._uiController.on('click', event => {
       this._screenShotMode = false
+      document.body.style.cursor = DEFAULT_MOUSE_CURSOR
       this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip })
       this._enableClickRecording()
     })

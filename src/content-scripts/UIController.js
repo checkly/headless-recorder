@@ -2,13 +2,20 @@ import EventEmitter from 'events'
 
 const BORDER_THICKNESS = 3
 
+const defaults = {
+  showSelector: false
+}
+
 class UIController extends EventEmitter {
-  constructor () {
+  constructor (options) {
+    options = Object.assign({}, defaults, options)
+
     super()
     this._overlay = null
-    this._outline = null
+    this._selector = null
     this._element = null
     this._dimensions = {}
+    this._showSelector = options.showSelector
 
     this._boundeMouseMove = this._mousemove.bind(this)
     this._boundeMouseUp = this._mouseup.bind(this)
@@ -25,12 +32,15 @@ class UIController extends EventEmitter {
       this._overlay.style.width = '100%'
       this._overlay.style.height = '100%'
       this._overlay.style.pointerEvents = 'none'
-      this._outline = document.createElement('div')
-      this._outline.className = 'pptrRecorderOutline'
-      this._outline.style.position = 'fixed'
-      this._outline.style.border = BORDER_THICKNESS + 'px solid rgba(69,200,241,0.8)'
-      this._outline.style.borderRadius = '3px'
-      this._overlay.appendChild(this._outline)
+
+      if (this._showSelector) {
+        this._selector = document.createElement('div')
+        this._selector.className = 'pptrRecorderOutline'
+        this._selector.style.position = 'fixed'
+        this._selector.style.border = BORDER_THICKNESS + 'px solid rgba(69,200,241,0.8)'
+        this._selector.style.borderRadius = '3px'
+        this._overlay.appendChild(this._selector)
+      }
     }
     if (!this._overlay.parentNode) {
       document.body.appendChild(this._overlay)
@@ -41,8 +51,10 @@ class UIController extends EventEmitter {
 
   hideSelector () {
     console.debug('UIController:hide')
-    document.body.removeChild(this._overlay)
-    this._overlay = this._outline = this._element = null
+    if (this._overlay) {
+      document.body.removeChild(this._overlay)
+    }
+    this._overlay = this._selector = this._element = null
     this._dimensions = {}
   }
 
@@ -55,7 +67,7 @@ class UIController extends EventEmitter {
 
       let elem = e.target
 
-      while (elem !== document.body) {
+      while (elem && elem !== document.body) {
         this._dimensions.top += elem.offsetTop
         this._dimensions.left += elem.offsetLeft
         elem = elem.offsetParent
@@ -63,12 +75,13 @@ class UIController extends EventEmitter {
       this._dimensions.width = this._element.offsetWidth
       this._dimensions.height = this._element.offsetHeight
 
-      this._outline.style.top = (this._dimensions.top - BORDER_THICKNESS) + 'px'
-      this._outline.style.left = (this._dimensions.left - BORDER_THICKNESS) + 'px'
-      this._outline.style.width = this._dimensions.width + 'px'
-      this._outline.style.height = this._dimensions.height + 'px'
-
-      console.debug(`top: ${this._outline.style.top}, left: ${this._outline.style.left}, width: ${this._outline.style.width}, height: ${this._outline.style.height}`)
+      if (this._selector) {
+        this._selector.style.top = (this._dimensions.top - BORDER_THICKNESS) + 'px'
+        this._selector.style.left = (this._dimensions.left - BORDER_THICKNESS) + 'px'
+        this._selector.style.width = this._dimensions.width + 'px'
+        this._selector.style.height = this._dimensions.height + 'px'
+        console.debug(`top: ${this._selector.style.top}, left: ${this._selector.style.left}, width: ${this._selector.style.width}, height: ${this._selector.style.height}`)
+      }
     }
   }
   _mouseup (e) {
@@ -76,16 +89,19 @@ class UIController extends EventEmitter {
     setTimeout(() => {
       this._overlay.style.backgroundColor = 'none'
       this._cleanup()
-      this.emit('click', {
-        clip: {
-          x: this._outline.style.left,
-          y: this._outline.style.top,
-          width: this._outline.style.width,
-          height: this._outline.style.height
-        },
-        raw: e
+
+      let clip = null
+
+      if (this._selector) {
+        clip = {
+          x: this._selector.style.left,
+          y: this._selector.style.top,
+          width: this._selector.style.width,
+          height: this._selector.style.height
+        }
       }
-      )
+
+      this.emit('click', { clip, raw: e })
     }, 100)
   }
 

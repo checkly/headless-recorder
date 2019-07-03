@@ -19,7 +19,8 @@ class RecordingController {
 
     this._menuId = 'PUPPETEER_RECORDER_CONTEXT_MENU'
     this._menuOptions = {
-      SCREENSHOT: '_SCREENSHOT'
+      SCREENSHOT: 'SCREENSHOT',
+      SCREENSHOT_CLIPPED: 'SCREENSHOT_CLIPPED'
     }
   }
 
@@ -75,7 +76,14 @@ class RecordingController {
 
       chrome.contextMenus.create({
         id: this._menuId + this._menuOptions.SCREENSHOT,
-        title: 'Take screenshot',
+        title: 'Screenshot',
+        parentId: this._menuId,
+        contexts: ['all']
+      })
+
+      chrome.contextMenus.create({
+        id: this._menuId + this._menuOptions.SCREENSHOT_CLIPPED,
+        title: 'Screenshot clipped',
         parentId: this._menuId,
         contexts: ['all']
       })
@@ -184,14 +192,17 @@ class RecordingController {
   handleMenuInteraction (info, tab) {
     console.debug('context menu clicked')
     if (info.menuItemId === this._menuId + this._menuOptions.SCREENSHOT) {
-      this.toggleScreenShotMode()
+      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+    }
+    if (info.menuItemId === this._menuId + this._menuOptions.SCREENSHOT_CLIPPED) {
+      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
     }
   }
 
-  toggleScreenShotMode () {
+  toggleScreenShotMode (action) {
     console.debug('toggling screenshot mode')
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: actions.TOGGLE_SCREENSHOT_MODE })
+      chrome.tabs.sendMessage(tabs[0].id, { action })
     })
   }
 
