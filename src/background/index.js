@@ -76,14 +76,14 @@ class RecordingController {
 
       chrome.contextMenus.create({
         id: this._menuId + this._menuOptions.SCREENSHOT,
-        title: 'Screenshot',
+        title: 'Take Screenshot',
         parentId: this._menuId,
         contexts: ['all']
       })
 
       chrome.contextMenus.create({
         id: this._menuId + this._menuOptions.SCREENSHOT_CLIPPED,
-        title: 'Screenshot clipped',
+        title: 'Take Screenshot Clipped',
         parentId: this._menuId,
         contexts: ['all']
       })
