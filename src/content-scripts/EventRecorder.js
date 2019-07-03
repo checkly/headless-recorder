@@ -13,6 +13,7 @@ export default class EventRecorder {
     this._uiController = null
     this._screenShotMode = false
     this._isTopFrame = (window.location === window.parent.location)
+    this._isRecordingClicks = true
   }
 
   boot () {
@@ -71,6 +72,9 @@ export default class EventRecorder {
   }
 
   _sendMessage (msg) {
+    // filter messages based on enabled / disabled features
+    if (msg.action === 'click' && !this._isRecordingClicks) return
+
     try {
       // poor man's way of detecting whether this script was injected by an actual extension, or is loaded for
       // testing purposes
@@ -118,6 +122,7 @@ export default class EventRecorder {
   }
 
   _handleScreenshotMode () {
+    this._disableClickRecording()
     this._uiController = new UIController()
     this._screenShotMode = !this._screenShotMode
 
@@ -132,7 +137,16 @@ export default class EventRecorder {
     this._uiController.on('click', event => {
       this._screenShotMode = false
       this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip })
+      this._enableClickRecording()
     })
+  }
+
+  _disableClickRecording () {
+    this._isRecordingClicks = false
+  }
+
+  _enableClickRecording () {
+    this._isRecordingClicks = true
   }
 
   static _getCoordinates (evt) {
@@ -144,6 +158,7 @@ export default class EventRecorder {
     }
     return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null
   }
+
   static _formatDataSelector (element, attribute) {
     return `[${attribute}="${element.getAttribute(attribute)}"]`
   }

@@ -5,82 +5,83 @@ const BORDER_THICKNESS = 3
 class UIController extends EventEmitter {
   constructor () {
     super()
-    this.overlay = null
-    this.outline = null
-    this.element = null
-    this.dimensions = {}
+    this._overlay = null
+    this._outline = null
+    this._element = null
+    this._dimensions = {}
 
-    this.boundeMouseMove = this._mousemove.bind(this)
-    this.boundeMouseUp = this._mouseup.bind(this)
+    this._boundeMouseMove = this._mousemove.bind(this)
+    this._boundeMouseUp = this._mouseup.bind(this)
   }
 
   showSelector () {
     console.debug('UIController:show')
-    if (!this.overlay) {
-      this.overlay = document.createElement('div')
-      this.overlay.className = 'pptrRecorderOverlay'
-      this.overlay.style.position = 'fixed'
-      this.overlay.style.top = '0px'
-      this.overlay.style.left = '0px'
-      this.overlay.style.width = '100%'
-      this.overlay.style.height = '100%'
-      this.overlay.style.pointerEvents = 'none'
-      this.outline = document.createElement('div')
-      this.outline.className = 'pptrRecorderOutline'
-      this.outline.style.position = 'fixed'
-      this.outline.style.border = BORDER_THICKNESS + 'px solid rgba(69,200,241,0.8)'
-      this.outline.style.borderRadius = '3px'
-      this.overlay.appendChild(this.outline)
+    if (!this._overlay) {
+      this._overlay = document.createElement('div')
+      this._overlay.className = 'pptrRecorderOverlay'
+      this._overlay.style.position = 'fixed'
+      this._overlay.style.top = '0px'
+      this._overlay.style.left = '0px'
+      this._overlay.style.width = '100%'
+      this._overlay.style.height = '100%'
+      this._overlay.style.pointerEvents = 'none'
+      this._outline = document.createElement('div')
+      this._outline.className = 'pptrRecorderOutline'
+      this._outline.style.position = 'fixed'
+      this._outline.style.border = BORDER_THICKNESS + 'px solid rgba(69,200,241,0.8)'
+      this._outline.style.borderRadius = '3px'
+      this._overlay.appendChild(this._outline)
     }
-    if (!this.overlay.parentNode) {
-      document.body.appendChild(this.overlay)
-      document.body.addEventListener('mousemove', this.boundeMouseMove, false)
-      document.body.addEventListener('mouseup', this.boundeMouseUp, false)
+    if (!this._overlay.parentNode) {
+      document.body.appendChild(this._overlay)
+      document.body.addEventListener('mousemove', this._boundeMouseMove, false)
+      document.body.addEventListener('click', this._boundeMouseUp, false)
     }
   }
 
   hideSelector () {
     console.debug('UIController:hide')
-    this.overlay = this.outline = this.element = null
-    this.dimensions = {}
+    document.body.removeChild(this._overlay)
+    this._overlay = this._outline = this._element = null
+    this._dimensions = {}
   }
 
   _mousemove (e) {
-    if (this.element !== e.target) {
-      this.element = e.target
+    if (this._element !== e.target) {
+      this._element = e.target
 
-      this.dimensions.top = -window.scrollY
-      this.dimensions.left = -window.scrollX
+      this._dimensions.top = -window.scrollY
+      this._dimensions.left = -window.scrollX
 
       let elem = e.target
 
       while (elem !== document.body) {
-        this.dimensions.top += elem.offsetTop
-        this.dimensions.left += elem.offsetLeft
+        this._dimensions.top += elem.offsetTop
+        this._dimensions.left += elem.offsetLeft
         elem = elem.offsetParent
       }
-      this.dimensions.width = this.element.offsetWidth
-      this.dimensions.height = this.element.offsetHeight
+      this._dimensions.width = this._element.offsetWidth
+      this._dimensions.height = this._element.offsetHeight
 
-      this.outline.style.top = (this.dimensions.top - BORDER_THICKNESS) + 'px'
-      this.outline.style.left = (this.dimensions.left - BORDER_THICKNESS) + 'px'
-      this.outline.style.width = this.dimensions.width + 'px'
-      this.outline.style.height = this.dimensions.height + 'px'
+      this._outline.style.top = (this._dimensions.top - BORDER_THICKNESS) + 'px'
+      this._outline.style.left = (this._dimensions.left - BORDER_THICKNESS) + 'px'
+      this._outline.style.width = this._dimensions.width + 'px'
+      this._outline.style.height = this._dimensions.height + 'px'
 
-      console.debug(`top: ${this.outline.style.top}, left: ${this.outline.style.left}, width: ${this.outline.style.width}, height: ${this.outline.style.height}`)
+      console.debug(`top: ${this._outline.style.top}, left: ${this._outline.style.left}, width: ${this._outline.style.width}, height: ${this._outline.style.height}`)
     }
   }
   _mouseup (e) {
-    this.overlay.style.backgroundColor = 'white'
+    this._overlay.style.backgroundColor = 'white'
     setTimeout(() => {
-      this.overlay.style.backgroundColor = 'none'
+      this._overlay.style.backgroundColor = 'none'
       this._cleanup()
       this.emit('click', {
         clip: {
-          x: this.outline.style.left,
-          y: this.outline.style.top,
-          width: this.outline.style.width,
-          height: this.outline.style.height
+          x: this._outline.style.left,
+          y: this._outline.style.top,
+          width: this._outline.style.width,
+          height: this._outline.style.height
         },
         raw: e
       }
@@ -89,9 +90,9 @@ class UIController extends EventEmitter {
   }
 
   _cleanup () {
-    document.body.removeEventListener('mousemove', this.boundeMouseMove, false)
-    document.body.removeEventListener('mouseup', this.boundeMouseUp, false)
-    document.body.removeChild(this.overlay)
+    document.body.removeEventListener('mousemove', this._boundeMouseMove, false)
+    document.body.removeEventListener('mouseup', this._boundeMouseUp, false)
+    document.body.removeChild(this._overlay)
   }
 }
 

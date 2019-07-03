@@ -3,13 +3,15 @@
     <div class="content">
       <h4>Recording</h4>
       <ul>
-        <li>To start recording hit Record.</li>
+        <li>To start recording hit <strong>Record</strong></li>
         <li>Hit <kbd>tab</kbd> after you finish typing in an <kbd>input</kbd> element.</li>
         <li>Click links, inputs and other elements.</li>
         <li>Wait for full page load on each navigation. The icon will switch from <img src="/images/icon_rec.png"> to
           <img src="/images/icon_wait.png">.</li>
-        <li>Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.</li>
+        <li>Click <strong>Pause</strong> when you want to navigate without recording anything.
+          Hit <strong>Resume</strong> to continue recording.</li>
       </ul>
+      <p>For more help and examples, <a href="https://checklyhq.com/puppeteer-recorder" target="_blank">go to the help docs</a></p>
       <h4>Replaying</h4>
       <p>Install <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a> on your machine. Copy and paste the code
       into a file and run as a standard node program</p>

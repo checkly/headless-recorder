@@ -1,4 +1,5 @@
 import CodeGenerator from '../CodeGenerator'
+import pptrActions from '../pptr-actions'
 
 describe('code-generator', () => {
   test('it should generate nothing when there are no events', () => {
@@ -79,7 +80,7 @@ describe('code-generator', () => {
   })
 
   test('it generates the correct clipped page screenshot code', () => {
-    const events = [{ action: 'screenshot*', value: { x: 10, y: 300, width: 800, height: 600 } }]
+    const events = [{ action: pptrActions.SCREENSHOT, value: { x: '10px', y: '300px', width: '800px', height: '600px' } }]
     const codeGenerator = new CodeGenerator()
     const result = codeGenerator._parseEvents(events)
 

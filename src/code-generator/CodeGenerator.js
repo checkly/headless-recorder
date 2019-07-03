@@ -165,6 +165,13 @@ export default class CodeGenerator {
     let block
 
     if (options.x && options.y && options.width && options.height) {
+      // remove the tailing 'px'
+      for (let prop in options) {
+        if (options.hasOwnProperty(prop) && options[prop].slice(-2) === 'px') {
+          options[prop] = options[prop].substring(0, options[prop].length - 2)
+        }
+      }
+
       block = new Block(this._frameId, {
         type: pptrActions.SCREENSHOT,
         value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', clip: { x: ${options.x}, y: ${options.y}, width: ${options.width}, height: ${options.height} } })` })
