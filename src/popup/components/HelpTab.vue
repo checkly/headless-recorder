@@ -12,8 +12,14 @@
           Hit <strong>Resume</strong> to continue recording.</li>
       </ul>
       <h4>Controls</h4>
-      <p>While recording, right click to show extra controls that trigger various functions like recording screenshots.</p>
-      <img src="/images/context_menu.png" alt="context menu" class="w-100">
+      <p>While recording, right click to show extra controls that trigger various functions like recording screenshots.
+        <img src="/images/context_menu.png" alt="context menu" class="w-100">
+      </p>
+      <h4>Keyboard shortcuts</h4>
+      <ul>
+        <li>Take screenshot: Ctrl+Shift+A</li>
+        <li>Take clipped screenshot: Ctrl+Shift+M</li>
+      </ul>
       <p>For more help and examples, <a href="https://checklyhq.com/puppeteer-recorder" target="_blank">go to the help docs</a></p>
       <h4>Replaying</h4>
       <p>Install <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a> on your machine. Copy and paste the code

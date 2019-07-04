@@ -7,7 +7,7 @@ export const waitForAndGetEvents = async function (page, amount) {
 }
 
 export const waitForRecorderEvents = function (page, amount) {
-  return page.waitForFunction(`window.eventRecorder.getEventLog().length >= ${amount || 1}`)
+  return page.waitForFunction(`window.eventRecorder._getEventLog().length >= ${amount || 1}`)
 }
 
 export const getEventLog = function (page) {

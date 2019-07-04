@@ -9,6 +9,7 @@ class RecordingController {
     this._boundedNavigationHandler = null
     this._boundedWaitHandler = null
     this._boundedMenuHandler = null
+    this._boundedKeyCommandHandler = null
     this._badgeState = ''
     this._isPaused = false
 
@@ -50,7 +51,6 @@ class RecordingController {
       this._boundedMessageHandler = this.handleMessage.bind(this)
       this._boundedNavigationHandler = this.handleNavigation.bind(this)
       this._boundedWaitHandler = this.handleWait.bind(this)
-      this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
 
       chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
       chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
@@ -76,21 +76,25 @@ class RecordingController {
 
       chrome.contextMenus.create({
         id: this._menuId + this._menuOptions.SCREENSHOT,
-        title: 'Take Screenshot',
+        title: 'Take Screenshot (Ctrl+Shift+A)',
         parentId: this._menuId,
         contexts: ['all']
       })
 
       chrome.contextMenus.create({
         id: this._menuId + this._menuOptions.SCREENSHOT_CLIPPED,
-        title: 'Take Screenshot Clipped',
+        title: 'Take Screenshot Clipped (Ctrl+Shift+S)',
         parentId: this._menuId,
         contexts: ['all']
       })
 
       // add the handlers
 
+      this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
       chrome.contextMenus.onClicked.addListener(this._boundedMenuHandler)
+
+      this._boundedKeyCommandHandler = this.handleKeyCommands.bind(this)
+      chrome.commands.onCommand.addListener(this._boundedKeyCommandHandler)
     })
   }
 
@@ -191,11 +195,24 @@ class RecordingController {
 
   handleMenuInteraction (info, tab) {
     console.debug('context menu clicked')
-    if (info.menuItemId === this._menuId + this._menuOptions.SCREENSHOT) {
-      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+    switch (info.menuItemId) {
+      case (this._menuId + this._menuOptions.SCREENSHOT):
+        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+        break
+      case (this._menuId + this._menuOptions.SCREENSHOT_CLIPPED):
+        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+        break
     }
-    if (info.menuItemId === this._menuId + this._menuOptions.SCREENSHOT_CLIPPED) {
-      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+  }
+
+  handleKeyCommands (command) {
+    switch (command) {
+      case actions.TOGGLE_SCREENSHOT_MODE:
+        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+        break
+      case actions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
+        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+        break
     }
   }
 

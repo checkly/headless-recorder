@@ -24,9 +24,6 @@
           <button class="btn btn-sm" @click="toggleRecord" :class="isRecording ? 'btn-danger' : 'btn-primary'">
             {{recordButtonText}}
           </button>
-          <div class="nag-cta" v-show="!isRecording">
-            <a href="#">Get the Pro version →</a>
-          </div>
           <button class="btn btn-sm btn-primary btn-outline-primary" @click="togglePause" v-show="isRecording">
             {{pauseButtonText}}
           </button>
@@ -244,17 +241,6 @@ export default {
     }
     .results-footer {
       @include footer()
-    }
-
-    .nag-cta {
-      a {
-        color: white;
-        padding: 5px 8px;
-        background: #FF659D;
-        border-radius: 8px;
-        font-size: 80%;
-        color: white;
-      }
     }
   }
 </style>

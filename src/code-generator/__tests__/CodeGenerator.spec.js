@@ -15,7 +15,7 @@ describe('code-generator', () => {
   })
 
   test('it generates the correct waitForNavigation code', () => {
-    const events = [{ action: 'click', selector: 'a.link' }, { action: 'navigation*' }]
+    const events = [{ action: 'click', selector: 'a.link' }, { action: pptrActions.NAVIGATION }]
     const codeGenerator = new CodeGenerator()
     const code = codeGenerator._parseEvents(events)
     const lines = code.split('\n')
@@ -72,7 +72,7 @@ describe('code-generator', () => {
   })
 
   test('it generates the correct current page screenshot code', () => {
-    const events = [{ action: 'screenshot*' }]
+    const events = [{ action: pptrActions.SCREENSHOT }]
     const codeGenerator = new CodeGenerator()
     const result = codeGenerator._parseEvents(events)
 

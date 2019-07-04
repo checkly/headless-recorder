@@ -164,7 +164,7 @@ export default class CodeGenerator {
   _handleScreenshot (options) {
     let block
 
-    if (options.x && options.y && options.width && options.height) {
+    if (options && options.x && options.y && options.width && options.height) {
       // remove the tailing 'px'
       for (let prop in options) {
         if (options.hasOwnProperty(prop) && options[prop].slice(-2) === 'px') {

@@ -5,6 +5,9 @@
         <img src="/images/Desert.svg" alt="desert" width="78px">
         <h3>No recorded events yet</h3>
         <p class="text-muted">Click record to begin</p>
+        <div class="nag-cta" v-show="!isRecording">
+          <a href="https://surveys.hotjar.com/s?siteId=717179&surveyId=137462" target="_blank">⚡️ Puppeteer Recorder Pro is coming →</a>
+        </div>
       </div>
       <div class="events" v-show="isRecording">
         <p class="text-muted text-center loading" v-show="liveEvents.length === 0">Waiting for events</p>
@@ -103,6 +106,13 @@
 
           }
         }
+      }
+    }
+    .nag-cta {
+      a {
+        color: $pink;
+        font-size: 80%;
+        font-weight: 500;
       }
     }
   }

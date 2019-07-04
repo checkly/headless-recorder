@@ -20,6 +20,22 @@
     "default_title": "Puppeteer Recorder",
     "default_popup": "index.html"
   },
+  "commands": {
+    "TOGGLE_SCREENSHOT_MODE": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A"
+      },
+      "description": "Take screenshot"
+    },
+    "TOGGLE_SCREENSHOT_CLIPPED_MODE": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Take screenshot clipped"
+    }
+  },
   "background": {
     "scripts": [
       "background.js"
