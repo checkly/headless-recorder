@@ -56,6 +56,8 @@ export default class CodeGenerator {
     console.debug(`generating code for ${events ? events.length : 0} events`)
     let result = ''
 
+    if (!events) return result
+
     for (let i = 0; i < events.length; i++) {
       const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
 

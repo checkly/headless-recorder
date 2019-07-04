@@ -58,6 +58,21 @@
             </div>
           </div>
         </div>
+        <div class="settings-block">
+          <h4 class="settings-block-title">
+            Extension settings
+          </h4>
+          <div class="settings-block-main">
+            <div class="settings-group">
+              <label>
+                <input id="options-telemetry" type="checkbox" v-model="options.extension.telemetry" @change="save">
+                Allow recording of usage telemetry
+              </label>
+              <br>
+              <small>We only record clicks for basic product development, no website content or input data. Data is never, ever shared with 3rd parties.</small>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="footer">
         sponsored by
@@ -73,7 +88,10 @@
   import { defaults as code } from '../../code-generator/CodeGenerator'
 
   const defaults = {
-    code
+    code,
+    extension: {
+      telemetry: true
+    }
   }
 
   export default {

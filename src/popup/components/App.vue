@@ -55,6 +55,7 @@ export default {
     data () {
       return {
         code: '',
+        options: {},
         showResultsTab: false,
         showHelp: false,
         liveEvents: [],
@@ -68,9 +69,10 @@ export default {
     },
     mounted () {
       this.loadState(() => {
+        this.trackPageView()
         if (this.isRecording) {
           console.debug('opened in recording state, fetching recording events')
-          this.$chrome.storage.local.get(['recording', 'code'], ({ recording }) => {
+          this.$chrome.storage.local.get(['recording', 'options'], ({ recording }) => {
             console.debug('loaded recording', recording)
             this.liveEvents = recording
           })
@@ -103,11 +105,13 @@ export default {
         this.storeState()
       },
       start () {
+        this.trackEvent('Start')
         this.cleanUp()
         console.debug('start recorder')
         this.bus.postMessage({ action: actions.START })
       },
       stop () {
+        this.trackEvent('Stop')
         console.debug('stop recorder')
         this.bus.postMessage({ action: actions.STOP })
 
@@ -136,13 +140,13 @@ export default {
         this.storeState()
       },
       openOptions () {
+        this.trackEvent('Options')
         if (this.$chrome.runtime.openOptionsPage) {
           this.$chrome.runtime.openOptionsPage()
         }
       },
       loadState (cb) {
-        this.$chrome.storage.local.get(['controls', 'code'], ({ controls, code }) => {
-          console.debug('loaded controls', controls)
+        this.$chrome.storage.local.get(['controls', 'code', 'options'], ({ controls, code, options }) => {
           if (controls) {
             this.isRecording = controls.isRecording
             this.isPaused = controls.isPaused
@@ -150,6 +154,10 @@ export default {
 
           if (code) {
             this.code = code
+          }
+
+          if (options) {
+            this.options = options
           }
           cb()
         })
@@ -164,6 +172,7 @@ export default {
         })
       },
       setCopying () {
+        this.trackEvent('Copy')
         this.isCopying = true
         setTimeout(() => { this.isCopying = false }, 1500)
       },
@@ -172,7 +181,18 @@ export default {
         this.showHelp = false
       },
       toggleShowHelp () {
+        this.trackEvent('Help')
         this.showHelp = !this.showHelp
+      },
+      trackEvent (event) {
+        if (this.options && this.options.extension && this.options.extension.telemetry) {
+          if (window._gaq) window._gaq.push(['_trackEvent', event, 'clicked'])
+        }
+      },
+      trackPageView () {
+        if (this.options && this.options.extension && this.options.extension.telemetry) {
+          if (window._gaq) window._gaq.push(['_trackPageview'])
+        }
       }
     },
     computed: {
