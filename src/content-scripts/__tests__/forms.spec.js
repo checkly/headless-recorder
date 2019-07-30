@@ -4,6 +4,7 @@ import {launchPuppeteerWithExtension, runDist} from '../../__e2e-tests__/helpers
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
 let server
+let port
 let browser
 let page
 
@@ -12,7 +13,11 @@ describe('forms', () => {
     await runDist()
     const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
     const fixture = './fixtures/forms.html'
-    server = await startServer(buildDir, fixture)
+    {
+      const {server: _s, port: _p} = await startServer(buildDir, fixture)
+      server = _s
+      port = _p
+    }
     return done()
   }, 20000)
 
@@ -25,7 +30,7 @@ describe('forms', () => {
   beforeEach(async () => {
     browser = await launchPuppeteerWithExtension(puppeteer)
     page = await browser.newPage()
-    await page.goto('http://localhost:3000/')
+    await page.goto(`http://localhost:${port}/`)
     await cleanEventLog(page)
   })
 

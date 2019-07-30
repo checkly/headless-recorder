@@ -101,8 +101,8 @@ export default class EventRecorder {
     // for these events we cannot generate selectors, which is OK
     try {
       const optimizedMinLength = (e.target.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
-      const selector = this._dataAttribute && e.target.hasAttribute && e.target.hasAttribute(this._dataAttribute)
-        ? EventRecorder._formatDataSelector(e.target, this._dataAttribute)
+      const selector = this._dataAttribute
+        ? finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength, attr: (name, _value) => name === this._dataAttribute})
         : finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength})
 
       const msg = {
