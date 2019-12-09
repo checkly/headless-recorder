@@ -19,5 +19,6 @@ before_install:
 install:
 - npm install
 script:
+- npm run lint
 - npm run build
 - NODE_ENV=production npm test
