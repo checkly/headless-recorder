@@ -1,5 +1,4 @@
 import puppeteer from 'puppeteer'
-import _ from 'lodash'
 import {launchPuppeteerWithExtension, runDist} from '../../__e2e-tests__/helpers'
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
@@ -50,5 +49,4 @@ describe.only('attributes', () => {
     const event = (await waitForAndGetEvents(page, 1))[0]
     expect(event.selector).toEqual('body > #content-root > [data-qa="article-wrapper"] > [data-qa="article-body"] > span')
   })
-
 })
