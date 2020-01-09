@@ -2,15 +2,18 @@
 
 [![Build Status](https://travis-ci.org/checkly/puppeteer-recorder.svg?branch=develop)](https://travis-ci.org/checkly/puppeteer-recorder)
 
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/UJGejcNli)
+## Gold sponsor
+
+![Checkly logo](/chrome-store/checkly-logo.png?raw=true)
+[Checkly](https://checklyhq.com)
 
 ![](src/images/recorder.png)
-Puppeteer recorder is a Chrome extension that records your browser interactions and generates a 
+Puppeteer recorder is a Chrome extension that records your browser interactions and generates a
 [Puppeteer](https://github.com/GoogleChrome/puppeteer) script. Install it from the [Chrome Webstore](https://chrome.google.com/webstore/detail/puppeteer-recorder/djeegiggegleadkkbgopoonhjimgehda).
 This project is pretty fresh, but does the following already:
 
 - Records clicks and type events.
-- Add waitForNavigation, setViewPort and other useful clauses. 
+- Add waitForNavigation, setViewPort and other useful clauses.
 - Generates a Puppeteer script.
 - Shows which events are being recorded.
 - Copy to clipboard.
@@ -25,11 +28,11 @@ This project is pretty fresh, but does the following already:
 - Hit <kbd>tab</kbd> after you finish typing in an `input` element.
 - Click links, inputs and other elements.
 - Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png).
-- Click Pause when you want to navigate without recording anything. Hit Resume to continue recording. 
+- Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
 ## Background
 
 Writing Puppeteer scripts for scraping, testing and monitoring can be tricky. A recorder / code generator can be helpful,
-even if the code isn't perfect. This project builds on other projects (see [disclaimer](#user-content-credits--disclaimer) 
+even if the code isn't perfect. This project builds on other projects (see [disclaimer](#user-content-credits--disclaimer)
 below) but adds extensibility, configurability and a smoother UI.
 
 ## Development
@@ -56,7 +59,7 @@ gren release --override --data-source=milestones --milestone-match="{{tag_name}}
 
 ## Credits & disclaimer
 
-Puppeteer recorder is the spiritual successor & love child of segment.io's 
+Puppeteer recorder is the spiritual successor & love child of segment.io's
 [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder).
 
 ## License
