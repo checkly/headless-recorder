@@ -2,10 +2,8 @@
 
 [![Build Status](https://travis-ci.org/checkly/puppeteer-recorder.svg?branch=develop)](https://travis-ci.org/checkly/puppeteer-recorder)
 
-## Gold sponsor
-
-![Checkly logo](/chrome-store/checkly-logo.png?raw=true)
-[Checkly](https://checklyhq.com)
+#### Gold sponsor
+[<img src="chrome-store/checkly-logo.png?raw=true" alt="Checkly" width="300">](https://checklyhq.com?utm_source=github&utm_medium=sponsor-logo-github&utm_campaign=puppeteer-recorder)
 
 ![](src/images/recorder.png)
 Puppeteer recorder is a Chrome extension that records your browser interactions and generates a
