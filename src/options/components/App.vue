@@ -15,8 +15,8 @@
           <div class="settings-block-main">
             <div class="settings-group">
               <label class="settings-label">custom data attribute</label>
-              <input id="options-code-dataAttribute" type="text" v-model="options.code.dataAttribute" @change="save" placeholder="your custom data-* attribute">
-              <small>Define a <code>data-*</code> attribute that we'll attempt to use when selecting the elements. This is handy
+              <input id="options-code-dataAttribute" type="text" v-model.trim="options.code.dataAttribute" @change="save" placeholder="your custom data-* attribute">
+              <small>Define a attribute that we'll attempt to use when selecting the elements. This is handy
                 when React or Vue based apps generate random class names.</small>
             </div>
           </div>
