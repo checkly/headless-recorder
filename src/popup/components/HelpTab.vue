@@ -29,7 +29,7 @@ npm install puppeteer
 node my-script.js</pre>
     </div>
     <div class="help-footer text-muted">
-      sponsored by
+      powered by
       <a href="https://checklyhq.com" target="_blank">
         <img src="/images/text_racoon_logo.svg" alt="">
       </a>

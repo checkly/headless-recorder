@@ -28,6 +28,7 @@
             {{pauseButtonText}}
           </button>
           <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
+          <checkly-badge v-if="!isRecording"></checkly-badge>
         </div>
         <ResultsTab :code="code" :copy-link-text="copyLinkText" :restart="restart" :set-copying="setCopying" v-show="showResultsTab"/>
         <div class="results-footer" v-show="showResultsTab">
@@ -46,12 +47,13 @@
   import RecordingTab from './RecordingTab.vue'
   import ResultsTab from './ResultsTab.vue'
   import HelpTab from './HelpTab.vue'
+  import ChecklyBadge from './ChecklyBadge.vue'
 
   import actions from '../../models/extension-ui-actions'
 
 export default {
     name: 'App',
-    components: { ResultsTab, RecordingTab, HelpTab },
+    components: { ResultsTab, RecordingTab, HelpTab, ChecklyBadge },
     data () {
       return {
         code: '',
@@ -216,7 +218,6 @@ export default {
   @import "~styles/_animations.scss";
   @import "~styles/_variables.scss";
   @import "~styles/_mixins.scss";
-
   .recorder {
     font-size: 14px;
 
@@ -257,7 +258,12 @@ export default {
     }
 
     .recording-footer {
-      @include footer()
+      @include footer();
+      img {
+        margin-left: 8px;
+        width: 80px;
+        vertical-align: middle;
+      }
     }
     .results-footer {
       @include footer()

@@ -6,7 +6,7 @@
         <h3>No recorded events yet</h3>
         <p class="text-muted">Click record to begin</p>
         <div class="nag-cta" v-show="!isRecording">
-          <a href="https://surveys.hotjar.com/s?siteId=717179&surveyId=137462" target="_blank">⚡️ Puppeteer Recorder Pro is coming →</a>
+          <a href="https://github.com/checkly/puppeteer-recorder/issues/83" target="_blank">⚡️Updates on the roadmap of Puppeteer Recorder →</a>
         </div>
       </div>
       <div class="events" v-show="isRecording">
