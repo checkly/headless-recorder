@@ -5,7 +5,9 @@
 [![coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/UJGejcNli)
 
 ![](src/images/recorder.png)
-Puppeteer recorder is a Chrome extension that records your browser interactions and generates a 
+
+⭐️ We just published an update on the glorious future of Puppeteer Recorder, [check out this pinned issue](https://github.com/checkly/puppeteer-recorder/issues/83) ⭐️ 
+
 [Puppeteer](https://github.com/GoogleChrome/puppeteer) script. Install it from the [Chrome Webstore](https://chrome.google.com/webstore/detail/puppeteer-recorder/djeegiggegleadkkbgopoonhjimgehda).
 This project is pretty fresh, but does the following already:
 
