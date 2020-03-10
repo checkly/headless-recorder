@@ -28,12 +28,12 @@ export const startServer = function (buildDir, file) {
     let server
     let port
     const retry = (e) => {
-      if(e.code == 'EADDRINUSE') {
+      if (e.code === 'EADDRINUSE') {
         setTimeout(() => connect, 1000)
       }
     }
     const connect = () => {
-      port = 0|(Math.random() * 1000) + 3000
+      port = 0 | (Math.random() * 1000) + 3000
       server = app.listen(port)
       server.once('error', retry)
       server.once('listening', () => {
