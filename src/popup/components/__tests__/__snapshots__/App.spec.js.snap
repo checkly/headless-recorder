@@ -17,7 +17,11 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         class="text-muted"
       >
         <small>
+<<<<<<< Updated upstream
           0.7.1
+=======
+          0.7.3
+>>>>>>> Stashed changes
         </small>
       </span>
     </a>
