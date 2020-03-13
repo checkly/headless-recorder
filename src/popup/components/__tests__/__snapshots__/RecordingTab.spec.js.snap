@@ -30,10 +30,10 @@ exports[`RecordingTab.vue it has the correct pristine / empty state 1`] = `
         class="nag-cta"
       >
         <a
-          href="https://surveys.hotjar.com/s?siteId=717179&surveyId=137462"
+          href="https://github.com/checkly/puppeteer-recorder/issues/83"
           target="_blank"
         >
-          ⚡️ Puppeteer Recorder Pro is coming →
+          ⚡️Updates on the roadmap of Puppeteer Recorder →
         </a>
       </div>
     </div>
@@ -88,10 +88,10 @@ exports[`RecordingTab.vue it has the correct recording DOM events state 1`] = `
         style="display: none;"
       >
         <a
-          href="https://surveys.hotjar.com/s?siteId=717179&surveyId=137462"
+          href="https://github.com/checkly/puppeteer-recorder/issues/83"
           target="_blank"
         >
-          ⚡️ Puppeteer Recorder Pro is coming →
+          ⚡️Updates on the roadmap of Puppeteer Recorder →
         </a>
       </div>
     </div>
@@ -175,10 +175,10 @@ exports[`RecordingTab.vue it has the correct recording Puppeteer custom events s
         style="display: none;"
       >
         <a
-          href="https://surveys.hotjar.com/s?siteId=717179&surveyId=137462"
+          href="https://github.com/checkly/puppeteer-recorder/issues/83"
           target="_blank"
         >
-          ⚡️ Puppeteer Recorder Pro is coming →
+          ⚡️Updates on the roadmap of Puppeteer Recorder →
         </a>
       </div>
     </div>
@@ -316,10 +316,10 @@ exports[`RecordingTab.vue it has the correct waiting for events state 1`] = `
         style="display: none;"
       >
         <a
-          href="https://surveys.hotjar.com/s?siteId=717179&surveyId=137462"
+          href="https://github.com/checkly/puppeteer-recorder/issues/83"
           target="_blank"
         >
-          ⚡️ Puppeteer Recorder Pro is coming →
+          ⚡️Updates on the roadmap of Puppeteer Recorder →
         </a>
       </div>
     </div>
