@@ -9,7 +9,7 @@ cache:
   directories:
   - node_modules
 node_js:
-- "8.11.4"
+- 12
 # allow headful tests
 before_install:
 - "export DISPLAY=:99.0"
