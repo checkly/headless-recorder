@@ -7,7 +7,7 @@ let port
 let browser
 let page
 
-describe.only('attributes', () => {
+describe('attributes', () => {
   beforeAll(async (done) => {
     await runDist()
     const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
