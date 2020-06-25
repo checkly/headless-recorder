@@ -22,9 +22,12 @@ export default class EventRecorder {
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(['options'], ({options}) => {
-        const { dataAttribute } = options ? options.code : {}
+        const { dataAttribute, strictDataAttributeQuery } = options ? options.code : {}
         if (dataAttribute) {
           this._dataAttribute = dataAttribute
+        }
+        if (strictDataAttributeQuery) {
+          this._strictDataAttributeQuery = strictDataAttributeQuery
         }
         this._initializeRecorder()
       })
@@ -100,10 +103,11 @@ export default class EventRecorder {
     // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
     // for these events we cannot generate selectors, which is OK
     try {
-      const optimizedMinLength = (e.target.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
+      const optimizedMinLength = (this._strictDataAttributeQuery || e.target.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
+      const seedMinLength = this._strictDataAttributeQuery ? 1 : 5
       const selector = this._dataAttribute
-        ? finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength, attr: (name, _value) => name === this._dataAttribute})
-        : finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength})
+        ? finder(e.target, {seedMinLength, optimizedMinLength: optimizedMinLength, attr: (name, _value) => name === this._dataAttribute})
+        : finder(e.target, {seedMinLength, optimizedMinLength: optimizedMinLength})
 
       const msg = {
         selector: selector,

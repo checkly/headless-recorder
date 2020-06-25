@@ -19,6 +19,12 @@
               <small>Define a <code>data-*</code> attribute that we'll attempt to use when selecting the elements. This is handy
                 when React or Vue based apps generate random class names.</small>
             </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-strictDataAttributeQuery" type="checkbox" v-model="options.code.strictDataAttributeQuery" @change="save">
+                treat data attributes as unique (this will not generate nested selectors)
+              </label>
+            </div>
           </div>
         </div>
         <div class="settings-block">
