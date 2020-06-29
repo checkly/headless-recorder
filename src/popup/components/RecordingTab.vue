@@ -17,7 +17,7 @@
               {{index + 1}}.
             </div>
             <div class="event-description">
-              <div class="event-action">{{event.action}}</div>
+                   {{event.action}} <i v-if="event.text"> "{{event.text}}"</i>
               <div class="event-props text-muted">{{event.selector || parseEventValue(event)}}</div>
             </div>
           </li>

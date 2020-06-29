@@ -112,6 +112,7 @@ export default class EventRecorder {
         action: e.type,
         keyCode: e.keyCode ? e.keyCode : null,
         href: e.target.href ? e.target.href : null,
+        text: this._getTextValue(e),
         coordinates: EventRecorder._getCoordinates(e)
       }
       this._sendMessage(msg)
@@ -156,6 +157,8 @@ export default class EventRecorder {
     this._isRecordingClicks = true
   }
 
+
+
   static _getCoordinates (evt) {
     const eventsWithCoordinates = {
       mouseup: true,
@@ -165,6 +168,12 @@ export default class EventRecorder {
     }
     return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null
   }
+
+  _getTextValue(event){
+    console.log(event.path[0].innerText.length);
+    if(event.path[0].innerText.length >40) return null;
+    return event.path[0].innerText;
+  } 
 
   static _formatDataSelector (element, attribute) {
     return `[${attribute}="${element.getAttribute(attribute)}"]`
