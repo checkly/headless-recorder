@@ -2,11 +2,11 @@ import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
 import Block from './Block'
 
-const importPuppeteer = `const puppeteer = require('playwright');\n`
+const importPuppeteer = `const playwright = require('playwright');\n`
 
 const header = `const browser = await playwright['chromium'].launch();
 const context = await browser.newContext();
-const page = await browser.newPage();`
+const page = await context.newPage();`
 
 const footer = `await browser.close();`
 
