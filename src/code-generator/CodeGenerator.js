@@ -13,7 +13,7 @@ const footer = `await browser.close();`
 const wrappedHeader = `(async () => {
   const browser = await playwright['chromium'].launch();
   const context = await browser.newContext();
-  const page = await browser.newPage();\n`
+  const page = await context.newPage();\n`
 
 const wrappedFooter = `  await browser.close();
 })()`
