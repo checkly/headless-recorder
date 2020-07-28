@@ -2,7 +2,7 @@ import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
 import Block from './Block'
 
-const importPuppeteer = `const playwright = require('playwright');\n`
+const importPlaywright = `const playwright = require('playwright');\n`
 
 const header = `const browser = await playwright['chromium'].launch();
 const context = await browser.newContext();
@@ -40,7 +40,7 @@ export default class CodeGenerator {
   }
 
   generate (events) {
-    return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
+    return importPlaywright + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
   _getHeader () {
