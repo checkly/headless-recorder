@@ -1,10 +1,10 @@
 {
   "name": "playwright-recorder",
   "version": "1.0.0",
-  "description": "A Chrome extension for recording browser interaction and generating Puppeteer scripts",
+  "description": "A Chrome extension for recording browser interaction and generating Playwright scripts",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
+    "dev": "NODE_ENV=development DEBUG=playwright-recorder:* webpack --watch",
     "build": "NODE_ENV=production webpack",
     "dist": "NODE_ENV=production webpack && node scripts/zip.js",
     "test": "npm run unit-test && npm run e2e-test",
@@ -21,7 +21,7 @@
     "url": "https://github.com/checkly/puppeteer-recorder"
   },
   "keywords": [
-    "puppeteer",
+    "playwright",
     "chrome",
     "extension"
   ],
