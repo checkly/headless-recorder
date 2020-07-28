@@ -2,12 +2,9 @@
   <div class="tab recording-tab">
     <div class="content">
       <div class="empty" v-show="!isRecording">
-        <img src="/images/Desert.svg" alt="desert" width="78px">
+        <img src="/images/PlayWright.png" alt="logo" width="78px">
         <h3>No recorded events yet</h3>
         <p class="text-muted">Click record to begin</p>
-        <div class="nag-cta" v-show="!isRecording">
-          <a href="https://github.com/checkly/puppeteer-recorder/issues/83" target="_blank">⚡️Updates on the roadmap of Puppeteer Recorder →</a>
-        </div>
       </div>
       <div class="events" v-show="isRecording">
         <p class="text-muted text-center loading" v-show="liveEvents.length === 0">Waiting for events</p>

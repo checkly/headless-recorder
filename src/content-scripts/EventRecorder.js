@@ -50,7 +50,7 @@ export default class EventRecorder {
       this._sendMessage({ control: ctrl.EVENT_RECORDER_STARTED })
       this._sendMessage({ control: ctrl.GET_CURRENT_URL, href: window.location.href })
       this._sendMessage({ control: ctrl.GET_VIEWPORT_SIZE, coordinates: { width: window.innerWidth, height: window.innerHeight } })
-      console.debug('Puppeteer Recorder in-page EventRecorder started')
+      console.debug('Playwright Recorder in-page EventRecorder started')
     }
   }
 

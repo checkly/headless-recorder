@@ -2,7 +2,7 @@
   <div class="options">
     <div class="container">
       <div class="header">
-        Puppeteer Recorder Options
+        Playwright Recorder Options
         <small class="saving-badge text-muted" v-show="saving">
           Saving...
         </small>
@@ -35,7 +35,7 @@
             <div class="settings-group">
               <label>
                 <input id="options-code-headless" type="checkbox" v-model="options.code.headless" @change="save">
-                set <code>headless</code> in puppeteer launch options
+                set <code>headless</code> in Playwright launch options
               </label>
             </div>
             <div class="settings-group">
@@ -76,6 +76,10 @@
       </div>
       <div class="footer">
         sponsored by
+        <a href="https://playwright.dev/" target="_blank">
+          <img src="/images/mslogo.jpg" alt="Microsoft logo">
+        </a>
+        &amp
         <a href="https://checklyhq.com" target="_blank">
           <img src="/images/text_racoon_logo.svg" alt="">
         </a>

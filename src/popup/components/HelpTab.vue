@@ -30,6 +30,10 @@ node my-script.js</pre>
     </div>
     <div class="help-footer text-muted">
       powered by
+      <a href="https://playwright.dev/" target="_blank">
+        <img src="/images/mslogo.jpg" alt="Microsoft logo">
+      </a>
+      &amp
       <a href="https://checklyhq.com" target="_blank">
         <img src="/images/text_racoon_logo.svg" alt="">
       </a>
