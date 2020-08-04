@@ -1,4 +1,5 @@
 import Block from './Block'
+import pptrActions from './pptr-actions'
 
 export const defaults = {
   wrapAsync: true,
@@ -31,6 +32,14 @@ export default class CodeGenerator {
       this._frameId = 0
       this._frame = 'page'
     }
+  }
+
+  _handleWaitForNavigation () {
+    const block = new Block(this._frameId)
+    if (this._options.waitForNavigation) {
+      block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
+    }
+    return block
   }
 
   _postProcess () {

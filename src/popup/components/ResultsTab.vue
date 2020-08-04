@@ -96,7 +96,7 @@ export default {
       background: transparent;
       cursor: pointer;
       font-size: 14px;
-      font-weight: 500;
+      color: $gray-dark;
       outline: none;
       border-bottom: 4px solid transparent;
       text-transform: capitalize;

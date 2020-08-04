@@ -18,10 +18,6 @@ const wrappedFooter = `  await browser.close()
 })()`
 
 export default class PuppeteerCodeGenerator extends CodeGenerator {
-  constructor (options) {
-    super(options)
-  }
-
   generate (events) {
     return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
@@ -147,14 +143,6 @@ export default class PuppeteerCodeGenerator extends CodeGenerator {
     }
 
     this._screenshotCounter++
-    return block
-  }
-
-  _handleWaitForNavigation () {
-    const block = new Block(this._frameId)
-    if (this._options.waitForNavigation) {
-      block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
-    }
     return block
   }
 

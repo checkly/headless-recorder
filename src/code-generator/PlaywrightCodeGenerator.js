@@ -18,10 +18,6 @@ const wrappedFooter = `  ${footer}
 })()`
 
 export default class PlaywrightCodeGenerator extends CodeGenerator {
-  constructor (options) {
-    super(options)
-  }
-
   generate (events) {
     return importPlaywright + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
@@ -125,7 +121,7 @@ export default class PlaywrightCodeGenerator extends CodeGenerator {
   }
 
   _handleViewport (width, height) {
-    return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
+    return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewportSize({ width: ${width}, height: ${height} })` })
   }
 
   _handleScreenshot (options) {
@@ -147,14 +143,6 @@ export default class PlaywrightCodeGenerator extends CodeGenerator {
     }
 
     this._screenshotCounter++
-    return block
-  }
-
-  _handleWaitForNavigation () {
-    const block = new Block(this._frameId)
-    if (this._options.waitForNavigation) {
-      block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
-    }
     return block
   }
 
