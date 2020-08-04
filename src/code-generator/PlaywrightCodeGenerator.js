@@ -3,9 +3,9 @@ import pptrActions from './pptr-actions'
 import Block from './Block'
 import CodeGenerator from './CodeGenerator'
 
-const importPlaywright = `const playwright = require('playwright')\n`
+const importPlaywright = `const playwright = require('playwright');\n`
 
-const header = `const browser = await playwright.chrome.launch()
+const header = `const browser = await playwright.chromium.launch()
   const context = await browser.newContext()
   const page = await context.newPage()`
 
