@@ -5,20 +5,31 @@ exports[`RecordingTab.vue it has the correct pristine / empty state 1`] = `
   class="tab results-tab"
 >
   <div
+    class="tabs"
+  >
+    <button
+      class="tabs__action selected"
+    >
+      puppeteer
+    </button>
+    <button
+      class="tabs__action"
+    >
+      playwright
+    </button>
+  </div>
+   
+  <div
     class="content"
   >
-    <div
-      class="generated-code"
-    >
-      <pre>
-              
-        <code>
-          No code yet...
-        </code>
-        
+    <pre>
+            
+      <code>
+        No code yet...
+      </code>
+      
     
-      </pre>
-    </div>
+    </pre>
   </div>
 </div>
 `;
@@ -28,17 +39,31 @@ exports[`RecordingTab.vue it show a code box when there is code 1`] = `
   class="tab results-tab"
 >
   <div
+    class="tabs"
+  >
+    <button
+      class="tabs__action selected"
+    >
+      puppeteer
+    </button>
+    <button
+      class="tabs__action"
+    >
+      playwright
+    </button>
+  </div>
+   
+  <div
     class="content"
   >
-    <div
-      class="generated-code"
-    >
-      <pre>
-        <code
-          class="javascript"
-        />
-      </pre>
-    </div>
+    <pre>
+            
+      <code
+        class="javascript"
+      />
+      
+    
+    </pre>
   </div>
 </div>
 `;

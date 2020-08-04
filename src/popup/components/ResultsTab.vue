@@ -1,21 +1,63 @@
 <template>
   <div class="tab results-tab">
+    <div class="tabs">
+      <button v-for="tab in tabs" :key="tab" class="tabs__action" v-bind:class="{'selected': activeTab === tab}" @click.prevent="changeTab(tab)">{{ tab }}</button>
+    </div>
+
     <div class="content">
-      <div class="generated-code">
-        <pre v-highlightjs="code" v-if="code"><code class="javascript"></code></pre>
-        <pre v-else>
+      <pre v-if="code()" v-highlightjs="code()">
+        <code class="javascript"></code>
+      </pre>
+      <pre v-else>
         <code>No code yet...</code>
       </pre>
-      </div>
     </div>
   </div>
 </template>
 <script>
-  export default {
-    name: 'ResultsTab',
-    props: {
-      code: { type: String, default: '' }
+export const TYPE = {
+  PUPPETEER: 'puppeteer',
+  PLAYWRIGHT: 'playwright'
+}
+
+export default {
+  name: 'ResultsTab',
+  props: {
+    puppeteer: {
+      type: String, 
+      default: ''
+    },
+    playwright: {
+      type: String, 
+      default: ''
+    },
+    options: {
+      type: Object,
+      default: () => ({})
     }
+  },
+  data () {
+    return {
+      activeTab: TYPE.PUPPETEER,
+      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT]
+    }
+  },
+  mounted() {
+    if (this.options && this.options.code && this.options.code.showPlaywrightFirst) {
+      this.activeTab = TYPE.PLAYWRIGHT
+      this.tabs = this.tabs.reverse()
+    }
+    this.$emit('update:tab', this.activeTab)
+  },
+  methods: {
+    code() {
+      return this.activeTab === TYPE.PUPPETEER ? this.puppeteer : this.playwright
+    },
+    changeTab(tab) {
+      this.activeTab = tab
+      this.$emit('update:tab', tab)
+    }
+  }
   }
 </script>
 <style lang="scss" scoped>
@@ -42,6 +84,24 @@
       .code {
         font-family: Consolas, Monaco, monospace;
         padding: $spacer;
+      }
+    }
+  }
+
+  .tabs {
+    display: flex;
+    &__action {
+      padding: 12px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      border-bottom: 4px solid transparent;
+      text-transform: capitalize;
+      &.selected {
+        border-bottom-color: $blue;
       }
     }
   }

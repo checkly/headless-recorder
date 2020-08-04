@@ -22,10 +22,11 @@ export const defaults = {
   waitForNavigation: true,
   waitForSelectorOnClick: true,
   blankLinesBetweenBlocks: true,
-  dataAttribute: ''
+  dataAttribute: '',
+  showPlaywrightFirst: false
 }
 
-export default class CodeGenerator {
+export default class PuppeteerCodeGenerator {
   constructor (options) {
     this._options = Object.assign(defaults, options)
     this._blocks = []

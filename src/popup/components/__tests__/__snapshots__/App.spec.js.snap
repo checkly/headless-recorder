@@ -102,13 +102,7 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         <checklybadge-stub />
       </div>
        
-      <resultstab-stub
-        code=""
-        copy-link-text="copy to clipboard"
-        restart="function () { [native code] }"
-        set-copying="function () { [native code] }"
-        style="display: none;"
-      />
+      <!---->
        
       <div
         class="results-footer"

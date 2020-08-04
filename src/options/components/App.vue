@@ -56,6 +56,12 @@
                 add blank lines between code blocks
               </label>
             </div>
+            <div class="settings-group">
+              <label>
+                <input id="options-code-showPlaywrightFirst" type="checkbox" v-model="options.code.showPlaywrightFirst" @change="save">
+                Show Playwright tab first
+              </label>
+            </div>
           </div>
         </div>
         <div class="settings-block">
@@ -85,7 +91,7 @@
 </template>
 
 <script>
-  import { defaults as code } from '../../code-generator/CodeGenerator'
+  import { defaults as code } from '../../code-generator/PuppeteerCodeGenerator'
 
   const defaults = {
     code,
