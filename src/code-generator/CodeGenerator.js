@@ -30,13 +30,13 @@ export default class CodeGenerator {
 
   _getHeader () {
     console.debug(this._options)
-    let hdr = this._options.wrapAsync ? wrappedHeader : header
+    let hdr = this._options.wrapAsync ? this._wrappedHeader : this._header
     hdr = this._options.headless ? hdr : hdr.replace('launch()', 'launch({ headless: false })')
     return hdr
   }
 
   _getFooter () {
-    return this._options.wrapAsync ? wrappedFooter : footer
+    return this._options.wrapAsync ? this._wrappedFooter : this._footer
   }
 
   _parseEvents (events) {
