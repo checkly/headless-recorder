@@ -10,12 +10,33 @@ exports[`RecordingTab.vue it has the correct pristine / empty state 1`] = `
     <button
       class="tabs__action selected"
     >
-      puppeteer
+      <!---->
+       
+      <img
+        src="/images/puppeteer.png"
+        width="16"
+      />
+       
+      <span
+        class="tabs__action--text"
+      >
+        puppeteer
+      </span>
     </button>
     <button
       class="tabs__action"
     >
-      playwright
+      <span>
+        🎭
+      </span>
+       
+      <!---->
+       
+      <span
+        class="tabs__action--text"
+      >
+        playwright
+      </span>
     </button>
   </div>
    
@@ -44,12 +65,33 @@ exports[`RecordingTab.vue it show a code box when there is code 1`] = `
     <button
       class="tabs__action selected"
     >
-      puppeteer
+      <!---->
+       
+      <img
+        src="/images/puppeteer.png"
+        width="16"
+      />
+       
+      <span
+        class="tabs__action--text"
+      >
+        puppeteer
+      </span>
     </button>
     <button
       class="tabs__action"
     >
-      playwright
+      <span>
+        🎭
+      </span>
+       
+      <!---->
+       
+      <span
+        class="tabs__action--text"
+      >
+        playwright
+      </span>
     </button>
   </div>
    

@@ -37,6 +37,6 @@ describe('RecordingTab.vue', () => {
         }
       }
     })
-    expect(wrapper.find('.tabs__action').text()).toEqual('playwright')
+    expect(wrapper.find('.tabs__action').text()).toEqual('🎭  playwright')
   })
 })

@@ -1,7 +1,11 @@
 <template>
   <div class="tab results-tab">
     <div class="tabs">
-      <button v-for="tab in tabs" :key="tab" class="tabs__action" v-bind:class="{'selected': activeTab === tab}" @click.prevent="changeTab(tab)">{{ tab }}</button>
+      <button v-for="tab in tabs" :key="tab" class="tabs__action" v-bind:class="{'selected': activeTab === tab}" @click.prevent="changeTab(tab)">
+        <span v-if="tab === 'playwright'">🎭</span>
+        <img v-if="tab === 'puppeteer'" src="/images/puppeteer.png" width="16" />
+        <span class="tabs__action--text">{{ tab }}</span>
+      </button>
     </div>
 
     <div class="content">
@@ -90,8 +94,9 @@ export default {
 
   .tabs {
     display: flex;
+    border-bottom: 1px solid $gray-lighter;
     &__action {
-      padding: 12px;
+      padding: 12px 20px;
       border: 0;
       background: transparent;
       cursor: pointer;
@@ -100,6 +105,11 @@ export default {
       outline: none;
       border-bottom: 4px solid transparent;
       text-transform: capitalize;
+      display: flex;
+      align-items: center;
+      &--text {
+        margin-left: 10px;
+      }
       &.selected {
         border-bottom-color: $blue;
       }
