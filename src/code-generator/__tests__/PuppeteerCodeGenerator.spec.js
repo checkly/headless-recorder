@@ -1,7 +1,7 @@
 import PuppeteerCodeGenerator from '../PuppeteerCodeGenerator'
 import pptrActions from '../pptr-actions'
 
-describe('code-generator', () => {
+describe('PuppeteerCodeGenerator', () => {
   test('it should generate nothing when there are no events', () => {
     const events = []
     const codeGenerator = new PuppeteerCodeGenerator()
