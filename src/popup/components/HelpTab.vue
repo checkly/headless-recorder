@@ -22,10 +22,10 @@
       </ul>
       <p>For more help and examples, <a href="https://checklyhq.com/puppeteer-recorder" target="_blank">go to the help docs</a></p>
       <h4>Replaying</h4>
-      <p>Install <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a> on your machine. Copy and paste the code
+      <p>Install <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a> or <a href="https://playwright.dev/">Playwright</a> on your machine. Copy and paste the code
       into a file and run as a standard node program</p>
       <pre>
-npm install puppeteer
+npm install puppeteer playwright
 node my-script.js</pre>
     </div>
     <div class="help-footer text-muted">
