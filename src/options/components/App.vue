@@ -29,31 +29,31 @@
             <div class="settings-group">
               <label>
                 <input id="options-code-wrapAsync" type="checkbox" v-model="options.code.wrapAsync" @change="save">
-                wrap code in async function
+                Wrap code in async function
               </label>
             </div>
             <div class="settings-group">
               <label>
                 <input id="options-code-headless" type="checkbox" v-model="options.code.headless" @change="save">
-                set <code>headless</code> in puppeteer launch options
+                Set <code>headless</code> in puppeteer launch options
               </label>
             </div>
             <div class="settings-group">
               <label>
                 <input id="options-code-waitForNavigation" type="checkbox" v-model="options.code.waitForNavigation" @change="save">
-                add <code>waitForNavigation</code> lines on navigation
+                Add <code>waitForNavigation</code> lines on navigation
               </label>
             </div>
             <div class="settings-group">
               <label>
                 <input id="options-code-waitForSelectorOnClick" type="checkbox" v-model="options.code.waitForSelectorOnClick" @change="save">
-                add <code>waitForSelector</code> lines before every <code>page.click()</code>
+                Add <code>waitForSelector</code> lines before every <code>page.click()</code>
               </label>
             </div>
             <div class="settings-group">
               <label>
                 <input id="options-code-blankLinesBetweenBlocks" type="checkbox" v-model="options.code.blankLinesBetweenBlocks" @change="save">
-                add blank lines between code blocks
+                Add blank lines between code blocks
               </label>
             </div>
             <div class="settings-group">
