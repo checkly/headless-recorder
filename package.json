@@ -13,9 +13,6 @@
     "e2e-test": "jest __e2e-tests__ --runInBand --silent",
     "lint": "eslint --quiet -f codeframe src"
   },
-  "pre-commit": [
-    "test-prod"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/checkly/puppeteer-recorder"
