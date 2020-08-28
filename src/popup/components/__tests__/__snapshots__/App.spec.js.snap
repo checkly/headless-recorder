@@ -3,7 +3,7 @@
 exports[`App.vue it has the correct pristine / empty state 1`] = `
 <div
   class="recorder"
-  id="puppeteer-recorder"
+  id="headless-recorder"
 >
   <div
     class="header"
@@ -12,7 +12,7 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
       href="#"
     >
       
-      Puppeteer recorder 
+      Headless recorder 
       <span
         class="text-muted"
       >

@@ -30,10 +30,14 @@ exports[`RecordingTab.vue it has the correct pristine / empty state 1`] = `
         class="nag-cta"
       >
         <a
-          href="https://github.com/checkly/puppeteer-recorder/issues/83"
+          href="https://checklyhq.com/headless-recorder"
           target="_blank"
         >
-          ⚡️Updates on the roadmap of Puppeteer Recorder →
+          Puppeteer Recorder is now 
+          <strong>
+            Headless Recorder
+          </strong>
+           and supports Playwright →
         </a>
       </div>
     </div>
@@ -88,10 +92,14 @@ exports[`RecordingTab.vue it has the correct recording DOM events state 1`] = `
         style="display: none;"
       >
         <a
-          href="https://github.com/checkly/puppeteer-recorder/issues/83"
+          href="https://checklyhq.com/headless-recorder"
           target="_blank"
         >
-          ⚡️Updates on the roadmap of Puppeteer Recorder →
+          Puppeteer Recorder is now 
+          <strong>
+            Headless Recorder
+          </strong>
+           and supports Playwright →
         </a>
       </div>
     </div>
@@ -175,10 +183,14 @@ exports[`RecordingTab.vue it has the correct recording Puppeteer custom events s
         style="display: none;"
       >
         <a
-          href="https://github.com/checkly/puppeteer-recorder/issues/83"
+          href="https://checklyhq.com/headless-recorder"
           target="_blank"
         >
-          ⚡️Updates on the roadmap of Puppeteer Recorder →
+          Puppeteer Recorder is now 
+          <strong>
+            Headless Recorder
+          </strong>
+           and supports Playwright →
         </a>
       </div>
     </div>
@@ -316,10 +328,14 @@ exports[`RecordingTab.vue it has the correct waiting for events state 1`] = `
         style="display: none;"
       >
         <a
-          href="https://github.com/checkly/puppeteer-recorder/issues/83"
+          href="https://checklyhq.com/headless-recorder"
           target="_blank"
         >
-          ⚡️Updates on the roadmap of Puppeteer Recorder →
+          Puppeteer Recorder is now 
+          <strong>
+            Headless Recorder
+          </strong>
+           and supports Playwright →
         </a>
       </div>
     </div>
