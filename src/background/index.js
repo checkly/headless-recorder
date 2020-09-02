@@ -70,7 +70,7 @@ class RecordingController {
 
       chrome.contextMenus.create({
         id: this._menuId,
-        title: 'Puppeteer Recorder',
+        title: 'Headless Recorder',
         contexts: ['all']
       })
 

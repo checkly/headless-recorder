@@ -1,8 +1,8 @@
 <template>
-  <div id="puppeteer-recorder" class="recorder">
+  <div id="headless-recorder" class="recorder">
     <div class="header">
       <a href="#" @click="goHome">
-        Puppeteer recorder <span class="text-muted"><small>{{version}}</small></span>
+        Headless recorder <span class="text-muted"><small>{{version}}</small></span>
       </a>
       <div class="left">
         <div class="recording-badge" v-show="isRecording">

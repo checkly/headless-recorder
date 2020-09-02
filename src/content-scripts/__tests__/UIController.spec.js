@@ -30,15 +30,15 @@ it('Shows and hides the selector', () => {
   const uic = new UIController()
 
   uic.showSelector()
-  let overlay = document.querySelector('.pptrRecorderOverlay')
-  let outline = document.querySelector('.pptrRecorderOutline')
+  let overlay = document.querySelector('.headlessRecorderOverlay')
+  let outline = document.querySelector('.headlessRecorderOutline')
 
   expect(overlay).toBeDefined()
   expect(outline).toBeDefined()
 
   uic.hideSelector()
-  overlay = document.querySelector('.pptrRecorderOverlay')
-  outline = document.querySelector('.pptrRecorderOutline')
+  overlay = document.querySelector('.headlessRecorderOverlay')
+  outline = document.querySelector('.headlessRecorderOutline')
 
   expect(overlay).toBeNull()
   expect(outline).toBeNull()

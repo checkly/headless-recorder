@@ -11,7 +11,7 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
       class="header"
     >
       
-      Puppeteer Recorder Options
+      Headless Recorder Options
       
       <small
         class="saving-badge text-muted"

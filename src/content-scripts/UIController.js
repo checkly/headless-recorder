@@ -25,7 +25,7 @@ class UIController extends EventEmitter {
     console.debug('UIController:show')
     if (!this._overlay) {
       this._overlay = document.createElement('div')
-      this._overlay.className = 'pptrRecorderOverlay'
+      this._overlay.className = 'headlessRecorderOverlay'
       this._overlay.style.position = 'fixed'
       this._overlay.style.top = '0px'
       this._overlay.style.left = '0px'
@@ -35,7 +35,7 @@ class UIController extends EventEmitter {
 
       if (this._showSelector) {
         this._selector = document.createElement('div')
-        this._selector.className = 'pptrRecorderOutline'
+        this._selector.className = 'headlessRecorderOutline'
         this._selector.style.position = 'fixed'
         this._selector.style.border = BORDER_THICKNESS + 'px solid rgba(69,200,241,0.8)'
         this._selector.style.borderRadius = '3px'

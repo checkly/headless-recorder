@@ -1,7 +1,7 @@
 {
-  "name": "puppeteer-recorder",
+  "name": "headless-recorder",
   "version": "0.8.0",
-  "description": "A Chrome extension for recording browser interaction and generating Puppeteer scripts",
+  "description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/checkly/puppeteer-recorder"
+    "url": "https://github.com/checkly/headless-recorder"
   },
   "keywords": [
     "puppeteer",
@@ -25,9 +25,9 @@
   "author": "Tim Nolet",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/checkly/puppeteer-recorder/issues"
+    "url": "https://github.com/checkly/headless-recorder/issues"
   },
-  "homepage": "https://github.com/checkly/puppeteer-recorder#readme",
+  "homepage": "https://github.com/checkly/headless-recorder#readme",
   "dependencies": {
     "@medv/finder": "^1.1.2",
     "events": "^3.0.0",

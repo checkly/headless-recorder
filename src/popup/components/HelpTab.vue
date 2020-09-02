@@ -20,7 +20,7 @@
         <li>Take screenshot: Ctrl+Shift+A</li>
         <li>Take clipped screenshot: Ctrl+Shift+M</li>
       </ul>
-      <p>For more help and examples, <a href="https://checklyhq.com/puppeteer-recorder" target="_blank">go to the help docs</a></p>
+      <p>For more help and examples, <a href="https://checklyhq.com/headless-recorder" target="_blank">go to the help docs</a></p>
       <h4>Replaying</h4>
       <p>Install <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a> or <a href="https://playwright.dev/">Playwright</a> on your machine. Copy and paste the code
       into a file and run as a standard node program</p>
