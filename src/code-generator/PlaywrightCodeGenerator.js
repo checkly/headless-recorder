@@ -32,4 +32,8 @@ export default class PlaywrightCodeGenerator extends CodeGenerator {
   _handleViewport (width, height) {
     return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewportSize({ width: ${width}, height: ${height} })` })
   }
+
+  _handleChange (selector, value) {
+    return new Block(this._frameId, { type: pptrActions.CHANGE, value: `await ${this._frame}.selectOption('${selector}', '${value}')` })
+  }
 }
