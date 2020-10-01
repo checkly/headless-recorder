@@ -1,6 +1,6 @@
 {
   "name": "headless-recorder",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
   "main": "index.js",
   "scripts": {
