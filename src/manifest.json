@@ -7,7 +7,8 @@
     "storage",
     "webNavigation",
     "activeTab",
-    "contextMenus"
+    "contextMenus",
+    "*://*/"
   ],
   "icons" : {
     "16": "images/app_icon_16.png",
