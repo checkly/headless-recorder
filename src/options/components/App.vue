@@ -19,6 +19,14 @@
               <small>Define an attribute that we'll attempt to use when selecting the elements, i.e "data-custom". This is handy
                 when React or Vue based apps generate random class names.</small>
             </div>
+            <div class="settings-group">
+              <label class="settings-label">set key code</label>
+              <div class="settings-block">
+                <button class="btn btn-sm btn-primary" @click="listenForKeyCodePress">{{ recordingKeyCodePress ? 'Capturing' : 'Click to capture key code'}}</button>
+                <input id="options-code-keyCode" readonly disabled type="number" v-model.number="options.code.keyCode" placeholder="Key Code for input fields (ex. 9 = Tab)">
+              </div>
+              <small>What key will be used for capturing input changes. The value here is the key code. This will not handle multiple keys.</small>
+            </div>
           </div>
         </div>
         <div class="settings-block">
@@ -106,7 +114,8 @@
       return {
         loading: true,
         saving: false,
-        options: defaults
+        options: defaults,
+        recordingKeyCodePress: false
       }
     },
     mounted () {
@@ -130,6 +139,20 @@
           }
           this.loading = false
         })
+      },
+      listenForKeyCodePress () {
+        this.recordingKeyCodePress = true
+        const keyDownFunction = e => {
+          this.recordingKeyCodePress = false
+          this.updateKeyCodeWithNumber(e)
+          window.removeEventListener('keydown', keyDownFunction, false)
+          e.preventDefault();
+        }
+        window.addEventListener('keydown', keyDownFunction, false)
+      },
+      updateKeyCodeWithNumber (evt) {
+        this.options.code.keyCode = parseInt(evt.keyCode, 10);
+        this.save()
       }
     }
   }
@@ -206,7 +229,7 @@
             display: block;
           }
         }
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
           margin-bottom: 10px;
           width: 100%;
           border: 1px solid $gray-light;
@@ -215,6 +238,9 @@
           font-size: 14px;
           border-radius: 10px;
           -webkit-box-sizing: border-box;
+        }
+        input[type="number"] {
+          width: 50px;
         }
       }
     }
