@@ -9,7 +9,8 @@ export const defaults = {
   waitForSelectorOnClick: true,
   blankLinesBetweenBlocks: true,
   dataAttribute: '',
-  showPlaywrightFirst: false
+  showPlaywrightFirst: false,
+  keyCode: 9
 }
 
 export default class CodeGenerator {
@@ -53,7 +54,7 @@ export default class CodeGenerator {
 
       switch (action) {
         case 'keydown':
-          if (keyCode === 9) { // tab key
+          if (keyCode === this._options.keyCode) {
             this._blocks.push(this._handleKeyDown(selector, value, keyCode))
           }
           break
