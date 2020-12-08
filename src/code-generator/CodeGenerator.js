@@ -128,7 +128,7 @@ export default class CodeGenerator {
 
   _handleKeyDown (selector, value) {
     const block = new Block(this._frameId)
-    block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${value}')` })
+    block.addLine({ type: domEvents.KEYDOWN, value: `await ${this._frame}.type('${selector}', '${this._escapeUserInput(value)}')` })
     return block
   }
 
@@ -206,5 +206,9 @@ export default class CodeGenerator {
       this._blocks.splice(i, 0, blankLine)
       i += 2
     }
+  }
+
+  _escapeUserInput (value) {
+    return value.replace(/\\/g, '\\\\').replace(/'/g, '\\\'')
   }
 }

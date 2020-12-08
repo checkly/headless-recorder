@@ -86,4 +86,12 @@ describe('PuppeteerCodeGenerator', () => {
 
     expect(result).toContain("await page.screenshot({ path: 'screenshot_1.png', clip: { x: 10, y: 300, width: 800, height: 600 } })")
   })
+
+  test('it generates the correct escaped value', () => {
+    const events = [{ action: 'keydown', keyCode: 9, selector: 'input.value', value: "hello');console.log('world" }]
+    const codeGenerator = new PuppeteerCodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+
+    expect(result).toContain("await page.type('input.value', 'hello\\');console.log(\\'world')")
+  })
 })
