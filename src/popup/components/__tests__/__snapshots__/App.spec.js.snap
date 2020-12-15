@@ -17,7 +17,7 @@ exports[`App.vue it has the correct pristine / empty state 1`] = `
         class="text-muted"
       >
         <small>
-          0.8.1
+          0.8.2
         </small>
       </span>
     </a>
