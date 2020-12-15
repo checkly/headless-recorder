@@ -29,4 +29,7 @@ jobs:
           key: ${{ github.sha }}
       - run: npm run lint
       - run: npm run build
+      - uses: mujo-code/puppeteer-headful@master
+          env:
+            CI: 'true'
       - run: NODE_ENV=production npm test

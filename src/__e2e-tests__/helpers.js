@@ -17,6 +17,11 @@ export const launchPuppeteerWithExtension = function (puppeteer) {
       '--disable-setuid-sandbox'
     ]
   }
+
+  if (process.env.CI) {
+    options.executablePath = process.env.PUPPETEER_EXEC_PATH // Set by docker on github actions
+  }
+
   return puppeteer.launch(options)
 }
 
