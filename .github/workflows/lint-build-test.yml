@@ -18,7 +18,7 @@ jobs:
         path: '.'
         key: ${{ github.sha }}
 
-  lint-build-test:
+  lint-build:
     runs-on: ubuntu-latest
     needs: dependencies
     steps:
@@ -29,7 +29,17 @@ jobs:
           key: ${{ github.sha }}
       - run: npm run lint
       - run: npm run build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: dependencies
+    steps:
+      - uses: actions/cache@v1
+        id: restore-dependencies
+        with:
+          path: '.'
+          key: ${{ github.sha }}
       - uses: mujo-code/puppeteer-headful@master
-          env:
-            CI: 'true'
-      - run: NODE_ENV=production npm test
+        env:
+          CI: 'true'
+        run: NODE_ENV=production npm test
