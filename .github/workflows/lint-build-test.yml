@@ -1,42 +1,3 @@
-# name: Lint & Build & Test
-
-# on:
-#   push:
-#     branches: [ master ]
-#   pull_request:
-#     types: [ opened, synchronize ]
-
-# jobs:
-#   dependencies:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v2
-#     - run: npm install
-#     - uses: actions/cache@v1
-#       id: cache-dependencies
-#       with:
-#         path: '.'
-#         key: ${{ github.sha }}
-
-#   ci:
-#     runs-on: ubuntu-latest
-#     needs: dependencies
-#     steps:
-#     - uses: actions/cache@v1
-#       id: restore-dependencies
-#       with:
-#         path: '.'
-#         key: ${{ github.sha }}
-#     - name: Lint
-#       run: npm run lint
-#     - name: Test
-#       uses: mujo-code/puppeteer-headful@master
-#       env:
-#         CI: 'true'
-#         NODE_ENV: 'production'
-#       with: 
-#         args: npm run build:test
-
 name: Lint & Build & Test
 
 on:
@@ -47,22 +8,33 @@ on:
 
 jobs:
   dependencies:
-    name: Dependencies
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Install Dependencies
-      uses: actions/npm@master
-      env:
-        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+    - uses: actions/checkout@v2
+    - run: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install
+    - uses: actions/cache@v1
+      id: cache-dependencies
       with:
-        args: install
+        path: '.'
+        key: ${{ github.sha }}
+
+  ci:
+    runs-on: ubuntu-latest
+    needs: dependencies
+    steps:
+    - uses: actions/cache@v1
+      id: restore-dependencies
+      with:
+        path: '.'
+        key: ${{ github.sha }}
     - name: Lint
       run: npm run lint
-    - name: Test Code
+    - name: Build
+      run: npm run build
+    - name: Test
       uses: mujo-code/puppeteer-headful@master
       env:
         CI: 'true'
         NODE_ENV: 'production'
-      with:
-        args: npm run build:test
+      with: 
+        args: ls && npm run test-prod
