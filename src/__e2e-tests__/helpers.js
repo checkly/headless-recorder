@@ -1,4 +1,3 @@
-import { Console } from 'console'
 import path from 'path'
 import { scripts } from '../../package.json'
 const util = require('util')
