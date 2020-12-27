@@ -12,7 +12,7 @@
     "unit-test": "jest __tests__/.*.spec.js",
     "e2e-test": "jest __e2e-tests__ --runInBand",
     "lint": "eslint --quiet -f codeframe src",
-    "build:test": "npm run build && npm run test-prod"
+    "ci": "ls && npm run test-prod"
   },
   "repository": {
     "type": "git",
