@@ -25,10 +25,6 @@ export const launchPuppeteerWithExtension = function (puppeteer) {
   return puppeteer.launch(options)
 }
 
-export const runDist = function () {
-  return exec(scripts.dist)
-}
-
 export const runBuild = function () {
   return exec(scripts.build)
 }

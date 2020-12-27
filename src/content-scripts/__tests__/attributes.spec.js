@@ -9,7 +9,6 @@ let page
 
 describe('attributes', () => {
   beforeAll(async (done) => {
-    // await runDist()
     const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
     const fixture = './fixtures/attributes.html'
     {

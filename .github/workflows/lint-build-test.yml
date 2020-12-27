@@ -29,8 +29,8 @@ jobs:
         key: ${{ github.sha }}
     - name: Lint
       run: npm run lint
-    - name: Build
-      run: npm run build
+    - name: Build & Zip
+      run: npm run dist
     - name: Test
       uses: mujo-code/puppeteer-headful@master
       env:
