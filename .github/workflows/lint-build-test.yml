@@ -27,8 +27,9 @@ jobs:
       with:
         path: '.'
         key: ${{ github.sha }}
-    - name: Lint & Build
+    - name: Lint
       run: npm run lint
+    - name: Build
       run: npm run build
     - name: Test
       uses: mujo-code/puppeteer-headful@master
