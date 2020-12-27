@@ -16,7 +16,7 @@ export const launchPuppeteerWithExtension = function (puppeteer) {
       '--no-sandbox',
       '--disable-setuid-sandbox'
     ]
-  } 
+  }
 
   console.log('---- DEBUG HERE ----')
   console.log(process.env.CI)
