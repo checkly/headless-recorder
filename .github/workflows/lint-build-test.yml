@@ -29,12 +29,12 @@ jobs:
         key: ${{ github.sha }}
     - name: Lint
       run: npm run lint
-    - name: Build
-      run: npm run build
     - name: Test
       uses: mujo-code/puppeteer-headful@master
       env:
         CI: 'true'
         NODE_ENV: 'production'
       with: 
-        args: npm run test-prod
+        args: |
+          npm run build
+          npm run test-prod
