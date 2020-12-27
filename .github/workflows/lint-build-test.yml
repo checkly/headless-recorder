@@ -35,6 +35,4 @@ jobs:
         CI: 'true'
         NODE_ENV: 'production'
       with: 
-        args: |
-          npm run build
-          npm run test-prod
+        args: npm run build:test
