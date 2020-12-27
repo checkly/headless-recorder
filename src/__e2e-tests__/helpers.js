@@ -1,3 +1,4 @@
+import { Console } from 'console'
 import path from 'path'
 import { scripts } from '../../package.json'
 const util = require('util')
@@ -16,7 +17,10 @@ export const launchPuppeteerWithExtension = function (puppeteer) {
       '--no-sandbox',
       '--disable-setuid-sandbox'
     ]
-  }
+  } 
+
+  console.log('---- DEBUG HERE ----')
+  console.log(process.env.CI)
 
   if (process.env.CI) {
     options.executablePath = process.env.PUPPETEER_EXEC_PATH // Set by docker on github actions
