@@ -18,9 +18,6 @@ export const launchPuppeteerWithExtension = function (puppeteer) {
     ]
   }
 
-  console.log('---- DEBUG HERE ----')
-  console.log(process.env.CI)
-
   if (process.env.CI) {
     options.executablePath = process.env.PUPPETEER_EXEC_PATH // Set by docker on github actions
   }
