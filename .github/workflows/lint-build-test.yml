@@ -1,0 +1,40 @@
+name: Lint & Build & Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install
+    - uses: actions/cache@v1
+      id: cache-dependencies
+      with:
+        path: '.'
+        key: ${{ github.sha }}
+
+  ci:
+    runs-on: ubuntu-latest
+    needs: dependencies
+    steps:
+    - uses: actions/cache@v1
+      id: restore-dependencies
+      with:
+        path: '.'
+        key: ${{ github.sha }}
+    - name: Lint
+      run: npm run lint
+    - name: Build & Zip
+      run: npm run dist
+    - name: Test
+      uses: mujo-code/puppeteer-headful@master
+      env:
+        CI: 'true'
+        NODE_ENV: 'production'
+      with: 
+        args: npm run test-prod

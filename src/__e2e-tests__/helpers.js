@@ -17,11 +17,12 @@ export const launchPuppeteerWithExtension = function (puppeteer) {
       '--disable-setuid-sandbox'
     ]
   }
-  return puppeteer.launch(options)
-}
 
-export const runDist = function () {
-  return exec(scripts.dist)
+  if (process.env.CI) {
+    options.executablePath = process.env.PUPPETEER_EXEC_PATH // Set by docker on github actions
+  }
+
+  return puppeteer.launch(options)
 }
 
 export const runBuild = function () {
