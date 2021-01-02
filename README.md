@@ -1,6 +1,6 @@
 # Headless Recorder (previously Puppeteer Recorder)
 
-[![Build Status](https://travis-ci.org/checkly/headless-recorder.svg?branch=develop)](https://travis-ci.org/checkly/headless-recorder)
+![Lint & Build & Test](https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master)
 
 #### Gold sponsor
 [<img src="chrome-store/checkly-logo.png?raw=true" alt="Checkly" width="300">](https://checklyhq.com?utm_source=github&utm_medium=sponsor-logo-github&utm_campaign=headless-recorder)
