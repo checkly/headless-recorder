@@ -94,4 +94,12 @@ describe('PuppeteerCodeGenerator', () => {
 
     expect(result).toContain("await page.type('input.value', 'hello\\');console.log(\\'world')")
   })
+
+  test('it generates the correct escaped value with backslash', () => {
+    const events = [{ action: 'click', selector: 'button.\\hello\\' }]
+    const codeGenerator = new PuppeteerCodeGenerator()
+    const result = codeGenerator._parseEvents(events)
+
+    expect(result).toContain("await page.click('button.\\\\hello\\\\')")
+  })
 })

@@ -48,6 +48,7 @@ export default class CodeGenerator {
 
     for (let i = 0; i < events.length; i++) {
       const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
+      const escapedSelector = selector ? selector.replace(/\\/g, '\\\\') : selector
 
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
@@ -55,15 +56,15 @@ export default class CodeGenerator {
       switch (action) {
         case 'keydown':
           if (keyCode === this._options.keyCode) {
-            this._blocks.push(this._handleKeyDown(selector, value, keyCode))
+            this._blocks.push(this._handleKeyDown(escapedSelector, value, keyCode))
           }
           break
         case 'click':
-          this._blocks.push(this._handleClick(selector, events))
+          this._blocks.push(this._handleClick(escapedSelector, events))
           break
         case 'change':
           if (tagName === 'SELECT') {
-            this._blocks.push(this._handleChange(selector, value))
+            this._blocks.push(this._handleChange(escapedSelector, value))
           }
           break
         case pptrActions.GOTO:
