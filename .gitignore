@@ -6,3 +6,5 @@ dist
 dist-zip
 *.pem
 *.crx
+test
+.vscode
