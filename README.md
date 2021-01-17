@@ -3,10 +3,10 @@
    <!-- headless-recorder Logo
      <img src="https://lh3.googleusercontent.com/zuxp6zCZpdSLqMHyr79oL39-phEVSVOYq2mtyBTkyJBc7A8PsWMTkWfofACaPIP-Vm59hutWx2YSFvfDPir9pCozg8g=w128-h128-e365-rj-sc0x00ffffff" /> -->
    <br/>
-   <h1 align="center">Headless Recorder
+   <h1 align="center">Headless Recorder</h1>
    <p align="center">     
      ⭐️ Puppeteer Recorder is now <b>Headless Recorder</b> and supports Playwright! ⭐️   
-   </p></h1>
+   </p>
    <br/>
    <p align="center" style="align: center;">
       <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
@@ -24,7 +24,7 @@
 ## 🙌 Support
 
 <!--sponsors start-->
-<table border="0" cellpadding="2">
+<table>
   <tbody>
     <tr>
       <td align="center" valign="middle">
