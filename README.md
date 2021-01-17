@@ -32,7 +32,6 @@
         <a href="https://checklyhq.com?utm_source=github&utm_medium=sponsor-logo-github&utm_campaign=headless-recorder" target="_blank">
           <img width="222px" src="chrome-store/checkly-logo.png?raw=true" alt="Checkly" />
         </a><br />
-        <div>Checkly</div><br />
         <i><sub>Delightful Active Monitoring for Developers</sub></i>
       </td>
       <td align="center" valign="middle">
@@ -51,7 +50,7 @@
 
 ## 📷 Screenshots
 
-![](src/images/recorder.png)
+![Screenshots](src/images/recorder.png)
 
 ## 🖨️ Overview
 
