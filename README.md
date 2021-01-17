@@ -1,8 +1,6 @@
 <p align="center">
-   <br/>
    <!-- headless-recorder Logo
      <img src="https://lh3.googleusercontent.com/zuxp6zCZpdSLqMHyr79oL39-phEVSVOYq2mtyBTkyJBc7A8PsWMTkWfofACaPIP-Vm59hutWx2YSFvfDPir9pCozg8g=w128-h128-e365-rj-sc0x00ffffff" /> -->
-   <br/>
    <h1 align="center">Headless Recorder</h1>
    <p align="center">     
      ⭐️ Puppeteer Recorder is now <b>Headless Recorder</b> and supports Playwright! ⭐️   
