@@ -30,13 +30,13 @@
       <td align="center" valign="middle">
         <h3>Gold Sponsor</h3>
         <a href="https://checklyhq.com?utm_source=github&utm_medium=sponsor-logo-github&utm_campaign=headless-recorder" target="_blank">
-          <img width="222px" src="chrome-store/checkly-logo.png?raw=true" alt="Checkly" />
+          <img width="200px" src="chrome-store/checkly-logo.png?raw=true" alt="Checkly" />
         </a><br />
         <i><sub>Delightful Active Monitoring for Developers</sub></i>
       </td>
       <td align="center" valign="middle">
         <a href="mailto:tim@checklyhq.com" target="_blank">
-          <img width="120px" src="https://imgur.com/X1gKuY0.png" alt="Support" />
+          <img width="100px" src="https://imgur.com/X1gKuY0.png" alt="Support" />
         <br />
         <div>You?</div></a>
       </td>
