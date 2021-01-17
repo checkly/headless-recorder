@@ -59,7 +59,7 @@ Headless recorder is a Chrome extension that records your browser interactions a
 
 Don't forget to check out our sister project [theheadless.dev](https://theheadless.dev/), the open source knowledge base for Puppeteer and Playwright.
 
-This project builds on existing open source projects (see [Credits](#user-content-credits)) but adds extensibility, configurability and a smoother UI. For more information, please see our [documentation](https://www.checklyhq.com/docs/headless-recorder/).
+This project builds on existing open source projects (see [Credits](#-credits)) but adds extensibility, configurability and a smoother UI. For more information, please see our [documentation](https://www.checklyhq.com/docs/headless-recorder/).
 
 ## 🏗️ Features
 
