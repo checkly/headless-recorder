@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 import _ from 'lodash'
-import {launchPuppeteerWithExtension} from '../../__e2e-tests__/helpers'
+import { launchPuppeteerWithExtension } from '../../__e2e-tests__/helpers'
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
 let server
@@ -13,7 +13,7 @@ describe('forms', () => {
     const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
     const fixture = './fixtures/forms.html'
     {
-      const {server: _s, port: _p} = await startServer(buildDir, fixture)
+      const { server: _s, port: _p } = await startServer(buildDir, fixture)
       server = _s
       port = _p
     }

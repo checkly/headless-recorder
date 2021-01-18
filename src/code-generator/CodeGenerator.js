@@ -93,11 +93,11 @@ export default class CodeGenerator {
     this._postProcess()
 
     const indent = this._options.wrapAsync ? '  ' : ''
-    const newLine = `\n`
+    const newLine = '\n'
 
-    for (let block of this._blocks) {
+    for (const block of this._blocks) {
       const lines = block.getLines()
-      for (let line of lines) {
+      for (const line of lines) {
         result += indent + line.value + newLine
       }
     }
@@ -159,7 +159,7 @@ export default class CodeGenerator {
 
     if (options && options.x && options.y && options.width && options.height) {
       // remove the tailing 'px'
-      for (let prop in options) {
+      for (const prop in options) {
         if (options.hasOwnProperty(prop) && options[prop].slice(-2) === 'px') {
           options[prop] = options[prop].substring(0, options[prop].length - 2)
         }
@@ -167,7 +167,8 @@ export default class CodeGenerator {
 
       block = new Block(this._frameId, {
         type: pptrActions.SCREENSHOT,
-        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', clip: { x: ${options.x}, y: ${options.y}, width: ${options.width}, height: ${options.height} } })` })
+        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', clip: { x: ${options.x}, y: ${options.y}, width: ${options.width}, height: ${options.height} } })`
+      })
     } else {
       block = new Block(this._frameId, { type: pptrActions.SCREENSHOT, value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png' })` })
     }
@@ -179,15 +180,15 @@ export default class CodeGenerator {
   _handleWaitForNavigation () {
     const block = new Block(this._frameId)
     if (this._options.waitForNavigation) {
-      block.addLine({type: pptrActions.NAVIGATION, value: `await navigationPromise`})
+      block.addLine({ type: pptrActions.NAVIGATION, value: 'await navigationPromise' })
     }
     return block
   }
 
   _postProcessSetFrames () {
-    for (let [i, block] of this._blocks.entries()) {
+    for (const [i, block] of this._blocks.entries()) {
       const lines = block.getLines()
-      for (let line of lines) {
+      for (const line of lines) {
         if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
           const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
           this._blocks[i].addLineToTop(({ type: pptrActions.FRAME_SET, value: declaration }))

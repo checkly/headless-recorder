@@ -21,7 +21,7 @@ export default class EventRecorder {
   boot () {
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(['options'], ({options}) => {
+      chrome.storage.local.get(['options'], ({ options }) => {
         const { dataAttribute } = options ? options.code : {}
         if (dataAttribute) {
           this._dataAttribute = dataAttribute
@@ -102,8 +102,8 @@ export default class EventRecorder {
     try {
       const optimizedMinLength = (e.target.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
       const selector = this._dataAttribute
-        ? finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength, attr: (name, _value) => name === this._dataAttribute})
-        : finder(e.target, {seedMinLength: 5, optimizedMinLength: optimizedMinLength})
+        ? finder(e.target, { seedMinLength: 5, optimizedMinLength: optimizedMinLength, attr: (name, _value) => name === this._dataAttribute })
+        : finder(e.target, { seedMinLength: 5, optimizedMinLength: optimizedMinLength })
 
       const msg = {
         selector: selector,

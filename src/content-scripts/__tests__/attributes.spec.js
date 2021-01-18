@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import {launchPuppeteerWithExtension} from '../../__e2e-tests__/helpers'
+import { launchPuppeteerWithExtension } from '../../__e2e-tests__/helpers'
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
 let server
@@ -12,7 +12,7 @@ describe('attributes', () => {
     const buildDir = process.env.NODE_ENV === 'production' ? '../../../dist' : '../../../build'
     const fixture = './fixtures/attributes.html'
     {
-      const {server: _s, port: _p} = await startServer(buildDir, fixture)
+      const { server: _s, port: _p } = await startServer(buildDir, fixture)
       server = _s
       port = _p
     }

@@ -37,7 +37,7 @@ export const startServer = function (buildDir, file) {
       server = app.listen(port)
       server.once('error', retry)
       server.once('listening', () => {
-        return resolve({server, port})
+        return resolve({ server, port })
       })
     }
     connect()

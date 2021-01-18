@@ -2,12 +2,12 @@ import pptrActions from './pptr-actions'
 import Block from './Block'
 import CodeGenerator from './CodeGenerator'
 
-const importPuppeteer = `const puppeteer = require('puppeteer');\n`
+const importPuppeteer = 'const puppeteer = require(\'puppeteer\');\n'
 
 const header = `const browser = await puppeteer.launch()
 const page = await browser.newPage()`
 
-const footer = `await browser.close()`
+const footer = 'await browser.close()'
 
 const wrappedHeader = `(async () => {
   const browser = await puppeteer.launch()

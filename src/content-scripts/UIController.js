@@ -84,6 +84,7 @@ class UIController extends EventEmitter {
       }
     }
   }
+
   _mouseup (e) {
     this._overlay.style.backgroundColor = 'white'
     setTimeout(() => {

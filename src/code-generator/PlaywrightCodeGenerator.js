@@ -2,13 +2,13 @@ import pptrActions from './pptr-actions'
 import Block from './Block'
 import CodeGenerator from './CodeGenerator'
 
-const importPlaywright = `const { chromium } = require('playwright');\n`
+const importPlaywright = 'const { chromium } = require(\'playwright\');\n'
 
 const header = `const browser = await chromium.launch()
   const context = await browser.newContext()
   const page = await context.newPage()`
 
-const footer = `await browser.close()`
+const footer = 'await browser.close()'
 
 const wrappedHeader = `(async () => {
   ${header}\n`

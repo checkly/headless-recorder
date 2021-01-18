@@ -108,8 +108,8 @@ class RecordingController {
     chrome.contextMenus.onClicked.removeListener(this._boundedMenuHandler)
 
     chrome.browserAction.setIcon({ path: './images/icon-black.png' })
-    chrome.browserAction.setBadgeText({text: this._badgeState})
-    chrome.browserAction.setBadgeBackgroundColor({color: '#45C8F1'})
+    chrome.browserAction.setBadgeText({ text: this._badgeState })
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#45C8F1' })
 
     chrome.storage.local.set({ recording: this._recording }, () => {
       console.debug('recording stored')
@@ -143,14 +143,14 @@ class RecordingController {
   recordCurrentUrl (href) {
     if (!this._hasGoto) {
       console.debug('recording goto* for:', href)
-      this.handleMessage({selector: undefined, value: undefined, action: pptrActions.GOTO, href})
+      this.handleMessage({ selector: undefined, value: undefined, action: pptrActions.GOTO, href })
       this._hasGoto = true
     }
   }
 
   recordCurrentViewportSize (value) {
     if (!this._hasViewPort) {
-      this.handleMessage({selector: undefined, value, action: pptrActions.VIEWPORT})
+      this.handleMessage({ selector: undefined, value, action: pptrActions.VIEWPORT })
       this._hasViewPort = true
     }
   }
@@ -218,7 +218,7 @@ class RecordingController {
 
   toggleScreenShotMode (action) {
     console.debug('toggling screenshot mode')
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       chrome.tabs.sendMessage(tabs[0].id, { action })
     })
   }
