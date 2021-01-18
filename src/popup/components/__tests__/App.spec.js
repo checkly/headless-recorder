@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import App from '../App'
+import App from '../App.vue'
 
 const chrome = {
   storage: {

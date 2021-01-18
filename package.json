@@ -1,86 +1,85 @@
 {
-  "name": "headless-recorder",
-  "version": "0.8.2",
-  "description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
-  "main": "index.js",
-  "scripts": {
-    "dev": "NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
-    "build": "NODE_ENV=production webpack",
-    "dist": "NODE_ENV=production webpack && node scripts/zip.js",
-    "test": "npm run unit-test && npm run e2e-test",
-    "test-prod": "NODE_ENV=production npm run unit-test && npm run e2e-test",
-    "unit-test": "jest __tests__/.*.spec.js --silent",
-    "e2e-test": "jest __e2e-tests__ --runInBand --silent",
-    "lint": "eslint --quiet -f codeframe src"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/checkly/headless-recorder"
-  },
-  "keywords": [
-    "puppeteer",
-    "chrome",
-    "extension"
-  ],
-  "author": "Tim Nolet",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/checkly/headless-recorder/issues"
-  },
-  "homepage": "https://github.com/checkly/headless-recorder#readme",
-  "dependencies": {
-    "@medv/finder": "^1.1.2",
-    "events": "^3.2.0",
-    "vue": "^2.5.17",
-    "vue-clipboard2": "^0.2.1",
-    "vue-highlightjs": "^1.3.3"
-  },
-  "devDependencies": {
-    "@vue/test-utils": "^1.0.0-beta.24",
-    "babel": "^6.23.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.6",
-    "babel-jest": "^23.4.2",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "copy-webpack-plugin": "^4.5.2",
-    "css-loader": "^1.0.0",
-    "eslint": "^5.3.0",
-    "eslint-config-standard": "^12.0.0-alpha.0",
-    "eslint-plugin-html": "^4.0.5",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jest": "^21.21.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "express": "^4.16.3",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "gren": "0.0.1",
-    "html-webpack-plugin": "^3.2.0",
-    "jest": "^23.5.0",
-    "jest-vue-preprocessor": "^1.4.0",
-    "lodash": "^4.17.19",
-    "node-sass": "^4.14.1",
-    "pre-commit": "^1.2.2",
-    "puppeteer": "^2.1.1",
-    "sass-loader": "^7.1.0",
-    "style-loader": "^0.22.1",
-    "superagent": "^3.8.3",
-    "vue-loader": "^15.3.0",
-    "vue-style-loader": "^4.1.1",
-    "vue-template-compiler": "^2.5.17",
-    "webpack": "^4.16.5",
-    "webpack-chrome-extension-reloader": "^0.8.3",
-    "webpack-cli": "^3.1.0",
-    "zip-folder": "^1.0.0"
-  },
-  "standard": {
-    "globals": [
-      "chrome"
-    ]
-  }
+	"name": "headless-recorder",
+	"version": "0.8.2",
+	"description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
+	"main": "index.js",
+	"scripts": {
+		"dev": "NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
+		"build": "NODE_ENV=production webpack",
+		"dist": "NODE_ENV=production webpack && node scripts/zip.js",
+		"test": "npm run unit-test && npm run e2e-test",
+		"test-prod": "NODE_ENV=production npm run unit-test && npm run e2e-test",
+		"unit-test": "jest --debug __tests__/.*.spec.js --silent",
+		"e2e-test": "jest --debug __e2e-tests__ --runInBand --silent",
+		"lint": "eslint --quiet -f codeframe src"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/checkly/headless-recorder"
+	},
+	"keywords": [
+		"puppeteer",
+		"chrome",
+		"extension"
+	],
+	"author": "Tim Nolet",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/checkly/headless-recorder/issues"
+	},
+	"homepage": "https://github.com/checkly/headless-recorder#readme",
+	"dependencies": {
+		"@medv/finder": "^2.0.0",
+		"events": "^3.2.0",
+		"vue": "^2.6.12",
+		"vue-clipboard2": "^0.3.1",
+		"vue-highlightjs": "^1.3.3"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.12.10",
+		"@babel/core": "^7.12.10",
+		"@babel/plugin-transform-runtime": "^7.12.10",
+		"@babel/preset-env": "^7.12.11",
+		"@vue/test-utils": "^1.1.2",
+		"babel-core": "^7.0.0-bridge.0",
+		"babel-eslint": "^10.1.0",
+		"babel-jest": "^26.6.3",
+		"babel-loader": "^8.2.2",
+		"copy-webpack-plugin": "^7.0.0",
+		"css-loader": "^5.0.1",
+		"eslint": "^7.18.0",
+		"eslint-config-standard": "^16.0.2",
+		"eslint-plugin-html": "^6.1.1",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-jest": "^24.1.3",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^4.2.1",
+		"eslint-plugin-standard": "^5.0.0",
+		"express": "^4.17.1",
+		"extract-text-webpack-plugin": "^3.0.2",
+		"gren": "0.0.1",
+		"html-webpack-plugin": "^4.5.1",
+		"jest": "^26.6.3",
+		"jest-vue-preprocessor": "^1.7.1",
+		"lodash": "^4.17.20",
+		"node-sass": "^5.0.0",
+		"pre-commit": "^1.2.2",
+		"puppeteer": "^5.5.0",
+		"sass-loader": "^10.1.1",
+		"style-loader": "^2.0.0",
+		"superagent": "^6.1.0",
+		"vue-jest": "^3.0.7",
+		"vue-loader": "^15.9.6",
+		"vue-style-loader": "^4.1.2",
+		"vue-template-compiler": "^2.6.12",
+		"webpack": "^4.16.5",
+		"webpack-chrome-extension-reloader": "^1.3.0",
+		"webpack-cli": "^4.3.1",
+		"zip-folder": "^1.0.0"
+	},
+	"standard": {
+		"globals": [
+			"chrome"
+		]
+	}
 }

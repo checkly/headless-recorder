@@ -1,7 +1,6 @@
 {
-  "presets": [ "es2015", "stage-0"],
+  "presets": [ "@babel/preset-env" ],
   "plugins": [
-    "transform-runtime",
-    "transform-object-rest-spread"
+    "@babel/plugin-transform-runtime",
   ]
 }

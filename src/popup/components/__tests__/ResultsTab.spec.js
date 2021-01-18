@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import ResultsTab from '../ResultsTab'
+import ResultsTab from '../ResultsTab.vue'
 
 describe('RecordingTab.vue', () => {
   let localVue

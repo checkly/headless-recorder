@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import RecordingTab from '../RecordingTab'
+import RecordingTab from '../RecordingTab.vue'
 
 describe('RecordingTab.vue', () => {
   test('it has the correct pristine / empty state', () => {
