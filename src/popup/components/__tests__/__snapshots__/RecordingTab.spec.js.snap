@@ -69,7 +69,6 @@ exports[`RecordingTab.vue it has the correct recording DOM events state 1`] = `
   >
     <div
       class="empty"
-      style="display: none;"
     >
       <img
         alt="desert"
@@ -89,7 +88,6 @@ exports[`RecordingTab.vue it has the correct recording DOM events state 1`] = `
        
       <div
         class="nag-cta"
-        style="display: none;"
       >
         <a
           href="https://checklyhq.com/headless-recorder"
@@ -106,46 +104,17 @@ exports[`RecordingTab.vue it has the correct recording DOM events state 1`] = `
      
     <div
       class="events"
-      style=""
+      style="display: none;"
     >
       <p
         class="text-muted text-center loading"
-        style="display: none;"
       >
         Waiting for events
       </p>
        
       <ul
         class="event-list"
-      >
-        <li
-          class="event-list-item"
-        >
-          <div
-            class="event-label"
-          >
-            
-            1.
-          
-          </div>
-           
-          <div
-            class="event-description"
-          >
-            <div
-              class="event-action"
-            >
-              click
-            </div>
-             
-            <div
-              class="event-props text-muted"
-            >
-              .main &gt; a.link
-            </div>
-          </div>
-        </li>
-      </ul>
+      />
     </div>
   </div>
 </div>
@@ -160,7 +129,6 @@ exports[`RecordingTab.vue it has the correct recording Puppeteer custom events s
   >
     <div
       class="empty"
-      style="display: none;"
     >
       <img
         alt="desert"
@@ -180,7 +148,6 @@ exports[`RecordingTab.vue it has the correct recording Puppeteer custom events s
        
       <div
         class="nag-cta"
-        style="display: none;"
       >
         <a
           href="https://checklyhq.com/headless-recorder"
@@ -197,100 +164,17 @@ exports[`RecordingTab.vue it has the correct recording Puppeteer custom events s
      
     <div
       class="events"
-      style=""
+      style="display: none;"
     >
       <p
         class="text-muted text-center loading"
-        style="display: none;"
       >
         Waiting for events
       </p>
        
       <ul
         class="event-list"
-      >
-        <li
-          class="event-list-item"
-        >
-          <div
-            class="event-label"
-          >
-            
-            1.
-          
-          </div>
-           
-          <div
-            class="event-description"
-          >
-            <div
-              class="event-action"
-            >
-              goto*
-            </div>
-             
-            <div
-              class="event-props text-muted"
-            >
-              http://example.com
-            </div>
-          </div>
-        </li>
-        <li
-          class="event-list-item"
-        >
-          <div
-            class="event-label"
-          >
-            
-            2.
-          
-          </div>
-           
-          <div
-            class="event-description"
-          >
-            <div
-              class="event-action"
-            >
-              viewport*
-            </div>
-             
-            <div
-              class="event-props text-muted"
-            >
-              width: 1280, height: 800
-            </div>
-          </div>
-        </li>
-        <li
-          class="event-list-item"
-        >
-          <div
-            class="event-label"
-          >
-            
-            3.
-          
-          </div>
-           
-          <div
-            class="event-description"
-          >
-            <div
-              class="event-action"
-            >
-              navigation*
-            </div>
-             
-            <div
-              class="event-props text-muted"
-            >
-              
-            </div>
-          </div>
-        </li>
-      </ul>
+      />
     </div>
   </div>
 </div>
@@ -305,7 +189,6 @@ exports[`RecordingTab.vue it has the correct waiting for events state 1`] = `
   >
     <div
       class="empty"
-      style="display: none;"
     >
       <img
         alt="desert"
@@ -325,7 +208,6 @@ exports[`RecordingTab.vue it has the correct waiting for events state 1`] = `
        
       <div
         class="nag-cta"
-        style="display: none;"
       >
         <a
           href="https://checklyhq.com/headless-recorder"
@@ -342,7 +224,7 @@ exports[`RecordingTab.vue it has the correct waiting for events state 1`] = `
      
     <div
       class="events"
-      style=""
+      style="display: none;"
     >
       <p
         class="text-muted text-center loading"

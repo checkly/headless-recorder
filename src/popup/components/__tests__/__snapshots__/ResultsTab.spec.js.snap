@@ -100,9 +100,9 @@ exports[`RecordingTab.vue it show a code box when there is code 1`] = `
   >
     <pre>
             
-      <code
-        class="javascript"
-      />
+      <code>
+        No code yet...
+      </code>
       
     
     </pre>
