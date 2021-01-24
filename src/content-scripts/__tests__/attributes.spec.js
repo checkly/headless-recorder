@@ -48,4 +48,20 @@ describe('attributes', () => {
     const event = (await waitForAndGetEvents(page, 1))[0]
     expect(event.selector).toEqual('body > #content-root > [data-qa="article-wrapper"] > [data-qa="article-body"] > span')
   })
+
+  test('it should use data attributes throughout selector even when id is set', async () => {
+    await page.evaluate('window.eventRecorder._dataAttribute = "data-qa"')
+    await page.click('#link')
+
+    const event = (await waitForAndGetEvents(page, 1))[0]
+    expect(event.selector).toEqual('[data-qa="link"]')
+  })
+
+  test('it should use id throughout selector when data attributes is not set', async () => {
+    await page.evaluate('window.eventRecorder._dataAttribute = null')
+    await page.click('#link')
+
+    const event = (await waitForAndGetEvents(page, 1))[0]
+    expect(event.selector).toEqual('#link')
+  })
 })
