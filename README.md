@@ -5,9 +5,7 @@
   <p align="center">
     <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
     <img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
-    <img src="https://img.shields.io/github/issues-pr/checkly/headless-recorder?label=PRs" alt="Github Pull Requests" />
-    <img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Users" />
-    <img src="https://img.shields.io/github/stars/checkly/headless-recorder?label=Stars" alt="Github Stars" />
+    <img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
     <img src="https://img.shields.io/github/license/checkly/headless-recorder?label=License" alt="License" />
   </p>
 </p>
