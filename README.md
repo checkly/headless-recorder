@@ -28,6 +28,8 @@ Don't forget to check out our sister project [theheadless.dev](https://theheadle
 
 This project builds on existing open source projects (see [Credits](#-credits)) but adds extensibility, configurability and a smoother UI. For more information, please see our [documentation](https://www.checklyhq.com/docs/headless-recorder/).
 
+<br>
+
 ## 🏗️ What you can do?
 
 - Records clicks and type events.
@@ -40,6 +42,8 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 > Note: we only record certain events. See `dom-events-to-record.js` in the code-generator folder for which events. This collection will be expanded in future releases.
 
+<br>
+
 ## 🔧 How to use?
 
 - Click the icon and hit Record.
@@ -47,6 +51,8 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 - Click on links, inputs and other elements.
 - Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png) to indicate it is ready for more input from you.
 - Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
+
+<br>
 
 ## 🖥️ Development
 
@@ -56,6 +62,8 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 1. Open chrome and navigate to extensions page using this URL: `chrome://extensions` 
 1. Make sure 'Developer mode' is enabled
 1. Click "Load unpacked extension" button, browse the `headless-recorder/build` directory and select it
+
+<br>
 
 ## 🚀 Release
 
@@ -67,9 +75,13 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 > ⚠️ Make sure all issues associated with the new version are linked to a milestone
 with the name of the tag.
 
+<br>
+
 ## 🙏 Credits 
 
 Headless recorder is the spiritual successor & love child of segment.io's [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder). 
+
+<br>
 
 ## 📄 License
 
