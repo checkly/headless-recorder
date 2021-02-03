@@ -73,7 +73,7 @@ Headless recorder is the spiritual successor & love child of segment.io's [Daydr
 
 ## 📄 License
 
-Apache 2
+[Apache 2](https://github.com/checkly/headless-recorder/blob/master/LICENSE)
 
 <h3 align="center">Supported by</h3>
 <p align="center">
