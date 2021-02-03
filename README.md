@@ -2,7 +2,7 @@
   <img width="200px" src="https://www.checklyhq.com/opensource/headless_recorder_logo.ad00bdc5.svg" alt="Headless Recorder" />
   <h1 align="center">Headless Recorder</h1>
   <br/>
-  <p>
+  <p align="center">
     <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
     <img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
     <img src="https://img.shields.io/github/issues-pr/checkly/headless-recorder?label=PRs" alt="Github Pull Requests" />
