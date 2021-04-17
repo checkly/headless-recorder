@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      time: "09:00"
+      interval: "daily"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+    reviewers:
+      - "ianaya89"
