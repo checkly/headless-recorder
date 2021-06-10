@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-light p-4 flex flex-col h-screen overflow-hidden">
+  <div class="bg-blue-light p-4 flex flex-col overflow-hidden">
     <div class="flex justify-between items-center mb-2">
       <h1
         @click="goHome"
@@ -12,12 +12,18 @@
         <div
           data-test-id="recording-badge"
           class="flex justify-center items-center text-red font-semibold"
-          :class="{ 'animate-pulse': recordingBadgeText === 'recording' }"
+          :class="{
+            'animate-pulse': recordingBadgeText === 'recording',
+            'text-yellow-500': recordingBadgeText !== 'recording',
+          }"
           v-show="isRecording"
         >
           <span
             data-test-id="red-dot"
-            class="bg-red rounded-full w-2 h-2 mr-1 "
+            class="bg-red rounded-full w-2 h-2 mr-1"
+            :class="{
+              'bg-yellow-500': recordingBadgeText !== 'recording',
+            }"
           ></span>
           {{ recordingBadgeText }}
         </div>
@@ -168,10 +174,23 @@ export default {
       this.trackPageView()
       if (this.isRecording) {
         console.debug('opened in recording state, fetching recording events')
-        chrome.storage.local.get(['recording', 'options'], ({ recording }) => {
-          console.debug('loaded recording', recording)
-          this.liveEvents = recording
-        })
+        chrome.storage.local.get(
+          ['recording', 'options', 'clear', 'pause'],
+          ({ recording, clear, pause }) => {
+            console.debug('loaded recording', recording)
+            this.liveEvents = recording
+
+            if (clear) {
+              this.toggleRecord()
+              chrome.storage.local.remove(['clear'])
+            }
+
+            if (pause) {
+              this.togglePause()
+              chrome.storage.local.remove(['pause'])
+            }
+          }
+        )
       }
 
       if (!this.isRecording && this.code) {
@@ -193,7 +212,7 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        window.close()
+        // window.close()
         this.start()
       }
       this.isRecording = !this.isRecording

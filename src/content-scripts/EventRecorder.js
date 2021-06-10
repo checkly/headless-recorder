@@ -3,6 +3,8 @@ import UIController from './UIController'
 import actions from '@/models/extension-ui-actions'
 import ctrl from '@/models/extension-control-messages'
 import { finder } from '@medv/finder'
+import { createApp } from 'vue'
+import App from './App.vue'
 
 const DEFAULT_MOUSE_CURSOR = 'default'
 
@@ -16,6 +18,11 @@ export default class EventRecorder {
     this._screenShotMode = false
     this._isTopFrame = window.location === window.parent.location
     this._isRecordingClicks = true
+
+    this.mouseOverEvent = null
+    this.mouseOutEvent = null
+    this.overlayApp = null
+    this.overlayContainer = null
   }
 
   boot() {
@@ -61,7 +68,7 @@ export default class EventRecorder {
         control: ctrl.GET_VIEWPORT_SIZE,
         coordinates: { width: window.innerWidth, height: window.innerHeight },
       })
-      console.debug('Puppeteer Recorder in-page EventRecorder started')
+      console.debug('Headless Recorder in-page EventRecorder started')
     }
   }
 
@@ -72,12 +79,63 @@ export default class EventRecorder {
         case actions.TOGGLE_SCREENSHOT_MODE:
           this._handleScreenshotMode(false)
           break
+
         case actions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
           this._handleScreenshotMode(true)
           break
-        default:
+
+        case actions.CLOSE_SCREENSHOT_MODE:
+          this._abortScreenshotMode()
+          break
+
+        case actions.TOGGLE_OVERLAY:
+          msg.value
+            ? this._attachSelectorHelper()
+            : this._dettachSelectorHelper()
+          break
       }
     }
+  }
+
+  _attachSelectorHelper() {
+    console.debug('attach overlay')
+
+    if (this.overlayContainer) {
+      return
+    }
+
+    const overlayId = 'headless-recorder-overlay'
+    const currentSelectorClass = 'headless-recorder-selected-element'
+
+    this.overlayContainer = document.createElement('nav')
+    this.overlayContainer.id = overlayId
+    document.body.appendChild(this.overlayContainer)
+
+    this.overlayApp = createApp(App).mount('#' + overlayId)
+
+    this.mouseOverEvent = e => {
+      const selector = this._getSelector(e)
+      this.overlayApp.currentSelector = selector.includes('#' + overlayId)
+        ? ''
+        : selector
+      e.target.classList.add(currentSelectorClass)
+    }
+
+    this.mouseOutEvent = e => {
+      e.target.classList.remove(currentSelectorClass)
+    }
+
+    window.document.addEventListener('mouseover', this.mouseOverEvent)
+    window.document.addEventListener('mouseout', this.mouseOutEvent)
+  }
+
+  _dettachSelectorHelper() {
+    console.debug('dettach overlay')
+    document.body.removeChild(this.overlayContainer)
+    this.overlayContainer = null
+    this.overlayApp = null
+    window.document.removeEventListener('mouseover', this.mouseOverEvent)
+    window.document.removeEventListener('mouseout', this.mouseOutEvent)
   }
 
   _addAllListeners(events) {
@@ -156,6 +214,16 @@ export default class EventRecorder {
     })
   }
 
+  _abortScreenshotMode() {
+    if (!this._screenShotMode) {
+      return
+    }
+    this._screenShotMode = false
+    document.body.style.cursor = DEFAULT_MOUSE_CURSOR
+    this._uiController.hideSelector()
+    this._enableClickRecording()
+  }
+
   _disableClickRecording() {
     this._isRecordingClicks = false
   }
@@ -174,8 +242,6 @@ export default class EventRecorder {
     if (e.target.id) {
       return `#${e.target.id}`
     }
-
-    console.log(finder(e.target))
 
     return finder(e.target, {
       seedMinLength: 5,

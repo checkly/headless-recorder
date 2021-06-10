@@ -41,7 +41,7 @@ class RecordingController {
   start() {
     console.debug('start recording')
     this.cleanUp(() => {
-      this._badgeState = 'rec'
+      // this._badgeState = 'rec'
 
       this._hasGoto = false
       this._hasViewPort = false
@@ -60,17 +60,8 @@ class RecordingController {
         this._boundedWaitHandler
       )
 
-      chrome.browserAction.setIcon({ path: './images/icon-green.png' })
-      chrome.browserAction.setBadgeText({ text: this._badgeState })
-      chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
-
-      /**
-       * Right click menu setup
-       */
-
+      chrome.browserAction.setIcon({ path: './images/logo-red.png' })
       chrome.contextMenus.removeAll()
-
-      // add the parent and its children
 
       chrome.contextMenus.create({
         id: this._menuId,
@@ -91,8 +82,6 @@ class RecordingController {
         parentId: this._menuId,
         contexts: ['all'],
       })
-
-      // add the handlers
 
       this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
       chrome.contextMenus.onClicked.addListener(this._boundedMenuHandler)
@@ -115,26 +104,26 @@ class RecordingController {
     )
     chrome.contextMenus.onClicked.removeListener(this._boundedMenuHandler)
 
-    chrome.browserAction.setIcon({ path: './images/icon-black.png' })
+    chrome.browserAction.setIcon({ path: './images/logo.png' })
     chrome.browserAction.setBadgeText({ text: this._badgeState })
     chrome.browserAction.setBadgeBackgroundColor({ color: '#45C8F1' })
 
     chrome.storage.local.set({ recording: this._recording }, () => {
       console.debug('recording stored')
     })
+
+    this.toggleSelectorHelper()
   }
 
   pause() {
     console.debug('pause')
-    this._badgeState = '❚❚'
-    chrome.browserAction.setBadgeText({ text: this._badgeState })
+    chrome.browserAction.setIcon({ path: './images/logo-yellow.png' })
     this._isPaused = true
   }
 
   unPause() {
     console.debug('unpause')
-    this._badgeState = 'rec'
-    chrome.browserAction.setBadgeText({ text: this._badgeState })
+    chrome.browserAction.setIcon({ path: './images/logo-red.png' })
     this._isPaused = false
   }
 
@@ -189,7 +178,10 @@ class RecordingController {
   }
 
   handleMessage(msg, sender) {
-    if (msg.control) return this.handleControlMessage(msg, sender)
+    console.log(msg)
+    if (msg.control) {
+      return this.handleControlMessage(msg, sender)
+    }
 
     if (msg.type === 'SIGN_CONNECT') {
       return
@@ -201,7 +193,6 @@ class RecordingController {
 
     if (!this._isPaused) {
       this._recording.push(msg)
-      console.log(msg)
       chrome.storage.local.set({ recording: this._recording }, () => {
         console.debug('stored recording updated')
       })
@@ -209,12 +200,45 @@ class RecordingController {
   }
 
   handleControlMessage(msg) {
-    if (msg.control === ctrl.EVENT_RECORDER_STARTED)
+    // Handle events from content-script
+    if (msg.control === ctrl.EVENT_RECORDER_STARTED) {
       chrome.browserAction.setBadgeText({ text: this._badgeState })
-    if (msg.control === ctrl.GET_VIEWPORT_SIZE)
+    }
+    if (msg.control === ctrl.GET_VIEWPORT_SIZE) {
       this.recordCurrentViewportSize(msg.coordinates)
-    if (msg.control === ctrl.GET_CURRENT_URL) this.recordCurrentUrl(msg.href)
-    if (msg.control === ctrl.GET_SCREENSHOT) this.recordScreenshot(msg.value)
+    }
+    if (msg.control === ctrl.GET_CURRENT_URL) {
+      this.recordCurrentUrl(msg.href)
+    }
+    if (msg.control === ctrl.GET_SCREENSHOT) {
+      this.recordScreenshot(msg.value)
+    }
+
+    if (msg.control === ctrl.OVERLAY_STOP) {
+      chrome.storage.local.set({ clear: true })
+      this.stop()
+    }
+
+    if (msg.control === ctrl.OVERLAY_PAUSE) {
+      chrome.storage.local.set({ pause: true })
+      this._isPaused ? this.unPause() : this.pause()
+    }
+
+    if (msg.control === ctrl.OVERLAY_CLIPPED_SCREENSHOT) {
+      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+    }
+
+    if (msg.control === ctrl.OVERLAY_FULL_SCREENSHOT) {
+      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+    }
+
+    if (msg.control === ctrl.OVERLAY_ABORT_SCREENSHOT) {
+      this.toggleScreenShotMode(actions.CLOSE_SCREENSHOT_MODE)
+    }
+
+    if (msg.control === ctrl.RESTART) {
+      this.start()
+    }
   }
 
   handleNavigation({ frameId }) {
@@ -256,13 +280,26 @@ class RecordingController {
   }
 
   handleWait() {
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
     chrome.browserAction.setBadgeText({ text: 'wait' })
   }
 
   injectScript() {
-    chrome.tabs.executeScript({
-      file: 'js/content-script.js',
-      allFrames: true,
+    chrome.tabs.executeScript(
+      { file: 'js/content-script.js', allFrames: true },
+      () => {
+        this.toggleSelectorHelper(true)
+      }
+    )
+  }
+
+  toggleSelectorHelper(value = false) {
+    console.debug('toggling overlay')
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        action: actions.TOGGLE_OVERLAY,
+        value,
+      })
     })
   }
 }

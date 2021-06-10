@@ -11,7 +11,7 @@
         <li>Click links, inputs and other elements.</li>
         <li>
           Wait for full page load on each navigation. The icon will switch from
-          <img src="@/assets/images/icon_rec.png" /> to
+          <img src="@/assets/images/logo-red.png" /> to
           <img src="@/assets/images/icon_wait.png" />.
         </li>
         <li>

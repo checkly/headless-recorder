@@ -113,6 +113,7 @@ class UIController extends EventEmitter {
   _cleanup() {
     document.body.removeEventListener('mousemove', this._boundeMouseMove, false)
     document.body.removeEventListener('mouseup', this._boundeMouseUp, false)
+    console.log('OVERLAY SCREEN', this._overlay)
     document.body.removeChild(this._overlay)
   }
 }
