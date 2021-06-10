@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>forms</title>
+</head>
+<body>
+<form action="/handler" method="post">
+  <fieldset>
+    <legend>Inputs</legend>
+    <div>
+      <label>text input</label>
+      <input type="text">
+    </div>
+    <div>
+      <label for="msg">text area</label>
+      <textarea id="msg"></textarea>
+    </div>
+    <div>
+      <label>radio</label>
+      <input type="radio" id="radioChoice1"
+             name="contact" value="radioChoice1">
+      <label>radioChoice1</label>
+
+      <input type="radio" id="radioChoice2"
+             name="contact" value="radioChoice2">
+      <label>radioChoice2</label>
+
+      <input type="radio" id="radioChoice3"
+             name="contact" value="radioChoice3">
+      <label>radioChoice3</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Select</legend>
+    <select>
+      <option value="">--Please choose an option--</option>
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+      <option value="hamster">Hamster</option>
+      <option value="parrot">Parrot</option>
+      <option value="spider">Spider</option>
+      <option value="goldfish">Goldfish</option>
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Checkboxes</legend>
+    <div>
+      <input id="checkbox1" type="checkbox" name="interest" value="checkbox1">
+      <label>Coding</label>
+    </div>
+    <div>
+      <input id="checkbox2" type="checkbox" name="interest" value="checkbox2">
+      <label>Music</label>
+    </div>
+  </fieldset>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+<script src="./build/js/content-script.js" ></script>
+</body>
+</html>

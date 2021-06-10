@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App.vue it has the correct pristine / empty state 1`] = `
+<div
+  class="recorder"
+  id="headless-recorder"
+>
+  <div
+    class="header"
+  >
+    <a
+      href="#"
+    >
+       Headless recorder 
+      <span
+        class="text-muted"
+      >
+        <small>
+          1.0.0
+        </small>
+      </span>
+    </a>
+    <div
+      class="left"
+    >
+      <div
+        class="recording-badge"
+        style="display: none;"
+      >
+        <span
+          class="red-dot"
+        />
+         recording
+      </div>
+      <button
+        class="header-button"
+      >
+        <img
+          alt="help"
+          src=""
+        />
+      </button>
+      <button
+        class="header-button"
+      >
+        <img
+          alt="settings"
+          src=""
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="main"
+  >
+    <div
+      class="tabs"
+    >
+      <recording-tab-stub
+        code=""
+        is-recording="false"
+        live-events=""
+      />
+      <div
+        class="recording-footer"
+      >
+        <button
+          class="btn btn-sm btn-primary"
+        >
+          Record
+        </button>
+        <button
+          class="btn btn-sm btn-primary btn-outline-primary"
+          style="display: none;"
+        >
+          Pause
+        </button>
+        <a
+          href="#"
+          style="display: none;"
+        >
+          view code
+        </a>
+        <checkly-badge-stub />
+      </div>
+      <!--v-if-->
+      <div
+        class="results-footer"
+        style="display: none;"
+      >
+        <button
+          class="btn btn-sm btn-primary"
+          style="display: none;"
+        >
+           Restart 
+        </button>
+        <a
+          href="#"
+          style="display: none;"
+        >
+          copy to clipboard
+        </a>
+      </div>
+    </div>
+    <help-tab-stub
+      style="display: none;"
+    />
+  </div>
+</div>
+`;

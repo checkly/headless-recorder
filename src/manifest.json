@@ -2,7 +2,6 @@
   "name": "Headless Recorder",
   "version": "1.0.0",
   "manifest_version": 2,
-  "homepage_url": "http://localhost:8080/",
   "description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
   "default_locale": "en",
   "permissions": [
@@ -10,6 +9,7 @@
     "webNavigation",
     "activeTab",
     "contextMenus",
+    "management",
     "*://*/"
   ],
   "icons" : {
@@ -34,6 +34,23 @@
   },
   "options_ui": {
     "page": "options.html",
-    "browser_style": true
+    "browser_style": true,
+    "open_in_tab": true
+  },
+  "commands": {
+    "TOGGLE_SCREENSHOT_MODE": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A"
+      },
+      "description": "Take screenshot"
+    },
+    "TOGGLE_SCREENSHOT_CLIPPED_MODE": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Take screenshot clipped"
+    }
   }
 }

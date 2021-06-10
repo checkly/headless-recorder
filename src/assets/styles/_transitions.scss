@@ -1,0 +1,21 @@
+// drop down
+.drop-down-enter, .drop-down-leave-to {
+  transform: translateX(0) translateY(-20px);
+  transition-timing-function: cubic-bezier(.74,.04,.26,1.05);
+  opacity: 0;
+}
+
+.drop-down-enter-active, .drop-down-leave-active {
+  transition: all .15s
+}
+
+// move left
+.move-left-enter, .move-left-leave-to {
+  transform: translateY(0) translateX(-80px);
+  transition-timing-function: cubic-bezier(.74,.04,.26,1.05);
+  opacity: 0;
+}
+
+.move-left-enter-active, .move-left-leave-active {
+  transition: all .15s
+}

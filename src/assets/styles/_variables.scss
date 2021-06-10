@@ -1,0 +1,38 @@
+// spacing
+$spacer: 12px;
+
+// colors
+$white:  #fff;
+$black:  #1f2d3d;
+$red:    #FF4949;
+$orange: #F19B45;
+$yellow: #FFC82C;
+$green:  #13CE66;
+
+$blue:   #45C8F1;
+$blue-light: #EBFAFF;
+$blue-lightest: #F0F8FF;
+$teal:   #205E71;
+$pink:   #FF659D;
+
+$gray-dark:                 #3C4858;
+$gray:                      #8492A6;
+$gray-light:                #E0E6ED;
+$gray-lighter:              #EFF2F7;
+$gray-lightest:             #F9FAFC;
+
+$brand-primary:             $blue;
+$brand-success:             $green;
+$brand-info:                $teal;
+$brand-warning:             $orange;
+$brand-danger:              $red;
+$brand-inverse:             $gray-dark;
+$brand-accent:              $pink;
+
+// typography
+
+$text-muted: $gray;
+
+// layout
+
+$max-content-height: 400px;

@@ -1,0 +1,39 @@
+button {
+  &.btn {
+    display: inline-block;
+    font-weight: 300;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all .15s ease;
+
+    &.btn-sm {
+      padding: .4rem .8rem;
+      font-size: .8rem;
+      border-radius: .2rem
+    }
+
+    &.btn-primary {
+      color: #fff;
+      background-color: $brand-primary;
+      border-color: $brand-primary;
+    }
+
+    &.btn-outline-primary {
+      color: $brand-primary;
+      background-color: transparent;
+      border-color: $brand-primary
+    }
+
+    &.btn-danger {
+      color: #fff;
+      background-color: $brand-danger;
+      border-color: $brand-danger;
+    }
+  }
+}
