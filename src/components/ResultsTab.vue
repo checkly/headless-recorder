@@ -21,12 +21,11 @@
       style="background: #2b2b2b"
       class="overflow-auto px-2 h-100"
     >
-        <code class="javascript px-2 break-word whitespace-pre-wrap overflow-x-hidden">
-        </code>
-      </pre>
+      <code class="javascript px-2 break-word whitespace-pre-wrap overflow-x-hidden"></code>
+    </pre>
     <pre v-else>
-        <code>No code yet...</code>
-      </pre>
+      <code>No code yet...</code>
+    </pre>
   </div>
 </template>
 <script>
@@ -53,10 +52,11 @@ export default {
   },
   data() {
     return {
-      activeTab: TYPE.PUPPETEER,
-      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT],
+      activeTab: TYPE.PLAYWRIGHT,
+      tabs: [TYPE.PLAYWRIGHT, TYPE.PUPPETEER],
     }
   },
+
   mounted() {
     if (
       this.options &&
@@ -68,6 +68,7 @@ export default {
     }
     this.$emit('update:tab', this.activeTab)
   },
+
   methods: {
     code() {
       return this.activeTab === TYPE.PUPPETEER

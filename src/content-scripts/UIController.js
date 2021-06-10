@@ -1,9 +1,9 @@
 import EventEmitter from 'events'
 
-const BORDER_THICKNESS = 3
+const BORDER_THICKNESS = 1
 
 const defaults = {
-  showSelector: false,
+  isClipped: false,
 }
 
 class UIController extends EventEmitter {
@@ -15,13 +15,13 @@ class UIController extends EventEmitter {
     this._selector = null
     this._element = null
     this._dimensions = {}
-    this._showSelector = options.showSelector
+    this._isClipped = options.isClipped
 
     this._boundeMouseMove = this._mousemove.bind(this)
     this._boundeMouseUp = this._mouseup.bind(this)
   }
 
-  showSelector() {
+  startScreenshotMode() {
     console.debug('UIController:show')
     if (!this._overlay) {
       this._overlay = document.createElement('div')
@@ -32,16 +32,6 @@ class UIController extends EventEmitter {
       this._overlay.style.width = '100%'
       this._overlay.style.height = '100%'
       this._overlay.style.pointerEvents = 'none'
-
-      if (this._showSelector) {
-        this._selector = document.createElement('div')
-        this._selector.className = 'headlessRecorderOutline'
-        this._selector.style.position = 'fixed'
-        this._selector.style.border =
-          BORDER_THICKNESS + 'px solid rgba(69,200,241,0.8)'
-        this._selector.style.borderRadius = '3px'
-        this._overlay.appendChild(this._selector)
-      }
     }
     if (!this._overlay.parentNode) {
       document.body.appendChild(this._overlay)
@@ -50,7 +40,7 @@ class UIController extends EventEmitter {
     }
   }
 
-  hideSelector() {
+  stopScreenshotMode() {
     console.debug('UIController:hide')
     if (this._overlay) {
       document.body.removeChild(this._overlay)
@@ -83,16 +73,11 @@ class UIController extends EventEmitter {
           this._dimensions.left - BORDER_THICKNESS + 'px'
         this._selector.style.width = this._dimensions.width + 'px'
         this._selector.style.height = this._dimensions.height + 'px'
-        console.debug(
-          `top: ${this._selector.style.top}, left: ${this._selector.style.left}, width: ${this._selector.style.width}, height: ${this._selector.style.height}`
-        )
       }
     }
   }
   _mouseup(e) {
-    this._overlay.style.backgroundColor = 'white'
     setTimeout(() => {
-      this._overlay.style.backgroundColor = 'none'
       this._cleanup()
 
       let clip = null
@@ -113,8 +98,11 @@ class UIController extends EventEmitter {
   _cleanup() {
     document.body.removeEventListener('mousemove', this._boundeMouseMove, false)
     document.body.removeEventListener('mouseup', this._boundeMouseUp, false)
-    console.log('OVERLAY SCREEN', this._overlay)
+
+    // if (this._overlay) {
     document.body.removeChild(this._overlay)
+    this._overlay = null
+    // }
   }
 }
 

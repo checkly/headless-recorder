@@ -91,7 +91,7 @@
         </button>
       </div>
     </template>
-    <!-- <HelpTab v-show="showHelp"></HelpTab> -->
+    <HelpTab v-show="showHelp" />
 
     <div
       class="flex justify-between pt-2"
@@ -212,12 +212,13 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        // window.close()
+        window.close()
         this.start()
       }
       this.isRecording = !this.isRecording
       this.storeState()
     },
+
     togglePause() {
       if (this.isPaused) {
         bus.postMessage({ action: actions.UN_PAUSE })
@@ -228,12 +229,14 @@ export default {
       }
       this.storeState()
     },
+
     start() {
       this.trackEvent('Start')
       this.cleanUp()
       console.debug('start recorder')
       bus.postMessage({ action: actions.START })
     },
+
     stop() {
       this.trackEvent('Stop')
       console.debug('stop recorder')
@@ -257,10 +260,12 @@ export default {
         }
       )
     },
+
     restart() {
       this.cleanUp()
       bus.postMessage({ action: actions.CLEAN_UP })
     },
+
     cleanUp() {
       this.recording = this.liveEvents = []
       this.code = ''
@@ -268,6 +273,7 @@ export default {
       this.showResultsTab = this.isRecording = this.isPaused = false
       this.storeState()
     },
+
     openOptions() {
       this.trackEvent('Options')
       if (chrome.runtime.openOptionsPage) {
@@ -326,10 +332,12 @@ export default {
       this.showResultsTab = false
       this.showHelp = false
     },
+
     toggleShowHelp() {
       this.trackEvent('Help')
       this.showHelp = !this.showHelp
     },
+
     trackEvent(event) {
       if (
         this.options &&
@@ -339,6 +347,7 @@ export default {
         if (window._gaq) window._gaq.push(['_trackEvent', event, 'clicked'])
       }
     },
+
     trackPageView() {
       if (
         this.options &&
@@ -348,11 +357,13 @@ export default {
         if (window._gaq) window._gaq.push(['_trackPageview'])
       }
     },
+
     getCodeForCopy() {
       return this.currentResultTab === 'puppeteer'
         ? this.code
         : this.codeForPlaywright
     },
+
     run() {
       const script = encodeURIComponent(btoa(this.code))
       const url = `https://app.checklyhq.com/checks/new/browser?framework=${this.currentResultTab}&script=${script}`

@@ -178,7 +178,6 @@ class RecordingController {
   }
 
   handleMessage(msg, sender) {
-    console.log(msg)
     if (msg.control) {
       return this.handleControlMessage(msg, sender)
     }
@@ -286,7 +285,7 @@ class RecordingController {
 
   injectScript() {
     chrome.tabs.executeScript(
-      { file: 'js/content-script.js', allFrames: true },
+      { file: 'js/content-script.js', allFrames: false },
       () => {
         this.toggleSelectorHelper(true)
       }

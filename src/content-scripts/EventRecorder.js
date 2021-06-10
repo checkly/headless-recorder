@@ -4,9 +4,7 @@ import actions from '@/models/extension-ui-actions'
 import ctrl from '@/models/extension-control-messages'
 import { finder } from '@medv/finder'
 import { createApp } from 'vue'
-import App from './App.vue'
-
-const DEFAULT_MOUSE_CURSOR = 'default'
+import OverlayApp from './App.vue'
 
 export default class EventRecorder {
   constructor() {
@@ -85,40 +83,44 @@ export default class EventRecorder {
           break
 
         case actions.CLOSE_SCREENSHOT_MODE:
-          this._abortScreenshotMode()
+          this._cancelScreenshotMode()
           break
 
         case actions.TOGGLE_OVERLAY:
-          msg.value
-            ? this._attachSelectorHelper()
-            : this._dettachSelectorHelper()
+          msg.value ? this._attachOverlay() : this._dettachOverlay()
           break
       }
     }
   }
 
-  _attachSelectorHelper() {
+  _attachOverlay() {
     console.debug('attach overlay')
 
     if (this.overlayContainer) {
       return
     }
 
-    const overlayId = 'headless-recorder-overlay'
+    const overlayId = 'headless-recorder'
     const currentSelectorClass = 'headless-recorder-selected-element'
 
-    this.overlayContainer = document.createElement('nav')
+    this.overlayContainer = document.createElement('div')
     this.overlayContainer.id = overlayId
     document.body.appendChild(this.overlayContainer)
 
-    this.overlayApp = createApp(App).mount('#' + overlayId)
+    this.overlayApp = createApp(OverlayApp).mount('#' + overlayId)
 
     this.mouseOverEvent = e => {
       const selector = this._getSelector(e)
       this.overlayApp.currentSelector = selector.includes('#' + overlayId)
         ? ''
         : selector
-      e.target.classList.add(currentSelectorClass)
+
+      if (
+        this.overlayApp.currentSelector &&
+        (!this._screenShotMode || this._uiController._isClipped)
+      ) {
+        e.target.classList.add(currentSelectorClass)
+      }
     }
 
     this.mouseOutEvent = e => {
@@ -129,7 +131,7 @@ export default class EventRecorder {
     window.document.addEventListener('mouseout', this.mouseOutEvent)
   }
 
-  _dettachSelectorHelper() {
+  _dettachOverlay() {
     console.debug('dettach overlay')
     document.body.removeChild(this.overlayContainer)
     this.overlayContainer = null
@@ -147,7 +149,9 @@ export default class EventRecorder {
 
   _sendMessage(msg) {
     // filter messages based on enabled / disabled features
-    if (msg.action === 'click' && !this._isRecordingClicks) return
+    if (msg.action === 'click' && !this._isRecordingClicks) {
+      return
+    }
 
     try {
       // poor man's way of detecting whether this script was injected by an actual extension, or is loaded for
@@ -163,15 +167,22 @@ export default class EventRecorder {
   }
 
   _recordEvent(e) {
-    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp)
+    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
       return
+    }
     this._previousEvent = e
 
     // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
     // for these events we cannot generate selectors, which is OK
     try {
+      const selector = this._getSelector(e)
+
+      if (selector.includes('#headless-recorder-overlay')) {
+        return
+      }
+
       this._sendMessage({
-        selector: this._getSelector(e),
+        selector,
         value: e.target.value,
         tagName: e.target.tagName,
         action: e.type,
@@ -194,33 +205,34 @@ export default class EventRecorder {
 
   _handleScreenshotMode(isClipped) {
     this._disableClickRecording()
-    this._uiController = new UIController({ showSelector: isClipped })
+    this._uiController = new UIController({ isClipped })
     this._screenShotMode = !this._screenShotMode
-    document.body.style.cursor = 'crosshair'
+    document.body.classList.add('headless-recorder-camera-cursor')
 
     console.debug('screenshot mode:', this._screenShotMode)
 
     if (this._screenShotMode) {
-      this._uiController.showSelector()
+      this._uiController.startScreenshotMode()
     } else {
-      this._uiController.hideSelector()
+      this._uiController.stopScreenshotMode()
     }
 
     this._uiController.on('click', event => {
       this._screenShotMode = false
-      document.body.style.cursor = DEFAULT_MOUSE_CURSOR
+      this.overlayApp.isScreenShotMode = false
+      document.body.classList.remove('headless-recorder-camera-cursor')
       this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip })
       this._enableClickRecording()
     })
   }
 
-  _abortScreenshotMode() {
+  _cancelScreenshotMode() {
     if (!this._screenShotMode) {
       return
     }
     this._screenShotMode = false
-    document.body.style.cursor = DEFAULT_MOUSE_CURSOR
-    this._uiController.hideSelector()
+    document.body.classList.remove('headless-recorder-camera-cursor')
+    this._uiController.stopScreenshotMode()
     this._enableClickRecording()
   }
 
