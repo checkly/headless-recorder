@@ -32,6 +32,15 @@ class UIController extends EventEmitter {
       this._overlay.style.width = '100%'
       this._overlay.style.height = '100%'
       this._overlay.style.pointerEvents = 'none'
+
+      if (this._isClipped) {
+        this._selector = document.createElement('div')
+        this._selector.className = 'headlessRecorderOutline'
+        this._selector.style.position = 'fixed'
+        this._overlay.appendChild(this._selector)
+      } else {
+        this._overlay.style.background = 'rgba(255, 73, 73, 0.1)'
+      }
     }
     if (!this._overlay.parentNode) {
       document.body.appendChild(this._overlay)
@@ -99,10 +108,8 @@ class UIController extends EventEmitter {
     document.body.removeEventListener('mousemove', this._boundeMouseMove, false)
     document.body.removeEventListener('mouseup', this._boundeMouseUp, false)
 
-    // if (this._overlay) {
     document.body.removeChild(this._overlay)
     this._overlay = null
-    // }
   }
 }
 

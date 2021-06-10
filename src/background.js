@@ -29,11 +29,27 @@ class RecordingController {
     chrome.extension.onConnect.addListener(port => {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === actions.START) this.start()
-        if (msg.action && msg.action === actions.STOP) this.stop()
-        if (msg.action && msg.action === actions.CLEAN_UP) this.cleanUp()
-        if (msg.action && msg.action === actions.PAUSE) this.pause()
-        if (msg.action && msg.action === actions.UN_PAUSE) this.unPause()
+        if (msg.action && msg.action === actions.START) {
+          this.start()
+        }
+        if (msg.action && msg.action === actions.STOP) {
+          this.stop()
+        }
+        if (msg.action && msg.action === actions.CLEAN_UP) {
+          this.cleanUp()
+        }
+        if (msg.action && msg.action === actions.PAUSE) {
+          chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            chrome.tabs.sendMessage(tabs[0].id, { action: actions.PAUSE })
+          })
+          this.pause()
+        }
+        if (msg.action && msg.action === actions.UN_PAUSE) {
+          chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            chrome.tabs.sendMessage(tabs[0].id, { action: actions.UN_PAUSE })
+          })
+          this.unPause()
+        }
       })
     })
   }
@@ -41,7 +57,7 @@ class RecordingController {
   start() {
     console.debug('start recording')
     this.cleanUp(() => {
-      // this._badgeState = 'rec'
+      this._badgeState = ''
 
       this._hasGoto = false
       this._hasViewPort = false

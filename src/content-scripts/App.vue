@@ -14,19 +14,18 @@
     >
       <svg
         v-show="isPaused"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 27 27"
         width="27"
         height="27"
-        fill="#F9FAFC"
+        viewBox="0 0 27 27"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M9.5 15.584V8.416a.5.5 0 01.77-.42l5.576 3.583a.5.5 0 010 .842l-5.576 3.584a.5.5 0 01-.77-.42z"
-        ></path>
-        <path
           fill-rule="evenodd"
-          d="M12 2.5a9.5 9.5 0 100 19 9.5 9.5 0 000-19zM1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12z"
-        ></path>
+          clip-rule="evenodd"
+          d="M5.08591 2.38757C5.44712 2.19037 5.88718 2.20614 6.23335 2.42868L21.9834 12.5537C22.3054 12.7607 22.5 13.1172 22.5 13.5C22.5 13.8828 22.3054 14.2393 21.9834 14.4463L6.23335 24.5713C5.88718 24.7939 5.44712 24.8096 5.08591 24.6124C4.72471 24.4152 4.5 24.0365 4.5 23.625V3.375C4.5 2.96347 4.72471 2.58478 5.08591 2.38757ZM6.75 5.43563V21.5644L19.2946 13.5L6.75 5.43563Z"
+          fill="#F9FAFC"
+        />
       </svg>
 
       <svg
@@ -213,7 +212,6 @@ export default {
 }
 
 .headless-recorder-camera-cursor {
-  opacity: 0.8;
   cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACMSURBVHgBzZDrDUBAEITnVEIHVIoKUAkd0MHphCXrstm4R/jBJF9yu5d9DfAXWWJT2DfFqVjDj0NGNd6QoEwVSC61RMEDKmLAzSQfHZETI8czx40cFGpQcpHMjdzkjA3Ct/r+XT5DWDkxqdzCmzmFTqi5yazW75HowWVkKTaq5X/Mg6gOD1Y814rPtQPiEFi9rPKoQQAAAABJRU5ErkJggg=='),
     auto;
 }

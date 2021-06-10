@@ -89,6 +89,14 @@ export default class EventRecorder {
         case actions.TOGGLE_OVERLAY:
           msg.value ? this._attachOverlay() : this._dettachOverlay()
           break
+
+        case actions.PAUSE:
+          this.overlayApp.isPaused = true
+          break
+
+        case actions.UNPAUSE:
+          this.overlayApp.isPaused = false
+          break
       }
     }
   }
@@ -231,6 +239,7 @@ export default class EventRecorder {
       return
     }
     this._screenShotMode = false
+    this.overlayApp.isScreenShotMode = false
     document.body.classList.remove('headless-recorder-camera-cursor')
     this._uiController.stopScreenshotMode()
     this._enableClickRecording()
