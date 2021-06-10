@@ -1,8 +1,10 @@
 {
   "name": "Headless Recorder",
-  "version": "0.8.2",
+  "version": "1.0.0",
   "manifest_version": 2,
+  "homepage_url": "http://localhost:8080/",
   "description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
+  "default_locale": "en",
   "permissions": [
     "storage",
     "webNavigation",
@@ -11,40 +13,27 @@
     "*://*/"
   ],
   "icons" : {
-    "16": "images/app_icon_16.png",
-    "48": "images/app_icon_48.png",
-    "128": "images/app_icon_128.png"
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "browser_action": {
-    "default_icon": "images/icon-black.png",
-    "default_title": "Headless Recorder",
-    "default_popup": "index.html"
-  },
-  "commands": {
-    "TOGGLE_SCREENSHOT_MODE": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+A",
-        "mac": "Command+Shift+A"
-      },
-      "description": "Take screenshot"
-    },
-    "TOGGLE_SCREENSHOT_CLIPPED_MODE": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+S",
-        "mac": "Command+Shift+S"
-      },
-      "description": "Take screenshot clipped"
-    }
-  },
   "background": {
     "scripts": [
-      "background.js"
+      "js/background.js"
     ],
     "persistent": false
   },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extName__",
+    "default_icon": {
+      "19": "icons/19.png",
+      "38": "icons/38.png"
+    }
+  },
   "options_ui": {
     "page": "options.html",
-    "open_in_tab": true
+    "browser_style": true
   }
 }
