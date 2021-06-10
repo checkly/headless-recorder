@@ -40,33 +40,33 @@
 </template>
 <script>
 export default {
-  name: "RecordingTab",
+  name: 'RecordingTab',
   props: {
     isRecording: { type: Boolean, default: false },
     liveEvents: {
       type: Array,
       default: () => {
-        return [];
-      }
-    }
+        return []
+      },
+    },
   },
   methods: {
     parseEventValue(event) {
       if (!event) {
-        return;
+        return
       }
-      if (event.action === "viewport*")
-        return `width: ${event.value.width}, height: ${event.value.height}`;
-      if (event.action === "goto*") return event.href;
-      if (event.action === "navigation*") return "";
-    }
-  }
-};
+      if (event.action === 'viewport*')
+        return `width: ${event.value.width}, height: ${event.value.height}`
+      if (event.action === 'goto*') return event.href
+      if (event.action === 'navigation*') return ''
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/styles/_animations.scss";
-@import "../assets/styles/_variables.scss";
+@import '../assets/styles/_animations.scss';
+@import '../assets/styles/_variables.scss';
 
 .recording-tab {
   .content {
@@ -88,7 +88,7 @@ export default {
       flex-direction: column-reverse;
 
       .loading:after {
-        content: ".";
+        content: '.';
         animation: dots 1s steps(5, end) infinite;
         animation-delay: 1.5s;
         margin-bottom: auto;

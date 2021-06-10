@@ -1,9 +1,9 @@
-import path from "path";
-import { scripts } from "../../package.json";
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
+import path from 'path'
+import { scripts } from '../../package.json'
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 
-const extensionPath = path.join(__dirname, "../../dist");
+const extensionPath = path.join(__dirname, '../../dist')
 
 export const launchPuppeteerWithExtension = function(puppeteer) {
   const options = {
@@ -13,18 +13,18 @@ export const launchPuppeteerWithExtension = function(puppeteer) {
     args: [
       `--disable-extensions-except=${extensionPath}`,
       `--load-extension=${extensionPath}`,
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ]
-  };
-
-  if (process.env.CI) {
-    options.executablePath = process.env.PUPPETEER_EXEC_PATH; // Set by docker on github actions
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
   }
 
-  return puppeteer.launch(options);
-};
+  if (process.env.CI) {
+    options.executablePath = process.env.PUPPETEER_EXEC_PATH // Set by docker on github actions
+  }
+
+  return puppeteer.launch(options)
+}
 
 export const runBuild = function() {
-  return exec(scripts.build);
-};
+  return exec(scripts.build)
+}

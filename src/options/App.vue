@@ -41,8 +41,8 @@
                 >
                   {{
                     recordingKeyCodePress
-                      ? "Capturing"
-                      : "Click to capture key code"
+                      ? 'Capturing'
+                      : 'Click to capture key code'
                   }}
                 </button>
                 <input
@@ -171,68 +171,68 @@
 </template>
 
 <script>
-import { defaults as code } from "@/services/CodeGenerator";
+import { defaults as code } from '@/services/CodeGenerator'
 
 const defaults = {
   code,
   extension: {
-    telemetry: true
-  }
-};
+    telemetry: true,
+  },
+}
 
 export default {
-  name: "App",
+  name: 'App',
   data() {
     return {
       loading: true,
       saving: false,
       options: defaults,
-      recordingKeyCodePress: false
-    };
+      recordingKeyCodePress: false,
+    }
   },
   mounted() {
-    this.load();
+    this.load()
   },
   methods: {
     save() {
-      this.saving = true;
+      this.saving = true
       chrome.storage.local.set({ options: this.options }, () => {
-        console.debug("saved options");
+        console.debug('saved options')
         setTimeout(() => {
-          this.saving = false;
-        }, 500);
-      });
+          this.saving = false
+        }, 500)
+      })
     },
     load() {
-      chrome.storage.local.get("options", ({ options }) => {
+      chrome.storage.local.get('options', ({ options }) => {
         if (options) {
-          console.debug("loaded options", JSON.stringify(options));
-          this.options = options;
+          console.debug('loaded options', JSON.stringify(options))
+          this.options = options
         }
-        this.loading = false;
-      });
+        this.loading = false
+      })
     },
     listenForKeyCodePress() {
-      this.recordingKeyCodePress = true;
+      this.recordingKeyCodePress = true
       const keyDownFunction = e => {
-        this.recordingKeyCodePress = false;
-        this.updateKeyCodeWithNumber(e);
-        window.removeEventListener("keydown", keyDownFunction, false);
-        e.preventDefault();
-      };
-      window.addEventListener("keydown", keyDownFunction, false);
+        this.recordingKeyCodePress = false
+        this.updateKeyCodeWithNumber(e)
+        window.removeEventListener('keydown', keyDownFunction, false)
+        e.preventDefault()
+      }
+      window.addEventListener('keydown', keyDownFunction, false)
     },
     updateKeyCodeWithNumber(evt) {
-      this.options.code.keyCode = parseInt(evt.keyCode, 10);
-      this.save();
-    }
-  }
-};
+      this.options.code.keyCode = parseInt(evt.keyCode, 10)
+      this.save()
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/styles/_variables.scss";
-@import "../assets/styles/_mixins.scss";
+@import '../assets/styles/_variables.scss';
+@import '../assets/styles/_mixins.scss';
 
 .options {
   height: 100%;
@@ -308,8 +308,8 @@ export default {
           display: block;
         }
       }
-      input[type="text"],
-      input[type="number"] {
+      input[type='text'],
+      input[type='number'] {
         margin-bottom: 10px;
         width: 100%;
         border: 1px solid $gray-light;
@@ -319,7 +319,7 @@ export default {
         border-radius: 10px;
         -webkit-box-sizing: border-box;
       }
-      input[type="number"] {
+      input[type='number'] {
         width: 50px;
       }
     }

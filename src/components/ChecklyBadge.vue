@@ -9,8 +9,8 @@
 
 <script>
 export default {
-  name: "ChecklyBadge"
-};
+  name: 'ChecklyBadge',
+}
 </script>
 
 <style scoped>

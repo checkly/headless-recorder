@@ -62,14 +62,14 @@ node my-script.js</pre
 </template>
 <script>
 export default {
-  name: "HelpTab"
-};
+  name: 'HelpTab',
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/styles/_variables.scss";
-@import "../assets/styles/_mixins.scss";
-@import "../assets/styles/_utils.scss";
+@import '../assets/styles/_variables.scss';
+@import '../assets/styles/_mixins.scss';
+@import '../assets/styles/_utils.scss';
 
 .help-tab {
   .content {

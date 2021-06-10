@@ -13,10 +13,10 @@
           {{ recordingBadgeText }}
         </div>
         <button @click="toggleShowHelp" class="header-button">
-          <img src="@/assets/images/help.svg" alt="help"/>
+          <img src="@/assets/images/help.svg" alt="help" />
         </button>
         <button @click="openOptions" class="header-button">
-          <img src="@/assets/images/settings.svg" alt="settings"/>
+          <img src="@/assets/images/settings.svg" alt="settings" />
         </button>
       </div>
     </div>
@@ -68,26 +68,26 @@
 </template>
 
 <script>
-import { version } from "../../package.json";
+import { version } from '../../package.json'
 
-import PuppeteerCodeGenerator from "@/services/PuppeteerCodeGenerator";
-import PlaywrightCodeGenerator from "@/services/PlaywrightCodeGenerator";
-import RecordingTab from "@/components/RecordingTab.vue";
-import ResultsTab from "@/components/ResultsTab.vue";
-import HelpTab from "@/components/HelpTab.vue";
-import ChecklyBadge from "@/components/ChecklyBadge.vue";
+import PuppeteerCodeGenerator from '@/services/PuppeteerCodeGenerator'
+import PlaywrightCodeGenerator from '@/services/PlaywrightCodeGenerator'
+import RecordingTab from '@/components/RecordingTab.vue'
+import ResultsTab from '@/components/ResultsTab.vue'
+import HelpTab from '@/components/HelpTab.vue'
+import ChecklyBadge from '@/components/ChecklyBadge.vue'
 
-import actions from "@/models/extension-ui-actions";
+import actions from '@/models/extension-ui-actions'
 
-let bus;
+let bus
 
 export default {
-  name: "App",
+  name: 'App',
   components: { ResultsTab, RecordingTab, HelpTab, ChecklyBadge },
   data() {
     return {
-      code: "",
-      codeForPlaywright: "",
+      code: '',
+      codeForPlaywright: '',
       options: {},
       showResultsTab: false,
       showHelp: false,
@@ -98,116 +98,116 @@ export default {
       isCopying: false,
       bus: null,
       version,
-      currentResultTab: null
-    };
+      currentResultTab: null,
+    }
   },
   mounted() {
     this.loadState(() => {
-      this.trackPageView();
+      this.trackPageView()
       if (this.isRecording) {
-        console.debug("opened in recording state, fetching recording events");
-        chrome.storage.local.get(["recording", "options"], ({ recording }) => {
-          console.debug("loaded recording", recording);
-          this.liveEvents = recording;
-        });
+        console.debug('opened in recording state, fetching recording events')
+        chrome.storage.local.get(['recording', 'options'], ({ recording }) => {
+          console.debug('loaded recording', recording)
+          this.liveEvents = recording
+        })
       }
 
       if (!this.isRecording && this.code) {
-        this.showResultsTab = true;
+        this.showResultsTab = true
       }
-    });
+    })
 
-    bus = chrome.extension.connect({ name: "recordControls" });
+    bus = chrome.extension.connect({ name: 'recordControls' })
   },
   methods: {
     toggleRecord() {
       if (this.isRecording) {
-        this.stop();
+        this.stop()
       } else {
-        this.start();
+        this.start()
       }
-      this.isRecording = !this.isRecording;
-      this.storeState();
+      this.isRecording = !this.isRecording
+      this.storeState()
     },
     togglePause() {
       if (this.isPaused) {
-        bus.postMessage({ action: actions.UN_PAUSE });
-        this.isPaused = false;
+        bus.postMessage({ action: actions.UN_PAUSE })
+        this.isPaused = false
       } else {
-        bus.postMessage({ action: actions.PAUSE });
-        this.isPaused = true;
+        bus.postMessage({ action: actions.PAUSE })
+        this.isPaused = true
       }
-      this.storeState();
+      this.storeState()
     },
     start() {
-      this.trackEvent("Start");
-      this.cleanUp();
-      console.debug("start recorder");
-      bus.postMessage({ action: actions.START });
+      this.trackEvent('Start')
+      this.cleanUp()
+      console.debug('start recorder')
+      bus.postMessage({ action: actions.START })
     },
     stop() {
-      this.trackEvent("Stop");
-      console.debug("stop recorder");
-      bus.postMessage({ action: actions.STOP });
+      this.trackEvent('Stop')
+      console.debug('stop recorder')
+      bus.postMessage({ action: actions.STOP })
 
       chrome.storage.local.get(
-        ["recording", "options"],
+        ['recording', 'options'],
         ({ recording, options }) => {
-          console.debug("loaded recording", recording);
-          console.debug("loaded options", options);
+          console.debug('loaded recording', recording)
+          console.debug('loaded options', options)
 
-          this.recording = recording;
-          const codeOptions = options ? options.code : {};
+          this.recording = recording
+          const codeOptions = options ? options.code : {}
 
-          const codeGen = new PuppeteerCodeGenerator(codeOptions);
-          const codeGenPlaywright = new PlaywrightCodeGenerator(codeOptions);
-          this.code = codeGen.generate(this.recording);
-          this.codeForPlaywright = codeGenPlaywright.generate(this.recording);
-          this.showResultsTab = true;
-          this.storeState();
+          const codeGen = new PuppeteerCodeGenerator(codeOptions)
+          const codeGenPlaywright = new PlaywrightCodeGenerator(codeOptions)
+          this.code = codeGen.generate(this.recording)
+          this.codeForPlaywright = codeGenPlaywright.generate(this.recording)
+          this.showResultsTab = true
+          this.storeState()
         }
-      );
+      )
     },
     restart() {
-      this.cleanUp();
-      bus.postMessage({ action: actions.CLEAN_UP });
+      this.cleanUp()
+      bus.postMessage({ action: actions.CLEAN_UP })
     },
     cleanUp() {
-      this.recording = this.liveEvents = [];
-      this.code = "";
-      this.codeForPlaywright = "";
-      this.showResultsTab = this.isRecording = this.isPaused = false;
-      this.storeState();
+      this.recording = this.liveEvents = []
+      this.code = ''
+      this.codeForPlaywright = ''
+      this.showResultsTab = this.isRecording = this.isPaused = false
+      this.storeState()
     },
     openOptions() {
-      this.trackEvent("Options");
+      this.trackEvent('Options')
       if (chrome.runtime.openOptionsPage) {
-        chrome.runtime.openOptionsPage();
+        chrome.runtime.openOptionsPage()
       }
     },
     loadState(cb) {
       chrome.storage.local.get(
-        ["controls", "code", "options", "codeForPlaywright"],
+        ['controls', 'code', 'options', 'codeForPlaywright'],
         ({ controls, code, options, codeForPlaywright }) => {
           if (controls) {
-            this.isRecording = controls.isRecording;
-            this.isPaused = controls.isPaused;
+            this.isRecording = controls.isRecording
+            this.isPaused = controls.isPaused
           }
 
           if (code) {
-            this.code = code;
+            this.code = code
           }
 
           if (codeForPlaywright) {
-            this.codeForPlaywright = codeForPlaywright;
+            this.codeForPlaywright = codeForPlaywright
           }
 
           if (options) {
-            this.options = options;
+            this.options = options
           }
-          cb();
+          cb()
         }
-      );
+      )
     },
     storeState() {
       chrome.storage.local.set({
@@ -215,24 +215,24 @@ export default {
         codeForPlaywright: this.codeForPlaywright,
         controls: {
           isRecording: this.isRecording,
-          isPaused: this.isPaused
-        }
-      });
+          isPaused: this.isPaused,
+        },
+      })
     },
     setCopying() {
-      this.trackEvent("Copy");
-      this.isCopying = true;
+      this.trackEvent('Copy')
+      this.isCopying = true
       setTimeout(() => {
-        this.isCopying = false;
-      }, 1500);
+        this.isCopying = false
+      }, 1500)
     },
     goHome() {
-      this.showResultsTab = false;
-      this.showHelp = false;
+      this.showResultsTab = false
+      this.showHelp = false
     },
     toggleShowHelp() {
-      this.trackEvent("Help");
-      this.showHelp = !this.showHelp;
+      this.trackEvent('Help')
+      this.showHelp = !this.showHelp
     },
     trackEvent(event) {
       if (
@@ -240,7 +240,7 @@ export default {
         this.options.extension &&
         this.options.extension.telemetry
       ) {
-        if (window._gaq) window._gaq.push(["_trackEvent", event, "clicked"]);
+        if (window._gaq) window._gaq.push(['_trackEvent', event, 'clicked'])
       }
     },
     trackPageView() {
@@ -249,36 +249,36 @@ export default {
         this.options.extension &&
         this.options.extension.telemetry
       ) {
-        if (window._gaq) window._gaq.push(["_trackPageview"]);
+        if (window._gaq) window._gaq.push(['_trackPageview'])
       }
     },
     getCodeForCopy() {
-      return this.currentResultTab === "puppeteer"
+      return this.currentResultTab === 'puppeteer'
         ? this.code
-        : this.codeForPlaywright;
-    }
+        : this.codeForPlaywright
+    },
   },
   computed: {
     recordingBadgeText() {
-      return this.isPaused ? "paused" : "recording";
+      return this.isPaused ? 'paused' : 'recording'
     },
     recordButtonText() {
-      return this.isRecording ? "Stop" : "Record";
+      return this.isRecording ? 'Stop' : 'Record'
     },
     pauseButtonText() {
-      return this.isPaused ? "Resume" : "Pause";
+      return this.isPaused ? 'Resume' : 'Pause'
     },
     copyLinkText() {
-      return this.isCopying ? "copied!" : "copy to clipboard";
-    }
-  }
-};
+      return this.isCopying ? 'copied!' : 'copy to clipboard'
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/styles/_animations.scss";
-@import "../assets/styles/_variables.scss";
-@import "../assets/styles/_mixins.scss";
+@import '../assets/styles/_animations.scss';
+@import '../assets/styles/_variables.scss';
+@import '../assets/styles/_mixins.scss';
 .recorder {
   font-size: 14px;
 

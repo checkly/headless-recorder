@@ -31,31 +31,31 @@
 </template>
 <script>
 export const TYPE = {
-  PUPPETEER: "puppeteer",
-  PLAYWRIGHT: "playwright"
-};
+  PUPPETEER: 'puppeteer',
+  PLAYWRIGHT: 'playwright',
+}
 
 export default {
-  name: "ResultsTab",
+  name: 'ResultsTab',
   props: {
     puppeteer: {
       type: String,
-      default: ""
+      default: '',
     },
     playwright: {
       type: String,
-      default: ""
+      default: '',
     },
     options: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
       activeTab: TYPE.PUPPETEER,
-      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT]
-    };
+      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT],
+    }
   },
   mounted() {
     if (
@@ -63,27 +63,27 @@ export default {
       this.options.code &&
       this.options.code.showPlaywrightFirst
     ) {
-      this.activeTab = TYPE.PLAYWRIGHT;
-      this.tabs = this.tabs.reverse();
+      this.activeTab = TYPE.PLAYWRIGHT
+      this.tabs = this.tabs.reverse()
     }
-    this.$emit("update:tab", this.activeTab);
+    this.$emit('update:tab', this.activeTab)
   },
   methods: {
     code() {
       return this.activeTab === TYPE.PUPPETEER
         ? this.puppeteer
-        : this.playwright;
+        : this.playwright
     },
     changeTab(tab) {
-      this.activeTab = tab;
-      this.$emit("update:tab", tab);
-    }
-  }
-};
+      this.activeTab = tab
+      this.$emit('update:tab', tab)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/styles/_variables.scss";
+@import '../assets/styles/_variables.scss';
 
 .results-tab {
   .content {

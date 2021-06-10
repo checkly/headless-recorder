@@ -1,47 +1,46 @@
-import eventsToRecord from "@/services/dom-events-to-record";
-import UIController from "./UIController";
-import actions from "@/models/extension-ui-actions";
-import ctrl from "@/models/extension-control-messages";
-import finder from "@medv/finder";
+import eventsToRecord from '@/services/dom-events-to-record'
+import UIController from './UIController'
+import actions from '@/models/extension-ui-actions'
+import ctrl from '@/models/extension-control-messages'
+import finder from '@medv/finder'
 
-const DEFAULT_MOUSE_CURSOR = "default";
+const DEFAULT_MOUSE_CURSOR = 'default'
 
 export default class EventRecorder {
   constructor() {
-    this._boundedMessageListener = null;
-    this._eventLog = [];
-    this._previousEvent = null;
-    this._dataAttribute = null;
-    this._uiController = null;
-    this._screenShotMode = false;
-    this._isTopFrame = window.location === window.parent.location;
-    this._isRecordingClicks = true;
+    this._boundedMessageListener = null
+    this._eventLog = []
+    this._previousEvent = null
+    this._dataAttribute = null
+    this._uiController = null
+    this._screenShotMode = false
+    this._isTopFrame = window.location === window.parent.location
+    this._isRecordingClicks = true
   }
 
   boot() {
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(["options"], ({ options }) => {
-        const { dataAttribute } = options ? options.code : {};
+      chrome.storage.local.get(['options'], ({ options }) => {
+        const { dataAttribute } = options ? options.code : {}
         if (dataAttribute) {
-          this._dataAttribute = dataAttribute;
+          this._dataAttribute = dataAttribute
         }
-        this._initializeRecorder();
-      });
+        this._initializeRecorder()
+      })
     } else {
-      this._initializeRecorder();
+      this._initializeRecorder()
     }
   }
 
   _initializeRecorder() {
-    const events = Object.values(eventsToRecord);
+    const events = Object.values(eventsToRecord)
     if (!window.pptRecorderAddedControlListeners) {
-      this._addAllListeners(events);
+      this._addAllListeners(events)
       this._boundedMessageListener =
-        this._boundedMessageListener ||
-        this._handleBackgroundMessage.bind(this);
-      chrome.runtime.onMessage.addListener(this._boundedMessageListener);
-      window.pptRecorderAddedControlListeners = true;
+        this._boundedMessageListener || this._handleBackgroundMessage.bind(this)
+      chrome.runtime.onMessage.addListener(this._boundedMessageListener)
+      window.pptRecorderAddedControlListeners = true
     }
 
     if (
@@ -49,66 +48,66 @@ export default class EventRecorder {
       chrome.runtime &&
       chrome.runtime.onMessage
     ) {
-      window.document.pptRecorderAddedControlListeners = true;
+      window.document.pptRecorderAddedControlListeners = true
     }
 
     if (this._isTopFrame) {
-      this._sendMessage({ control: ctrl.EVENT_RECORDER_STARTED });
+      this._sendMessage({ control: ctrl.EVENT_RECORDER_STARTED })
       this._sendMessage({
         control: ctrl.GET_CURRENT_URL,
-        href: window.location.href
-      });
+        href: window.location.href,
+      })
       this._sendMessage({
         control: ctrl.GET_VIEWPORT_SIZE,
-        coordinates: { width: window.innerWidth, height: window.innerHeight }
-      });
-      console.debug("Puppeteer Recorder in-page EventRecorder started");
+        coordinates: { width: window.innerWidth, height: window.innerHeight },
+      })
+      console.debug('Puppeteer Recorder in-page EventRecorder started')
     }
   }
 
   _handleBackgroundMessage(msg) {
-    console.debug("content-script: message from background", msg);
+    console.debug('content-script: message from background', msg)
     if (msg && msg.action) {
       switch (msg.action) {
         case actions.TOGGLE_SCREENSHOT_MODE:
-          this._handleScreenshotMode(false);
-          break;
+          this._handleScreenshotMode(false)
+          break
         case actions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
-          this._handleScreenshotMode(true);
-          break;
+          this._handleScreenshotMode(true)
+          break
         default:
       }
     }
   }
 
   _addAllListeners(events) {
-    const boundedRecordEvent = this._recordEvent.bind(this);
+    const boundedRecordEvent = this._recordEvent.bind(this)
     events.forEach(type => {
-      window.addEventListener(type, boundedRecordEvent, true);
-    });
+      window.addEventListener(type, boundedRecordEvent, true)
+    })
   }
 
   _sendMessage(msg) {
     // filter messages based on enabled / disabled features
-    if (msg.action === "click" && !this._isRecordingClicks) return;
+    if (msg.action === 'click' && !this._isRecordingClicks) return
 
     try {
       // poor man's way of detecting whether this script was injected by an actual extension, or is loaded for
       // testing purposes
       if (chrome.runtime && chrome.runtime.onMessage) {
-        chrome.runtime.sendMessage(msg);
+        chrome.runtime.sendMessage(msg)
       } else {
-        this._eventLog.push(msg);
+        this._eventLog.push(msg)
       }
     } catch (err) {
-      console.debug("caught error", err);
+      console.debug('caught error', err)
     }
   }
 
   _recordEvent(e) {
     if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp)
-      return;
-    this._previousEvent = e;
+      return
+    this._previousEvent = e
 
     // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
     // for these events we cannot generate selectors, which is OK
@@ -120,67 +119,67 @@ export default class EventRecorder {
         action: e.type,
         keyCode: e.keyCode ? e.keyCode : null,
         href: e.target.href ? e.target.href : null,
-        coordinates: EventRecorder._getCoordinates(e)
-      });
+        coordinates: EventRecorder._getCoordinates(e),
+      })
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
   }
 
   _getEventLog() {
-    return this._eventLog;
+    return this._eventLog
   }
 
   _clearEventLog() {
-    this._eventLog = [];
+    this._eventLog = []
   }
 
   _handleScreenshotMode(isClipped) {
-    this._disableClickRecording();
-    this._uiController = new UIController({ showSelector: isClipped });
-    this._screenShotMode = !this._screenShotMode;
-    document.body.style.cursor = "crosshair";
+    this._disableClickRecording()
+    this._uiController = new UIController({ showSelector: isClipped })
+    this._screenShotMode = !this._screenShotMode
+    document.body.style.cursor = 'crosshair'
 
-    console.debug("screenshot mode:", this._screenShotMode);
+    console.debug('screenshot mode:', this._screenShotMode)
 
     if (this._screenShotMode) {
-      this._uiController.showSelector();
+      this._uiController.showSelector()
     } else {
-      this._uiController.hideSelector();
+      this._uiController.hideSelector()
     }
 
-    this._uiController.on("click", event => {
-      this._screenShotMode = false;
-      document.body.style.cursor = DEFAULT_MOUSE_CURSOR;
-      this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip });
-      this._enableClickRecording();
-    });
+    this._uiController.on('click', event => {
+      this._screenShotMode = false
+      document.body.style.cursor = DEFAULT_MOUSE_CURSOR
+      this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip })
+      this._enableClickRecording()
+    })
   }
 
   _disableClickRecording() {
-    this._isRecordingClicks = false;
+    this._isRecordingClicks = false
   }
 
   _enableClickRecording() {
-    this._isRecordingClicks = true;
+    this._isRecordingClicks = true
   }
 
   _getSelector(e) {
     if (this._dataAttribute && e.target.getAttribute(this._dataAttribute)) {
       return `[${this._dataAttribute}="${e.target.getAttribute(
         this._dataAttribute
-      )}"]`;
+      )}"]`
     }
 
     if (e.target.id) {
-      return `#${e.target.id}`;
+      return `#${e.target.id}`
     }
 
     return finder(e.target, {
       seedMinLength: 5,
       optimizedMinLength: e.target.id ? 2 : 10,
-      attr: name => name === this._dataAttribute
-    });
+      attr: name => name === this._dataAttribute,
+    })
   }
 
   static _getCoordinates(evt) {
@@ -188,10 +187,10 @@ export default class EventRecorder {
       mouseup: true,
       mousedown: true,
       mousemove: true,
-      mouseover: true
-    };
+      mouseover: true,
+    }
     return eventsWithCoordinates[evt.type]
       ? { x: evt.clientX, y: evt.clientY }
-      : null;
+      : null
   }
 }
