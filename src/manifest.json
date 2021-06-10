@@ -8,6 +8,7 @@
     "storage",
     "webNavigation",
     "activeTab",
+    "cookies",
     "contextMenus",
     "management",
     "*://*/"

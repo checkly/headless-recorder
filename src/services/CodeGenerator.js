@@ -34,7 +34,7 @@ export default class CodeGenerator {
     let hdr = this._options.wrapAsync ? this._wrappedHeader : this._header
     hdr = this._options.headless
       ? hdr
-      : hdr.replace('launch()', 'launch({ headless: false })')
+      : hdr?.replace('launch()', 'launch({ headless: false })')
     return hdr
   }
 
@@ -60,7 +60,7 @@ export default class CodeGenerator {
         frameUrl,
       } = events[i]
       const escapedSelector = selector
-        ? selector.replace(/\\/g, '\\\\')
+        ? selector?.replace(/\\/g, '\\\\')
         : selector
 
       // we need to keep a handle on what frames events originate from
@@ -263,6 +263,6 @@ export default class CodeGenerator {
   }
 
   _escapeUserInput(value) {
-    return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+    return value?.replace(/\\/g, '\\\\')?.replace(/'/g, "\\'")
   }
 }

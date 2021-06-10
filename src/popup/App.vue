@@ -1,69 +1,113 @@
 <template>
-  <div id="headless-recorder" class="recorder">
-    <div class="header">
-      <a href="#" @click="goHome">
-        Headless recorder
-        <span class="text-muted"
-          ><small>{{ version }}</small></span
+  <div class="bg-blue-light p-4 flex flex-col h-screen overflow-hidden">
+    <div class="flex justify-between items-center mb-2">
+      <h1
+        @click="goHome"
+        role="button"
+        class="text-sm font-semibold text-gray-darkest"
+      >
+        Headless Recorder
+      </h1>
+      <div class="flex">
+        <div
+          data-test-id="recording-badge"
+          class="flex justify-center items-center text-red font-semibold"
+          :class="{ 'animate-pulse': recordingBadgeText === 'recording' }"
+          v-show="isRecording"
         >
-      </a>
-      <div class="left">
-        <div class="recording-badge" v-show="isRecording">
-          <span class="red-dot"></span>
+          <span
+            data-test-id="red-dot"
+            class="bg-red rounded-full w-2 h-2 mr-1 "
+          ></span>
           {{ recordingBadgeText }}
         </div>
-        <button @click="toggleShowHelp" class="header-button">
-          <img src="@/assets/images/help.svg" alt="help" />
+        <button @click="toggleShowHelp" class="ml-4">
+          <img src="@/assets/icons/question.svg" alt="help" class="w-4" />
         </button>
-        <button @click="openOptions" class="header-button">
-          <img src="@/assets/images/settings.svg" alt="settings" />
+        <button @click="openOptions" class="ml-2">
+          <img src="@/assets/icons/gear.svg" alt="settings" class="w-4" />
         </button>
       </div>
     </div>
-    <div class="main">
-      <div class="tabs" v-show="!showHelp">
-        <RecordingTab
-          :code="code"
-          :is-recording="isRecording"
-          :live-events="liveEvents"
-          v-show="!showResultsTab"
-        />
-        <div class="recording-footer" v-show="!showResultsTab">
+
+    <template v-if="!showHelp">
+      <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
+      <RecordingTab
+        :code="code"
+        :is-recording="isRecording"
+        :live-events="liveEvents"
+        v-show="!showResultsTab && isRecording"
+      />
+      <ResultsTab
+        :puppeteer="code"
+        :playwright="codeForPlaywright"
+        :options="options"
+        v-if="showResultsTab"
+        v-on:update:tab="currentResultTab = $event"
+      />
+      <div
+        data-test-id="results-footer"
+        class="flex py-2 px-3 justify-between bg-black rounded-b-md"
+        v-show="showResultsTab"
+      >
+        <div class="flex">
           <button
-            class="btn btn-sm"
-            @click="toggleRecord"
-            :class="isRecording ? 'btn-danger' : 'btn-primary'"
+            class="font-semibold text-sm text-white bg-blue flex justify-center items-center rounded-sm p-2 mr-3"
+            @click="restart"
+            v-show="code"
           >
-            {{ recordButtonText }}
+            <img src="@/assets/icons/history.svg" alt="restart recording" />
           </button>
           <button
-            class="btn btn-sm btn-primary btn-outline-primary"
-            @click="togglePause"
-            v-show="isRecording"
+            v-if="isLoggedIn"
+            class="font-semibold text-sm text-white bg-blue flex justify-center items-center rounded-sm p-2"
+            @click="run"
+            v-show="code"
           >
-            {{ pauseButtonText }}
+            <img src="@/assets/icons/zap.svg" class="mr-2" alt="thunder" />
+            Run on Checkly
           </button>
-          <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
-          <checkly-badge v-if="!isRecording"></checkly-badge>
+          <a
+            v-else
+            href="https://app.checklyhq.com/signup"
+            class="text-xs text-white"
+          >
+            Signup on Checkly
+          </a>
         </div>
-        <ResultsTab
-          :puppeteer="code"
-          :playwright="codeForPlaywright"
-          :options="options"
-          v-if="showResultsTab"
-          v-on:update:tab="currentResultTab = $event"
-        />
-        <div class="results-footer" v-show="showResultsTab">
-          <button class="btn btn-sm btn-primary" @click="restart" v-show="code">
-            Restart
-          </button>
-          <a href="#" @click.prevent="setCopying" v-show="code">{{
-            copyLinkText
-          }}</a>
-        </div>
+        <button @click="copyCode" v-show="code">
+          <img
+            v-show="!isCopying"
+            src="@/assets/icons/duplicate.svg"
+            alt="copy code to clipboard"
+          />
+          <span class="text-white text-xs" v-show="isCopying">copied!</span>
+        </button>
       </div>
-      <HelpTab v-show="showHelp"></HelpTab>
+    </template>
+    <!-- <HelpTab v-show="showHelp"></HelpTab> -->
+
+    <div
+      class="flex justify-between pt-2"
+      v-show="!showResultsTab && isRecording"
+    >
+      <button
+        @click="toggleRecord"
+        class="font-semibold text-sm text-white bg-red flex items-center rounded-sm p-2.5"
+      >
+        Finishing Recording
+      </button>
+      <button
+        class="text-sm text-gray-dark"
+        @click="togglePause"
+        v-show="isRecording"
+      >
+        {{ pauseButtonText }}
+      </button>
+      <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
     </div>
+
+    <Footer class="mt-2" v-if="!isRecording && !showResultsTab" />
   </div>
 </template>
 
@@ -74,8 +118,11 @@ import PuppeteerCodeGenerator from '@/services/PuppeteerCodeGenerator'
 import PlaywrightCodeGenerator from '@/services/PlaywrightCodeGenerator'
 import RecordingTab from '@/components/RecordingTab.vue'
 import ResultsTab from '@/components/ResultsTab.vue'
-import HelpTab from '@/components/HelpTab.vue'
-import ChecklyBadge from '@/components/ChecklyBadge.vue'
+import HomeTab from '@/components/HomeTab.vue'
+
+// import HelpTab from '@/components/HelpTab.vue'
+
+import Footer from '@/components/Footer.vue'
 
 import actions from '@/models/extension-ui-actions'
 
@@ -83,12 +130,14 @@ let bus
 
 export default {
   name: 'App',
-  components: { ResultsTab, RecordingTab, HelpTab, ChecklyBadge },
+  components: { ResultsTab, RecordingTab, HomeTab, Footer },
+
   data() {
     return {
       code: '',
       codeForPlaywright: '',
       options: {},
+      isLoggedIn: false,
       showResultsTab: false,
       showHelp: false,
       liveEvents: [],
@@ -101,6 +150,19 @@ export default {
       currentResultTab: null,
     }
   },
+
+  computed: {
+    recordingBadgeText() {
+      return this.isPaused ? 'paused' : 'recording'
+    },
+    recordButtonText() {
+      return this.isRecording ? 'Stop' : 'Record'
+    },
+    pauseButtonText() {
+      return this.isPaused ? 'Resume' : 'Pause'
+    },
+  },
+
   mounted() {
     this.loadState(() => {
       this.trackPageView()
@@ -118,12 +180,20 @@ export default {
     })
 
     bus = chrome.extension.connect({ name: 'recordControls' })
+
+    chrome.cookies.getAll({}, res => {
+      if (res.find(cookie => cookie.name.startsWith('checkly_has_account'))) {
+        this.isLoggedIn = true
+      }
+    })
   },
+
   methods: {
     toggleRecord() {
       if (this.isRecording) {
         this.stop()
       } else {
+        window.close()
         this.start()
       }
       this.isRecording = !this.isRecording
@@ -219,13 +289,20 @@ export default {
         },
       })
     },
-    setCopying() {
-      this.trackEvent('Copy')
-      this.isCopying = true
-      setTimeout(() => {
-        this.isCopying = false
-      }, 1500)
+
+    copyCode() {
+      navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
+        if (result.state == 'granted' || result.state == 'prompt') {
+          this.trackEvent('Copy')
+          this.isCopying = true
+          setTimeout(() => {
+            this.isCopying = false
+            navigator.clipboard.writeText(this.code)
+          }, 500)
+        }
+      })
     },
+
     goHome() {
       this.showResultsTab = false
       this.showHelp = false
@@ -257,84 +334,18 @@ export default {
         ? this.code
         : this.codeForPlaywright
     },
-  },
-  computed: {
-    recordingBadgeText() {
-      return this.isPaused ? 'paused' : 'recording'
-    },
-    recordButtonText() {
-      return this.isRecording ? 'Stop' : 'Record'
-    },
-    pauseButtonText() {
-      return this.isPaused ? 'Resume' : 'Pause'
-    },
-    copyLinkText() {
-      return this.isCopying ? 'copied!' : 'copy to clipboard'
+    run() {
+      const script = encodeURIComponent(btoa(this.code))
+      const url = `https://app.checklyhq.com/checks/new/browser?framework=${this.currentResultTab}&script=${script}`
+      chrome.tabs.create({ url })
     },
   },
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../assets/styles/_animations.scss';
-@import '../assets/styles/_variables.scss';
-@import '../assets/styles/_mixins.scss';
-.recorder {
-  font-size: 14px;
-
-  .header {
-    @include header();
-
-    &-button {
-      color: $gray-dark;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-
-      img {
-        width: 18px;
-      }
-    }
-
-    .left {
-      margin-left: auto;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-
-      .recording-badge {
-        color: $brand-danger;
-        .red-dot {
-          height: 9px;
-          width: 9px;
-          background-color: $brand-danger;
-          border-radius: 50%;
-          display: inline-block;
-          margin-right: 0.4rem;
-          vertical-align: middle;
-          position: relative;
-        }
-      }
-
-      .header-button {
-        margin-left: $spacer;
-        img {
-          vertical-align: middle;
-        }
-      }
-    }
-  }
-
-  .recording-footer {
-    @include footer();
-    img {
-      margin-left: 8px;
-      width: 80px;
-      vertical-align: middle;
-    }
-  }
-  .results-footer {
-    @include footer();
-  }
+<style>
+html {
+  width: 360px;
+  height: 535px;
 }
 </style>

@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 import _ from 'lodash'
-import { launchPuppeteerWithExtension } from '@/__e2e-tests__/helpers'
+import { launchPuppeteerWithExtension } from '@/__tests__/helpers'
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
 let server

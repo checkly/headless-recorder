@@ -2,7 +2,7 @@ import eventsToRecord from '@/services/dom-events-to-record'
 import UIController from './UIController'
 import actions from '@/models/extension-ui-actions'
 import ctrl from '@/models/extension-control-messages'
-import finder from '@medv/finder'
+import { finder } from '@medv/finder'
 
 const DEFAULT_MOUSE_CURSOR = 'default'
 
@@ -174,6 +174,8 @@ export default class EventRecorder {
     if (e.target.id) {
       return `#${e.target.id}`
     }
+
+    console.log(finder(e.target))
 
     return finder(e.target, {
       seedMinLength: 5,

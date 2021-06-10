@@ -1,46 +1,34 @@
 <template>
-  <div class="tab recording-tab">
-    <div class="content">
-      <div class="empty" v-show="!isRecording">
-        <img src="@/assets/images/Desert.svg" alt="desert" width="78px" />
-        <h3>No recorded events yet</h3>
-        <p class="text-muted">Click record to begin</p>
-        <div class="nag-cta" v-show="!isRecording">
-          <a href="https://checklyhq.com/headless-recorder" target="_blank"
-            >Puppeteer Recorder is now <strong>Headless Recorder</strong> and
-            supports Playwright →</a
-          >
+  <div
+    class="flex flex-col items-center bg-white rounded-md h-100 overflow-auto break-all whitespace-pre-wrap"
+    :class="{ 'justify-center': !liveEvents.length }"
+  >
+    <p class="text-sm text-gray animate-pulse" v-show="!liveEvents.length">
+      Waiting for events...
+    </p>
+    <ul class="flex flex-col items-start p-2 w-full">
+      <li
+        v-for="(event, index) in liveEvents"
+        :key="index"
+        class="border-b border-gray-lighter mb-4 w-full p-2"
+      >
+        <div class="text-sm mb-1">
+          <span class="text-gray mr-1">{{ index + 1 }}.</span>
+          <span class="text-gray-dark font-semibold uppercase">{{
+            event.action
+          }}</span>
         </div>
-      </div>
-      <div class="events" v-show="isRecording">
-        <p
-          class="text-muted text-center loading"
-          v-show="liveEvents.length === 0"
-        >
-          Waiting for events
-        </p>
-        <ul class="event-list">
-          <li
-            v-for="(event, index) in liveEvents"
-            :key="index"
-            class="event-list-item"
-          >
-            <div class="event-label">{{ index + 1 }}.</div>
-            <div class="event-description">
-              <div class="event-action">{{ event.action }}</div>
-              <div class="event-props text-muted">
-                {{ event.selector || parseEventValue(event) }}
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+        <span class="text-xs text-gray">
+          {{ parseEventValue(event) }}
+        </span>
+      </li>
+    </ul>
   </div>
 </template>
 <script>
 export default {
   name: 'RecordingTab',
+
   props: {
     isRecording: { type: Boolean, default: false },
     liveEvents: {
@@ -50,91 +38,28 @@ export default {
       },
     },
   },
+
   methods: {
     parseEventValue(event) {
       if (!event) {
-        return
+        return ''
       }
-      if (event.action === 'viewport*')
-        return `width: ${event.value.width}, height: ${event.value.height}`
-      if (event.action === 'goto*') return event.href
-      if (event.action === 'navigation*') return ''
+
+      if (event.selector) {
+        return event.selector
+      }
+
+      const action = event?.action.toLowerCase()
+
+      if (action === 'viewport') {
+        return `width: ${event.value.width} - height: ${event.value.height}`
+      }
+      if (action === 'goto') {
+        return event.href
+      }
+
+      return ''
     },
   },
 }
 </script>
-
-<style lang="scss" scoped>
-@import '../assets/styles/_animations.scss';
-@import '../assets/styles/_variables.scss';
-
-.recording-tab {
-  .content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 200px;
-    .empty {
-      padding: $spacer;
-      text-align: center;
-    }
-
-    .events {
-      max-height: $max-content-height;
-      flex: 1;
-      height: 100%;
-      overflow: auto;
-      display: flex;
-      flex-direction: column-reverse;
-
-      .loading:after {
-        content: '.';
-        animation: dots 1s steps(5, end) infinite;
-        animation-delay: 1.5s;
-        margin-bottom: auto;
-      }
-
-      .event-list {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-
-        .event-list-item {
-          padding: 12px;
-          font-size: 12px;
-          border-top: 1px solid $gray-light;
-          display: flex;
-          flex: 1 1 auto;
-          height: 32px;
-
-          .event-label {
-            vertical-align: top;
-            margin-right: $spacer;
-          }
-
-          .event-description {
-            margin-right: auto;
-            display: inline-block;
-
-            .event-action {
-              font-weight: bold;
-            }
-
-            .event-props {
-              white-space: pre;
-            }
-          }
-        }
-      }
-    }
-  }
-  .nag-cta {
-    margin-bottom: $spacer;
-    a {
-      color: $pink;
-      font-size: 80%;
-      font-weight: 500;
-    }
-  }
-}
-</style>
