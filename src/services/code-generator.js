@@ -1,6 +1,6 @@
-import domEvents from './dom-events-to-record'
-import Block from './Block'
-import pptrActions from './pptr-actions'
+import { eventsToRecord } from '@/services/constants'
+import { headlessActions } from '@/services/constants'
+import Block from './block'
 
 export const defaults = {
   wrapAsync: true,
@@ -82,17 +82,17 @@ export default class CodeGenerator {
             this._blocks.push(this._handleChange(escapedSelector, value))
           }
           break
-        case pptrActions.GOTO:
+        case headlessActions.GOTO:
           this._blocks.push(this._handleGoto(href, frameId))
           break
-        case pptrActions.VIEWPORT:
+        case headlessActions.VIEWPORT:
           this._blocks.push(this._handleViewport(value.width, value.height))
           break
-        case pptrActions.NAVIGATION:
+        case headlessActions.NAVIGATION:
           this._blocks.push(this._handleWaitForNavigation())
           this._hasNavigation = true
           break
-        case pptrActions.SCREENSHOT:
+        case headlessActions.SCREENSHOT:
           this._blocks.push(this._handleScreenshot(value))
           break
       }
@@ -101,7 +101,7 @@ export default class CodeGenerator {
     if (this._hasNavigation && this._options.waitForNavigation) {
       console.debug('Adding navigationPromise declaration')
       const block = new Block(this._frameId, {
-        type: pptrActions.NAVIGATION_PROMISE,
+        type: headlessActions.NAVIGATION_PROMISE,
         value: 'const navigationPromise = page.waitForNavigation()',
       })
       this._blocks.unshift(block)
@@ -148,7 +148,7 @@ export default class CodeGenerator {
   _handleKeyDown(selector, value) {
     const block = new Block(this._frameId)
     block.addLine({
-      type: domEvents.KEYDOWN,
+      type: eventsToRecord.KEYDOWN,
       value: `await ${this._frame}.type('${selector}', '${this._escapeUserInput(
         value
       )}')`,
@@ -160,12 +160,12 @@ export default class CodeGenerator {
     const block = new Block(this._frameId)
     if (this._options.waitForSelectorOnClick) {
       block.addLine({
-        type: domEvents.CLICK,
+        type: eventsToRecord.CLICK,
         value: `await ${this._frame}.waitForSelector('${selector}')`,
       })
     }
     block.addLine({
-      type: domEvents.CLICK,
+      type: eventsToRecord.CLICK,
       value: `await ${this._frame}.click('${selector}')`,
     })
     return block
@@ -173,14 +173,14 @@ export default class CodeGenerator {
 
   _handleChange(selector, value) {
     return new Block(this._frameId, {
-      type: domEvents.CHANGE,
+      type: eventsToRecord.CHANGE,
       value: `await ${this._frame}.select('${selector}', '${value}')`,
     })
   }
 
   _handleGoto(href) {
     return new Block(this._frameId, {
-      type: pptrActions.GOTO,
+      type: headlessActions.GOTO,
       value: `await ${this._frame}.goto('${href}')`,
     })
   }
@@ -201,12 +201,12 @@ export default class CodeGenerator {
       }
 
       block = new Block(this._frameId, {
-        type: pptrActions.SCREENSHOT,
+        type: headlessActions.SCREENSHOT,
         value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', clip: { x: ${options.x}, y: ${options.y}, width: ${options.width}, height: ${options.height} } })`,
       })
     } else {
       block = new Block(this._frameId, {
-        type: pptrActions.SCREENSHOT,
+        type: headlessActions.SCREENSHOT,
         value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png' })`,
       })
     }
@@ -219,7 +219,7 @@ export default class CodeGenerator {
     const block = new Block(this._frameId)
     if (this._options.waitForNavigation) {
       block.addLine({
-        type: pptrActions.NAVIGATION,
+        type: headlessActions.NAVIGATION,
         value: `await navigationPromise`,
       })
     }
@@ -238,11 +238,11 @@ export default class CodeGenerator {
             line.frameId
           } = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
           this._blocks[i].addLineToTop({
-            type: pptrActions.FRAME_SET,
+            type: headlessActions.FRAME_SET,
             value: declaration,
           })
           this._blocks[i].addLineToTop({
-            type: pptrActions.FRAME_SET,
+            type: headlessActions.FRAME_SET,
             value: 'let frames = await page.frames()',
           })
           delete this._allFrames[line.frameId]

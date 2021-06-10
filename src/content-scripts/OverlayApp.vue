@@ -154,8 +154,8 @@
 </template>
 
 <script>
-import control from '@/models/extension-control-messages'
 import { directive } from 'vue-tippy'
+import { controlMessages } from '@/services/constants'
 
 export default {
   name: 'Overlay',
@@ -176,30 +176,32 @@ export default {
         return
       }
       chrome.runtime.sendMessage({
-        control: control.OVERLAY_ABORT_SCREENSHOT,
+        control: controlMessages.OVERLAY_ABORT_SCREENSHOT,
       })
     })
   },
 
   methods: {
     stop() {
-      chrome.runtime.sendMessage({ control: control.OVERLAY_STOP })
+      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_STOP })
     },
 
     pause() {
       this.isPaused = !this.isPaused
-      chrome.runtime.sendMessage({ control: control.OVERLAY_PAUSE })
+      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_PAUSE })
     },
 
     fullScreenshot() {
       this.isScreenShotMode = true
-      chrome.runtime.sendMessage({ control: control.OVERLAY_FULL_SCREENSHOT })
+      chrome.runtime.sendMessage({
+        control: controlMessages.OVERLAY_FULL_SCREENSHOT,
+      })
     },
 
     clippedScreenshot() {
       this.isScreenShotMode = true
       chrome.runtime.sendMessage({
-        control: control.OVERLAY_CLIPPED_SCREENSHOT,
+        control: controlMessages.OVERLAY_CLIPPED_SCREENSHOT,
       })
     },
   },
@@ -209,6 +211,22 @@ export default {
 <style lang="scss">
 .headless-recorder-selected-element {
   background: rgba(255, 73, 73, 0.1);
+}
+
+.screenshot-this {
+  animation-name: ss-animation;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes ss-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .headless-recorder-camera-cursor {

@@ -1,10 +1,14 @@
-import eventsToRecord from '@/services/dom-events-to-record'
-import UIController from './UIController'
-import actions from '@/models/extension-ui-actions'
-import ctrl from '@/models/extension-control-messages'
-import { finder } from '@medv/finder'
 import { createApp } from 'vue'
-import OverlayApp from './App.vue'
+import { finder } from '@medv/finder'
+
+import {
+  uiActions,
+  controlMessages,
+  eventsToRecord,
+} from '@/services/constants'
+
+import UIController from './screenshot-controller'
+import OverlayApp from './OverlayApp.vue'
 
 export default class EventRecorder {
   constructor() {
@@ -57,13 +61,13 @@ export default class EventRecorder {
     }
 
     if (this._isTopFrame) {
-      this._sendMessage({ control: ctrl.EVENT_RECORDER_STARTED })
+      this._sendMessage({ control: controlMessages.EVENT_RECORDER_STARTED })
       this._sendMessage({
-        control: ctrl.GET_CURRENT_URL,
+        control: controlMessages.GET_CURRENT_URL,
         href: window.location.href,
       })
       this._sendMessage({
-        control: ctrl.GET_VIEWPORT_SIZE,
+        control: controlMessages.GET_VIEWPORT_SIZE,
         coordinates: { width: window.innerWidth, height: window.innerHeight },
       })
       console.debug('Headless Recorder in-page EventRecorder started')
@@ -74,27 +78,27 @@ export default class EventRecorder {
     console.debug('content-script: message from background', msg)
     if (msg && msg.action) {
       switch (msg.action) {
-        case actions.TOGGLE_SCREENSHOT_MODE:
+        case uiActions.TOGGLE_SCREENSHOT_MODE:
           this._handleScreenshotMode(false)
           break
 
-        case actions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
+        case uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
           this._handleScreenshotMode(true)
           break
 
-        case actions.CLOSE_SCREENSHOT_MODE:
+        case uiActions.CLOSE_SCREENSHOT_MODE:
           this._cancelScreenshotMode()
           break
 
-        case actions.TOGGLE_OVERLAY:
+        case uiActions.TOGGLE_OVERLAY:
           msg.value ? this._attachOverlay() : this._dettachOverlay()
           break
 
-        case actions.PAUSE:
+        case uiActions.PAUSE:
           this.overlayApp.isPaused = true
           break
 
-        case actions.UNPAUSE:
+        case uiActions.UNPAUSE:
           this.overlayApp.isPaused = false
           break
       }
@@ -228,8 +232,15 @@ export default class EventRecorder {
     this._uiController.on('click', event => {
       this._screenShotMode = false
       this.overlayApp.isScreenShotMode = false
+      document.body.classList.add('screenshot-this')
       document.body.classList.remove('headless-recorder-camera-cursor')
-      this._sendMessage({ control: ctrl.GET_SCREENSHOT, value: event.clip })
+      setTimeout(() => {
+        document.body.classList.remove('screenshot-this')
+      }, 1000)
+      this._sendMessage({
+        control: controlMessages.GET_SCREENSHOT,
+        value: event.clip,
+      })
       this._enableClickRecording()
     })
   }

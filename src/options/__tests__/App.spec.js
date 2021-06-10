@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import App from '../App'
+import App from '../OptionsApp'
 
 function createChromeLocalStorageMock(options) {
   let ops = options || {}

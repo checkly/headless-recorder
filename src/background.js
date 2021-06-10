@@ -1,7 +1,8 @@
-import pptrActions from '@/services/pptr-actions'
-import ctrl from '@/models/extension-control-messages'
-import actions from '@/models/extension-ui-actions'
-
+import {
+  uiActions,
+  controlMessages,
+  headlessActions,
+} from '@/services/constants'
 class RecordingController {
   constructor() {
     this._recording = []
@@ -29,24 +30,24 @@ class RecordingController {
     chrome.extension.onConnect.addListener(port => {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === actions.START) {
+        if (msg.action && msg.action === uiActions.START) {
           this.start()
         }
-        if (msg.action && msg.action === actions.STOP) {
+        if (msg.action && msg.action === uiActions.STOP) {
           this.stop()
         }
-        if (msg.action && msg.action === actions.CLEAN_UP) {
+        if (msg.action && msg.action === uiActions.CLEAN_UP) {
           this.cleanUp()
         }
-        if (msg.action && msg.action === actions.PAUSE) {
+        if (msg.action && msg.action === uiActions.PAUSE) {
           chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, { action: actions.PAUSE })
+            chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.PAUSE })
           })
           this.pause()
         }
-        if (msg.action && msg.action === actions.UN_PAUSE) {
+        if (msg.action && msg.action === uiActions.UN_PAUSE) {
           chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, { action: actions.UN_PAUSE })
+            chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.UN_PAUSE })
           })
           this.unPause()
         }
@@ -159,7 +160,7 @@ class RecordingController {
       this.handleMessage({
         selector: undefined,
         value: undefined,
-        action: pptrActions.GOTO,
+        action: headlessActions.GOTO,
         href,
       })
       this._hasGoto = true
@@ -171,7 +172,7 @@ class RecordingController {
       this.handleMessage({
         selector: undefined,
         value,
-        action: pptrActions.VIEWPORT,
+        action: headlessActions.VIEWPORT,
       })
       this._hasViewPort = true
     }
@@ -181,7 +182,7 @@ class RecordingController {
     this.handleMessage({
       selector: undefined,
       value: undefined,
-      action: pptrActions.NAVIGATION,
+      action: headlessActions.NAVIGATION,
     })
   }
 
@@ -189,7 +190,7 @@ class RecordingController {
     this.handleMessage({
       selector: undefined,
       value,
-      action: pptrActions.SCREENSHOT,
+      action: headlessActions.SCREENSHOT,
     })
   }
 
@@ -216,42 +217,42 @@ class RecordingController {
 
   handleControlMessage(msg) {
     // Handle events from content-script
-    if (msg.control === ctrl.EVENT_RECORDER_STARTED) {
+    if (msg.control === controlMessages.EVENT_RECORDER_STARTED) {
       chrome.browserAction.setBadgeText({ text: this._badgeState })
     }
-    if (msg.control === ctrl.GET_VIEWPORT_SIZE) {
+    if (msg.control === controlMessages.GET_VIEWPORT_SIZE) {
       this.recordCurrentViewportSize(msg.coordinates)
     }
-    if (msg.control === ctrl.GET_CURRENT_URL) {
+    if (msg.control === controlMessages.GET_CURRENT_URL) {
       this.recordCurrentUrl(msg.href)
     }
-    if (msg.control === ctrl.GET_SCREENSHOT) {
+    if (msg.control === controlMessages.GET_SCREENSHOT) {
       this.recordScreenshot(msg.value)
     }
 
-    if (msg.control === ctrl.OVERLAY_STOP) {
+    if (msg.control === controlMessages.OVERLAY_STOP) {
       chrome.storage.local.set({ clear: true })
       this.stop()
     }
 
-    if (msg.control === ctrl.OVERLAY_PAUSE) {
+    if (msg.control === controlMessages.OVERLAY_PAUSE) {
       chrome.storage.local.set({ pause: true })
       this._isPaused ? this.unPause() : this.pause()
     }
 
-    if (msg.control === ctrl.OVERLAY_CLIPPED_SCREENSHOT) {
-      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+    if (msg.control === controlMessages.OVERLAY_CLIPPED_SCREENSHOT) {
+      this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
     }
 
-    if (msg.control === ctrl.OVERLAY_FULL_SCREENSHOT) {
-      this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+    if (msg.control === controlMessages.OVERLAY_FULL_SCREENSHOT) {
+      this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_MODE)
     }
 
-    if (msg.control === ctrl.OVERLAY_ABORT_SCREENSHOT) {
-      this.toggleScreenShotMode(actions.CLOSE_SCREENSHOT_MODE)
+    if (msg.control === controlMessages.OVERLAY_ABORT_SCREENSHOT) {
+      this.toggleScreenShotMode(uiActions.CLOSE_SCREENSHOT_MODE)
     }
 
-    if (msg.control === ctrl.RESTART) {
+    if (msg.control === controlMessages.RESTART) {
       this.start()
     }
   }
@@ -268,21 +269,21 @@ class RecordingController {
     console.debug('context menu clicked')
     switch (info.menuItemId) {
       case this._menuId + this._menuOptions.SCREENSHOT:
-        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_MODE)
         break
       case this._menuId + this._menuOptions.SCREENSHOT_CLIPPED:
-        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
         break
     }
   }
 
   handleKeyCommands(command) {
     switch (command) {
-      case actions.TOGGLE_SCREENSHOT_MODE:
-        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_MODE)
+      case uiActions.TOGGLE_SCREENSHOT_MODE:
+        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_MODE)
         break
-      case actions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
-        this.toggleScreenShotMode(actions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+      case uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
+        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
         break
     }
   }
@@ -312,7 +313,7 @@ class RecordingController {
     console.debug('toggling overlay')
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       chrome.tabs.sendMessage(tabs[0].id, {
-        action: actions.TOGGLE_OVERLAY,
+        action: uiActions.TOGGLE_OVERLAY,
         value,
       })
     })

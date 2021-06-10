@@ -1,6 +1,6 @@
-import pptrActions from './pptr-actions'
-import Block from './Block'
-import CodeGenerator from './CodeGenerator'
+import Block from '@/services/block'
+import CodeGenerator from '@/services/code-generator'
+import { headlessActions } from '@/services/constants'
 
 const importPlaywright = `const { chromium } = require('playwright');\n`
 
@@ -36,14 +36,14 @@ export default class PlaywrightCodeGenerator extends CodeGenerator {
 
   _handleViewport(width, height) {
     return new Block(this._frameId, {
-      type: pptrActions.VIEWPORT,
+      type: headlessActions.VIEWPORT,
       value: `await ${this._frame}.setViewportSize({ width: ${width}, height: ${height} })`,
     })
   }
 
   _handleChange(selector, value) {
     return new Block(this._frameId, {
-      type: pptrActions.CHANGE,
+      type: headlessActions.CHANGE,
       value: `await ${this._frame}.selectOption('${selector}', '${value}')`,
     })
   }

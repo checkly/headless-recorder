@@ -1,5 +1,5 @@
-import PuppeteerCodeGenerator from '../PuppeteerCodeGenerator'
-import pptrActions from '../pptr-actions'
+import PuppeteerCodeGenerator from '../puppeteer-code-generator'
+import { headlessActions } from '@/services/constants'
 
 describe('PuppeteerCodeGenerator', () => {
   test('it should generate nothing when there are no events', () => {
@@ -26,7 +26,7 @@ describe('PuppeteerCodeGenerator', () => {
   test('it generates the correct waitForNavigation code', () => {
     const events = [
       { action: 'click', selector: 'a.link' },
-      { action: pptrActions.NAVIGATION },
+      { action: headlessActions.NAVIGATION },
     ]
     const codeGenerator = new PuppeteerCodeGenerator()
     const code = codeGenerator._parseEvents(events)
@@ -120,7 +120,7 @@ describe('PuppeteerCodeGenerator', () => {
   })
 
   test('it generates the correct current page screenshot code', () => {
-    const events = [{ action: pptrActions.SCREENSHOT }]
+    const events = [{ action: headlessActions.SCREENSHOT }]
     const codeGenerator = new PuppeteerCodeGenerator()
     const result = codeGenerator._parseEvents(events)
 
@@ -132,7 +132,7 @@ describe('PuppeteerCodeGenerator', () => {
   test('it generates the correct clipped page screenshot code', () => {
     const events = [
       {
-        action: pptrActions.SCREENSHOT,
+        action: headlessActions.SCREENSHOT,
         value: { x: '10px', y: '300px', width: '800px', height: '600px' },
       },
     ]

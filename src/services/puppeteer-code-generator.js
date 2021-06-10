@@ -1,6 +1,6 @@
-import pptrActions from './pptr-actions'
-import Block from './Block'
-import CodeGenerator from './CodeGenerator'
+import { headlessActions } from '@/services/constants'
+import Block from './block'
+import CodeGenerator from './code-generator'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
@@ -36,7 +36,7 @@ export default class PuppeteerCodeGenerator extends CodeGenerator {
 
   _handleViewport(width, height) {
     return new Block(this._frameId, {
-      type: pptrActions.VIEWPORT,
+      type: headlessActions.VIEWPORT,
       value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })`,
     })
   }

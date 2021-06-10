@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import { defaults as code } from '@/services/CodeGenerator'
+import { defaults as code } from '@/services/code-generator'
 
 const defaults = {
   code,

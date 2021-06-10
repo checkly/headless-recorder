@@ -23,8 +23,29 @@ export const uiActions = {
   UN_PAUSE: 'UN_PAUSE',
 }
 
+export const headlessActions = {
+  GOTO: 'GOTO',
+  VIEWPORT: 'VIEWPORT',
+  WAITFORSELECTOR: 'WAITFORSELECTOR',
+  NAVIGATION: 'NAVIGATION',
+  NAVIGATION_PROMISE: 'NAVIGATION_PROMISE',
+  FRAME_SET: 'FRAME_SET',
+  SCREENSHOT: 'SCREENSHOT',
+}
+
 export const overlaySelectors = {
   OVERLAY_ID: 'headless-recorder-overlay',
   CURRENT_SELECTOR_CLASS: 'headless-recorder-selected-element',
   CURSOR_CAMERA_CLASS: 'headless-recorder-camera-cursor',
+}
+
+export const eventsToRecord = {
+  CLICK: 'click',
+  DBLCLICK: 'dblclick',
+  CHANGE: 'change',
+  KEYDOWN: 'keydown',
+  SELECT: 'select',
+  SUBMIT: 'submit',
+  LOAD: 'load',
+  UNLOAD: 'unload',
 }

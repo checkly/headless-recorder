@@ -1,3 +1,3 @@
-import EventRecorder from './EventRecorder'
+import EventRecorder from './event-recorder'
 window.eventRecorder = new EventRecorder()
 window.eventRecorder.boot()

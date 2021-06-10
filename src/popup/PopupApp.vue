@@ -120,17 +120,16 @@
 <script>
 import { version } from '../../package.json'
 
-import PuppeteerCodeGenerator from '@/services/PuppeteerCodeGenerator'
-import PlaywrightCodeGenerator from '@/services/PlaywrightCodeGenerator'
+import { uiActions } from '@/services/constants'
+import PuppeteerCodeGenerator from '@/services/puppeteer-code-generator'
+import PlaywrightCodeGenerator from '@/services/playwright-code-generator'
+
 import RecordingTab from '@/components/RecordingTab.vue'
 import ResultsTab from '@/components/ResultsTab.vue'
 import HomeTab from '@/components/HomeTab.vue'
-
-// import HelpTab from '@/components/HelpTab.vue'
-
 import Footer from '@/components/Footer.vue'
 
-import actions from '@/models/extension-ui-actions'
+// import HelpTab from '@/components/HelpTab.vue'
 
 let bus
 
@@ -221,10 +220,10 @@ export default {
 
     togglePause() {
       if (this.isPaused) {
-        bus.postMessage({ action: actions.UN_PAUSE })
+        bus.postMessage({ action: uiActions.UN_PAUSE })
         this.isPaused = false
       } else {
-        bus.postMessage({ action: actions.PAUSE })
+        bus.postMessage({ action: uiActions.PAUSE })
         this.isPaused = true
       }
       this.storeState()
@@ -234,13 +233,13 @@ export default {
       this.trackEvent('Start')
       this.cleanUp()
       console.debug('start recorder')
-      bus.postMessage({ action: actions.START })
+      bus.postMessage({ action: uiActions.START })
     },
 
     stop() {
       this.trackEvent('Stop')
       console.debug('stop recorder')
-      bus.postMessage({ action: actions.STOP })
+      bus.postMessage({ action: uiActions.STOP })
 
       chrome.storage.local.get(
         ['recording', 'options'],
@@ -263,7 +262,7 @@ export default {
 
     restart() {
       this.cleanUp()
-      bus.postMessage({ action: actions.CLEAN_UP })
+      bus.postMessage({ action: uiActions.CLEAN_UP })
     },
 
     cleanUp() {

@@ -16,16 +16,34 @@ module.exports = {
       transparent: 'transparent',
       current: 'currentColor',
 
-      black: colors.black,
+      gray: {
+        lightest: '#F9FAFC',
+        lighter: '#EFF2F7',
+        light: '#E0E6ED',
+        DEFAULT: '#8492A6',
+        dark: '#3C4858;',
+        darkest: '#1F2D3D;',
+      },
+
+      blue: {
+        light: '#F0F8FF',
+        DEFAULT: '#45C8F1',
+      },
+
+      red: {
+        DEFAULT: '#FF4949',
+      },
+
+      pink: {
+        DEFAULT: '#FF659D',
+      },
+
+      black: '#161616',
       white: colors.white,
-      gray: colors.coolGray,
-      red: colors.red,
       yellow: colors.amber,
       green: colors.emerald,
-      blue: colors.blue,
       indigo: colors.indigo,
       purple: colors.violet,
-      pink: colors.pink,
     },
     spacing: {
       px: '1px',
@@ -143,7 +161,7 @@ module.exports = {
     borderOpacity: theme => theme('opacity'),
     borderRadius: {
       none: '0px',
-      sm: '0.125rem',
+      sm: '0.188rem',
       DEFAULT: '0.25rem',
       md: '0.375rem',
       lg: '0.5rem',
@@ -246,6 +264,7 @@ module.exports = {
     },
     fontFamily: {
       sans: [
+        'Inter',
         'ui-sans-serif',
         'system-ui',
         '-apple-system',
@@ -425,6 +444,7 @@ module.exports = {
     height: theme => ({
       auto: 'auto',
       ...theme('spacing'),
+      '100': '27rem',
       '1/2': '50%',
       '1/3': '33.333333%',
       '2/3': '66.666667%',

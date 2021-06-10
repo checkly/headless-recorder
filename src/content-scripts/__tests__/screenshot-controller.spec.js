@@ -1,4 +1,4 @@
-import UIController from '../UIController'
+import UIController from '../screenshot-controller'
 
 // this test NEEDS to come first because of shitty JSDOM.
 // See https://github.com/facebook/jest/issues/1224
