@@ -1,15 +1,12 @@
-import {
-  uiActions,
-  controlMessages,
-  headlessActions,
-} from '@/services/constants'
+import badge from '@/services/badge'
+import browser from '@/services/browser'
+import { uiActions, controlMessages, headlessActions } from '@/services/constants'
 class RecordingController {
   constructor() {
     this._recording = []
     this._boundedMessageHandler = null
     this._boundedNavigationHandler = null
     this._boundedWaitHandler = null
-    this._boundedMenuHandler = null
     this._boundedKeyCommandHandler = null
     this._badgeState = ''
     this._isPaused = false
@@ -30,22 +27,22 @@ class RecordingController {
     chrome.extension.onConnect.addListener(port => {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === uiActions.START) {
+        if (msg?.action === uiActions.START) {
           this.start()
         }
-        if (msg.action && msg.action === uiActions.STOP) {
+        if (msg?.action === uiActions.STOP) {
           this.stop()
         }
-        if (msg.action && msg.action === uiActions.CLEAN_UP) {
+        if (msg?.action === uiActions.CLEAN_UP) {
           this.cleanUp()
         }
-        if (msg.action && msg.action === uiActions.PAUSE) {
+        if (msg?.action === uiActions.PAUSE) {
           chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
             chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.PAUSE })
           })
           this.pause()
         }
-        if (msg.action && msg.action === uiActions.UN_PAUSE) {
+        if (msg?.action === uiActions.UN_PAUSE) {
           chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
             chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.UN_PAUSE })
           })
@@ -63,45 +60,17 @@ class RecordingController {
       this._hasGoto = false
       this._hasViewPort = false
 
-      this.injectScript()
+      browser.injectContentScript()
 
       this._boundedMessageHandler = this.handleMessage.bind(this)
       this._boundedNavigationHandler = this.handleNavigation.bind(this)
-      this._boundedWaitHandler = this.handleWait.bind(this)
+      this._boundedWaitHandler = badge.setWait
 
       chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
-      chrome.webNavigation.onCompleted.addListener(
-        this._boundedNavigationHandler
-      )
-      chrome.webNavigation.onBeforeNavigate.addListener(
-        this._boundedWaitHandler
-      )
+      chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
+      chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
 
-      chrome.browserAction.setIcon({ path: './images/logo-red.png' })
-      chrome.contextMenus.removeAll()
-
-      chrome.contextMenus.create({
-        id: this._menuId,
-        title: 'Headless Recorder',
-        contexts: ['all'],
-      })
-
-      chrome.contextMenus.create({
-        id: this._menuId + this._menuOptions.SCREENSHOT,
-        title: 'Take Screenshot (Ctrl+Shift+A)',
-        parentId: this._menuId,
-        contexts: ['all'],
-      })
-
-      chrome.contextMenus.create({
-        id: this._menuId + this._menuOptions.SCREENSHOT_CLIPPED,
-        title: 'Take Screenshot Clipped (Ctrl+Shift+S)',
-        parentId: this._menuId,
-        contexts: ['all'],
-      })
-
-      this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
-      chrome.contextMenus.onClicked.addListener(this._boundedMenuHandler)
+      badge.setRecording()
 
       this._boundedKeyCommandHandler = this.handleKeyCommands.bind(this)
       chrome.commands.onCommand.addListener(this._boundedKeyCommandHandler)
@@ -113,41 +82,34 @@ class RecordingController {
     this._badgeState = this._recording.length > 0 ? '1' : ''
 
     chrome.runtime.onMessage.removeListener(this._boundedMessageHandler)
-    chrome.webNavigation.onCompleted.removeListener(
-      this._boundedNavigationHandler
-    )
-    chrome.webNavigation.onBeforeNavigate.removeListener(
-      this._boundedWaitHandler
-    )
-    chrome.contextMenus.onClicked.removeListener(this._boundedMenuHandler)
+    chrome.webNavigation.onCompleted.removeListener(this._boundedNavigationHandler)
+    chrome.webNavigation.onBeforeNavigate.removeListener(this._boundedWaitHandler)
 
-    chrome.browserAction.setIcon({ path: './images/logo.png' })
-    chrome.browserAction.setBadgeText({ text: this._badgeState })
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#45C8F1' })
+    badge.setResult(this._badgeState)
 
     chrome.storage.local.set({ recording: this._recording }, () => {
       console.debug('recording stored')
     })
 
-    this.toggleSelectorHelper()
+    browser.sendContenScriptMessage({ action: uiActions.TOGGLE_OVERLAY, value: false })
   }
 
   pause() {
     console.debug('pause')
-    chrome.browserAction.setIcon({ path: './images/logo-yellow.png' })
+    badge.setPause()
     this._isPaused = true
   }
 
   unPause() {
     console.debug('unpause')
-    chrome.browserAction.setIcon({ path: './images/logo-red.png' })
+    badge.setRecording()
     this._isPaused = false
   }
 
   cleanUp(cb) {
     console.debug('cleanup')
     this._recording = []
-    chrome.browserAction.setBadgeText({ text: '' })
+    badge.setResult()
     chrome.storage.local.remove('recording', () => {
       console.debug('stored recording cleared')
       if (cb) cb()
@@ -196,7 +158,7 @@ class RecordingController {
 
   handleMessage(msg, sender) {
     if (msg.control) {
-      return this.handleControlMessage(msg, sender)
+      return this.handleContentScriptMessages(msg, sender)
     }
 
     if (msg.type === 'SIGN_CONNECT') {
@@ -215,8 +177,7 @@ class RecordingController {
     }
   }
 
-  handleControlMessage(msg) {
-    // Handle events from content-script
+  handleContentScriptMessages(msg) {
     if (msg.control === controlMessages.EVENT_RECORDER_STARTED) {
       chrome.browserAction.setBadgeText({ text: this._badgeState })
     }
@@ -230,96 +191,55 @@ class RecordingController {
       this.recordScreenshot(msg.value)
     }
 
+    if (msg.control === controlMessages.RESTART) {
+      this.start()
+    }
+
+    this.handleOverlayMessages(msg)
+  }
+
+  handleOverlayMessages(msg) {
     if (msg.control === controlMessages.OVERLAY_STOP) {
       chrome.storage.local.set({ clear: true })
       this.stop()
     }
 
     if (msg.control === controlMessages.OVERLAY_PAUSE) {
-      chrome.storage.local.set({ pause: true })
+      chrome.storage.local.set({ pause: this._isPaused ? false : true })
       this._isPaused ? this.unPause() : this.pause()
     }
 
     if (msg.control === controlMessages.OVERLAY_CLIPPED_SCREENSHOT) {
-      this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
+      browser.sendContenScriptMessage({ action: uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE })
     }
 
     if (msg.control === controlMessages.OVERLAY_FULL_SCREENSHOT) {
-      this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_MODE)
+      browser.sendContenScriptMessage({ action: uiActions.TOGGLE_SCREENSHOT_MODE })
     }
 
     if (msg.control === controlMessages.OVERLAY_ABORT_SCREENSHOT) {
-      this.toggleScreenShotMode(uiActions.CLOSE_SCREENSHOT_MODE)
-    }
-
-    if (msg.control === controlMessages.RESTART) {
-      this.start()
+      browser.sendContenScriptMessage({ action: uiActions.CLOSE_SCREENSHOT_MODE })
     }
   }
 
   handleNavigation({ frameId }) {
     console.debug('frameId is:', frameId)
-    this.injectScript()
+    browser.injectContentScript()
     if (frameId === 0) {
       this.recordNavigation()
     }
   }
 
-  handleMenuInteraction(info) {
-    console.debug('context menu clicked')
-    switch (info.menuItemId) {
-      case this._menuId + this._menuOptions.SCREENSHOT:
-        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_MODE)
-        break
-      case this._menuId + this._menuOptions.SCREENSHOT_CLIPPED:
-        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
-        break
+  handleKeyCommands(action) {
+    if (action === uiActions.TOGGLE_SCREENSHOT_MODE) {
+      browser.sendContenScriptMessage({ action: uiActions.TOGGLE_SCREENSHOT_MODE })
     }
-  }
 
-  handleKeyCommands(command) {
-    switch (command) {
-      case uiActions.TOGGLE_SCREENSHOT_MODE:
-        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_MODE)
-        break
-      case uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
-        this.toggleScreenShotMode(uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE)
-        break
+    if (action === uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE) {
+      browser.sendContenScriptMessage({ action: uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE })
     }
-  }
-
-  toggleScreenShotMode(action) {
-    console.debug('toggling screenshot mode')
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, { action })
-    })
-  }
-
-  handleWait() {
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
-    chrome.browserAction.setBadgeText({ text: 'wait' })
-  }
-
-  injectScript() {
-    chrome.tabs.executeScript(
-      { file: 'js/content-script.js', allFrames: false },
-      () => {
-        this.toggleSelectorHelper(true)
-      }
-    )
-  }
-
-  toggleSelectorHelper(value = false) {
-    console.debug('toggling overlay')
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: uiActions.TOGGLE_OVERLAY,
-        value,
-      })
-    })
   }
 }
 
-console.debug('booting recording controller')
 window.recordingController = new RecordingController()
 window.recordingController.boot()

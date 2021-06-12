@@ -49,3 +49,5 @@ export const eventsToRecord = {
   LOAD: 'load',
   UNLOAD: 'unload',
 }
+
+export const RUN_CHECK_URL = ''

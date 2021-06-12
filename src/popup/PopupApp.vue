@@ -1,11 +1,7 @@
 <template>
   <div class="bg-blue-light p-4 flex flex-col overflow-hidden">
     <div class="flex justify-between items-center mb-2">
-      <h1
-        @click="goHome"
-        role="button"
-        class="text-sm font-semibold text-gray-darkest"
-      >
+      <h1 @click="goHome" role="button" class="text-sm font-semibold text-gray-darkest">
         Headless Recorder
       </h1>
       <div class="flex">
@@ -73,41 +69,30 @@
             <img src="@/assets/icons/zap.svg" class="mr-2" alt="thunder" />
             Run on Checkly
           </button>
-          <a
-            v-else
-            href="https://app.checklyhq.com/signup"
-            class="text-xs text-white"
-          >
+          <a v-else href="https://app.checklyhq.com/signup" class="text-xs text-white">
             Signup on Checkly
           </a>
         </div>
-        <button @click="copyCode" v-show="code">
+        <!-- <button @click="copyCode" v-show="code">
           <img
             v-show="!isCopying"
             src="@/assets/icons/duplicate.svg"
             alt="copy code to clipboard"
           />
           <span class="text-white text-xs" v-show="isCopying">copied!</span>
-        </button>
+        </button> -->
       </div>
     </template>
     <HelpTab v-show="showHelp" />
 
-    <div
-      class="flex justify-between pt-2"
-      v-show="!showResultsTab && isRecording"
-    >
+    <div class="flex justify-between pt-2" v-show="!showResultsTab && isRecording">
       <button
         @click="toggleRecord"
         class="font-semibold text-sm text-white bg-red flex items-center rounded-sm p-2.5"
       >
         Finishing Recording
       </button>
-      <button
-        class="text-sm text-gray-dark"
-        @click="togglePause"
-        v-show="isRecording"
-      >
+      <button class="text-sm text-gray-dark" @click="togglePause" v-show="isRecording">
         {{ pauseButtonText }}
       </button>
       <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
@@ -119,6 +104,9 @@
 
 <script>
 import { version } from '../../package.json'
+
+import store from '@/services/store'
+import browser from '@/services/browser'
 
 import { uiActions } from '@/services/constants'
 import PuppeteerCodeGenerator from '@/services/puppeteer-code-generator'
@@ -168,96 +156,47 @@ export default {
     },
   },
 
-  mounted() {
-    this.loadState(() => {
-      this.trackPageView()
-      if (this.isRecording) {
-        console.debug('opened in recording state, fetching recording events')
-        chrome.storage.local.get(
-          ['recording', 'options', 'clear', 'pause'],
-          ({ recording, clear, pause }) => {
-            console.debug('loaded recording', recording)
-            this.liveEvents = recording
-
-            if (clear) {
-              this.toggleRecord()
-              chrome.storage.local.remove(['clear'])
-            }
-
-            if (pause) {
-              this.togglePause()
-              chrome.storage.local.remove(['pause'])
-            }
-          }
-        )
-      }
-
-      if (!this.isRecording && this.code) {
-        this.showResultsTab = true
-      }
-    })
-
-    bus = chrome.extension.connect({ name: 'recordControls' })
-
-    chrome.cookies.getAll({}, res => {
-      if (res.find(cookie => cookie.name.startsWith('checkly_has_account'))) {
-        this.isLoggedIn = true
-      }
-    })
+  async mounted() {
+    bus = browser.getBus()
+    const state = await store.load()
+    this.loadState(state)
+    this.isLoggedIn = (await browser.getChecklyCookie()) ? true : false
   },
 
   methods: {
     toggleRecord() {
-      if (this.isRecording) {
-        this.stop()
-      } else {
-        window.close()
-        this.start()
-      }
+      this.isRecording ? this.stop() : this.start()
       this.isRecording = !this.isRecording
       this.storeState()
     },
 
     togglePause() {
-      if (this.isPaused) {
-        bus.postMessage({ action: uiActions.UN_PAUSE })
-        this.isPaused = false
-      } else {
-        bus.postMessage({ action: uiActions.PAUSE })
-        this.isPaused = true
-      }
+      bus.postMessage({ action: this.isPaused ? uiActions.UN_PAUSE : uiActions.PAUSE })
+      this.isPaused = !this.isPaused
       this.storeState()
     },
 
     start() {
-      this.trackEvent('Start')
       this.cleanUp()
-      console.debug('start recorder')
       bus.postMessage({ action: uiActions.START })
     },
 
-    stop() {
-      this.trackEvent('Stop')
-      console.debug('stop recorder')
+    async stop() {
       bus.postMessage({ action: uiActions.STOP })
 
-      chrome.storage.local.get(
-        ['recording', 'options'],
-        ({ recording, options }) => {
-          console.debug('loaded recording', recording)
-          console.debug('loaded options', options)
+      const { recording, options } = await store.load(['recording', 'options'])
+      console.log(recording, options)
 
-          this.recording = recording
-          const codeOptions = options ? options.code : {}
+      const codeOptions = options ? options.code : {}
+      const pupeteerCode = new PuppeteerCodeGenerator(codeOptions)
+      const playwrightCode = new PlaywrightCodeGenerator(codeOptions)
 
-          const codeGen = new PuppeteerCodeGenerator(codeOptions)
-          const codeGenPlaywright = new PlaywrightCodeGenerator(codeOptions)
-          this.code = codeGen.generate(this.recording)
-          this.codeForPlaywright = codeGenPlaywright.generate(this.recording)
-          this.showResultsTab = true
-          this.storeState()
-        }
-      )
+      this.recording = recording
+      this.code = pupeteerCode.generate(this.recording)
+      this.codeForPlaywright = playwrightCode.generate(this.recording)
+      this.showResultsTab = true
+
+      this.storeState()
     },
 
     restart() {
@@ -270,39 +209,51 @@ export default {
       this.code = ''
       this.codeForPlaywright = ''
       this.showResultsTab = this.isRecording = this.isPaused = false
-      this.storeState()
+      store.cleanUp()
     },
 
     openOptions() {
-      this.trackEvent('Options')
-      if (chrome.runtime.openOptionsPage) {
-        chrome.runtime.openOptionsPage()
+      browser.openOptions()
+    },
+
+    async loadState({ controls, code, options, codeForPlaywright, clear, pause, recording }) {
+      console.log({ controls, code, options, codeForPlaywright, clear, pause, recording })
+      if (controls) {
+        this.isRecording = controls.isRecording
+        this.isPaused = controls.isPaused
+
+        if (this.isRecording) {
+          this.liveEvents = recording
+
+          if (clear) {
+            chrome.storage.local.remove(['clear'])
+            this.toggleRecord()
+          }
+
+          if (pause) {
+            chrome.storage.local.remove(['pause'])
+            this.togglePause()
+          }
+        }
+      }
+
+      if (code) {
+        this.code = code
+      }
+
+      if (codeForPlaywright) {
+        this.codeForPlaywright = codeForPlaywright
+      }
+
+      if (options) {
+        this.options = options
+      }
+
+      if (!this.isRecording && this.code) {
+        this.showResultsTab = true
       }
     },
-    loadState(cb) {
-      chrome.storage.local.get(
-        ['controls', 'code', 'options', 'codeForPlaywright'],
-        ({ controls, code, options, codeForPlaywright }) => {
-          if (controls) {
-            this.isRecording = controls.isRecording
-            this.isPaused = controls.isPaused
-          }
 
-          if (code) {
-            this.code = code
-          }
-
-          if (codeForPlaywright) {
-            this.codeForPlaywright = codeForPlaywright
-          }
-
-          if (options) {
-            this.options = options
-          }
-          cb()
-        }
-      )
-    },
     storeState() {
       chrome.storage.local.set({
         code: this.code,
@@ -314,53 +265,17 @@ export default {
       })
     },
 
-    copyCode() {
-      navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
-        if (result.state == 'granted' || result.state == 'prompt') {
-          this.trackEvent('Copy')
-          this.isCopying = true
-          setTimeout(() => {
-            this.isCopying = false
-            navigator.clipboard.writeText(this.code)
-          }, 500)
-        }
-      })
-    },
-
     goHome() {
       this.showResultsTab = false
       this.showHelp = false
     },
 
     toggleShowHelp() {
-      this.trackEvent('Help')
       this.showHelp = !this.showHelp
     },
 
-    trackEvent(event) {
-      if (
-        this.options &&
-        this.options.extension &&
-        this.options.extension.telemetry
-      ) {
-        if (window._gaq) window._gaq.push(['_trackEvent', event, 'clicked'])
-      }
-    },
-
-    trackPageView() {
-      if (
-        this.options &&
-        this.options.extension &&
-        this.options.extension.telemetry
-      ) {
-        if (window._gaq) window._gaq.push(['_trackPageview'])
-      }
-    },
-
     getCodeForCopy() {
-      return this.currentResultTab === 'puppeteer'
-        ? this.code
-        : this.codeForPlaywright
+      return this.currentResultTab === 'puppeteer' ? this.code : this.codeForPlaywright
     },
 
     run() {
