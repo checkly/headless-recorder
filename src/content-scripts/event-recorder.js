@@ -98,7 +98,7 @@ export default class EventRecorder {
           this.overlayApp.isPaused = true
           break
 
-        case uiActions.UNPAUSE:
+        case uiActions.UN_PAUSE:
           this.overlayApp.isPaused = false
           break
       }

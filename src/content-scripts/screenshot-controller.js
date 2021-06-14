@@ -37,6 +37,7 @@ class UIController extends EventEmitter {
         this._selector = document.createElement('div')
         this._selector.className = 'headlessRecorderOutline'
         this._selector.style.position = 'fixed'
+        this._selector.style.border = `${BORDER_THICKNESS}px dotted red`
         this._overlay.appendChild(this._selector)
       } else {
         this._overlay.style.background = 'rgba(255, 73, 73, 0.1)'
