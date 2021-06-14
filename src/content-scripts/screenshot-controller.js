@@ -1,12 +1,12 @@
 import EventEmitter from 'events'
 
-const BORDER_THICKNESS = 1
+const BORDER_THICKNESS = 2
 
 const defaults = {
   isClipped: false,
 }
 
-class UIController extends EventEmitter {
+class ScreenshotController extends EventEmitter {
   constructor(options) {
     options = Object.assign({}, defaults, options)
 
@@ -22,7 +22,7 @@ class UIController extends EventEmitter {
   }
 
   startScreenshotMode() {
-    console.debug('UIController:show')
+    console.debug('ScreenshotController:show')
     if (!this._overlay) {
       this._overlay = document.createElement('div')
       this._overlay.className = 'headlessRecorderOverlay'
@@ -37,9 +37,10 @@ class UIController extends EventEmitter {
         this._selector = document.createElement('div')
         this._selector.className = 'headlessRecorderOutline'
         this._selector.style.position = 'fixed'
-        this._selector.style.border = `${BORDER_THICKNESS}px dotted red`
+        this._selector.style.border = `${BORDER_THICKNESS}px dashed rgba(255, 73, 73, 0.7)`
         this._overlay.appendChild(this._selector)
       } else {
+        this._overlay.style.border = `${BORDER_THICKNESS}px dashed rgba(255, 73, 73, 0.7)`
         this._overlay.style.background = 'rgba(255, 73, 73, 0.1)'
       }
     }
@@ -51,7 +52,7 @@ class UIController extends EventEmitter {
   }
 
   stopScreenshotMode() {
-    console.debug('UIController:hide')
+    console.debug('ScreenshotController:hide')
     if (this._overlay) {
       document.body.removeChild(this._overlay)
     }
@@ -114,4 +115,4 @@ class UIController extends EventEmitter {
   }
 }
 
-export default UIController
+export default ScreenshotController

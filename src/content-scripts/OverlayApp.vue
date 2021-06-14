@@ -157,6 +157,8 @@
 import { directive } from 'vue-tippy'
 import { controlMessages } from '@/services/constants'
 
+import 'tippy.js/dist/tippy.css'
+
 export default {
   name: 'Overlay',
 
@@ -305,6 +307,11 @@ export default {
 }
 
 .tippy-box {
-  top: -15px;
+  margin-top: -45px;
+  background: #161616;
+}
+
+.tippy-arrow {
+  color: #161616;
 }
 </style>
