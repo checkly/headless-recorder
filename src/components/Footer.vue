@@ -1,5 +1,5 @@
 <template>
-  <div class="flex px-4 py-3 justify-between items-center">
+  <div class="flex px-4 py-3 justify-between items-center mt-2">
     <a href="https://checklyhq.com" target="_blank">
       <img
         src="@/assets/images/text_racoon_logo.svg"

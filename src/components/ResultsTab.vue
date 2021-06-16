@@ -1,7 +1,7 @@
 <template>
   <div
     data-test-id="results-tab"
-    class="flex flex-col bg-blue-light overflow-hidden mt-2"
+    class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100"
   >
     <div class="flex flex-row mb-2">
       <button
@@ -20,7 +20,7 @@
         v-if="code"
         v-highlightjs="code"
         style="background: #161616"
-        class="overflow-auto h-100"
+        class="overflow-auto  h-100"
       >
       <code ref="code" class="javascript px-2 break-word whitespace-pre-wrap overflow-x-hidden"></code>
       </pre>

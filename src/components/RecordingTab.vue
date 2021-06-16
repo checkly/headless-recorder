@@ -1,12 +1,15 @@
 <template>
   <div
-    class="bg-white flex flex-col items-center overflow-auto break-all whitespace-pre-wrap h-100 "
+    class="bg-white flex flex-col items-center overflow-auto break-all whitespace-pre-wrap h-100"
     :class="{ 'justify-center': !liveEvents.length }"
   >
-    <p class="text-sm text-gray animate-pulse" v-show="!liveEvents.length">
+    <div
+      v-if="!liveEvents.length"
+      class="text-sm text-gray flex flex-col justify-center items-center animate-pulse h-100"
+    >
       Waiting for events...
-    </p>
-    <ul class="flex flex-col items-start p-2 w-full">
+    </div>
+    <ul v-else class="flex flex-col items-start p-2 w-full h-100">
       <li
         v-for="(event, index) in liveEvents"
         :key="index"

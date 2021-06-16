@@ -1,25 +1,6 @@
 <template>
   <div class="bg-blue-lightest flex flex-col overflow-hidden">
-    <div class="flex justify-between items-center p-4 pb-0 mb-2">
-      <h1
-        @click="goHome"
-        role="button"
-        class="text-sm font-semibold text-gray-darkest"
-      >
-        Headless Recorder
-      </h1>
-      <div class="flex">
-        <button class="ml-4">
-          <img src="@/assets/icons/moon.svg" alt="help" class="w-4" />
-        </button>
-        <button @click="toggleShowHelp" class="ml-2">
-          <img src="@/assets/icons/question.svg" alt="help" class="w-4" />
-        </button>
-        <button @click="openOptions" class="ml-2">
-          <img src="@/assets/icons/gear.svg" alt="settings" class="w-4" />
-        </button>
-      </div>
-    </div>
+    <Header @home="goHome" @options="openOptions" @help="toggleHelp" />
 
     <template v-if="!showHelp">
       <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
@@ -76,13 +57,13 @@
         </button>
       </div>
     </template>
-    <HelpTab v-show="showHelp" />
+    <HelpTab v-else />
 
     <div
       class="flex justify-between items-center py-4 px-2"
       v-show="!showResultsTab && isRecording"
     >
-      <div class="flex">
+      <div class="flex w-1/3">
         <RoundButton @click="toggleRecord" class="mr-1">
           <svg
             width="14"
@@ -118,27 +99,33 @@
           </svg>
         </RoundButton>
       </div>
-      <RecordingLabel :text="recordingBadgeText" :v-show="isRecording" />
+      <RecordingLabel
+        class="w-1/3"
+        :text="recordingBadgeText"
+        :v-show="isRecording"
+      />
       <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
-      <RoundButton v-show="isRecording">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M1.64294 3.14291L0.426777 1.92675C0.269286 1.76926 0 1.8808 0 2.10353V5.74998C0 5.88805 0.111929 5.99998 0.25 5.99998H3.89645C4.11917 5.99998 4.23071 5.73069 4.07322 5.5732L2.715 4.21498C3.89508 2.57019 5.82314 1.5 8.00007 1.5C11.5899 1.5 14.5001 4.41015 14.5001 8C14.5001 11.5899 11.5899 14.5 8.00007 14.5C4.63773 14.5 1.87085 11.9464 1.53446 8.67332C1.49211 8.26128 1.12376 7.96158 0.711712 8.00393C0.299669 8.04628 -2.88747e-05 8.41463 0.0423185 8.82668C0.456521 12.8569 3.86076 16 8.00007 16C12.4183 16 16.0001 12.4183 16.0001 8C16.0001 3.58172 12.4183 0 8.00007 0C5.40771 0 3.10436 1.23301 1.64294 3.14291Z"
-            fill="#697280"
-          />
-        </svg>
-      </RoundButton>
+      <div class="w-1/3 flex justify-end">
+        <RoundButton v-show="isRecording">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1.64294 3.14291L0.426777 1.92675C0.269286 1.76926 0 1.8808 0 2.10353V5.74998C0 5.88805 0.111929 5.99998 0.25 5.99998H3.89645C4.11917 5.99998 4.23071 5.73069 4.07322 5.5732L2.715 4.21498C3.89508 2.57019 5.82314 1.5 8.00007 1.5C11.5899 1.5 14.5001 4.41015 14.5001 8C14.5001 11.5899 11.5899 14.5 8.00007 14.5C4.63773 14.5 1.87085 11.9464 1.53446 8.67332C1.49211 8.26128 1.12376 7.96158 0.711712 8.00393C0.299669 8.04628 -2.88747e-05 8.41463 0.0423185 8.82668C0.456521 12.8569 3.86076 16 8.00007 16C12.4183 16 16.0001 12.4183 16.0001 8C16.0001 3.58172 12.4183 0 8.00007 0C5.40771 0 3.10436 1.23301 1.64294 3.14291Z"
+              fill="#697280"
+            />
+          </svg>
+        </RoundButton>
+      </div>
     </div>
 
-    <Footer class="mt-2" v-if="!isRecording && !showResultsTab" />
+    <Footer v-if="!isRecording && !showResultsTab" />
   </div>
 </template>
 
@@ -150,10 +137,12 @@ import Store from '@/services/store'
 import PuppeteerCodeGenerator from '@/services/puppeteer-code-generator'
 import PlaywrightCodeGenerator from '@/services/playwright-code-generator'
 
+import Footer from '@/components/Footer.vue'
+import Header from '@/components/Header.vue'
+
 import RecordingTab from '@/components/RecordingTab.vue'
 import ResultsTab from '@/components/ResultsTab.vue'
 import HomeTab from '@/components/HomeTab.vue'
-import Footer from '@/components/Footer.vue'
 import RoundButton from '@/components/RoundButton.vue'
 import RecordingLabel from '@/components/RecordingLabel.vue'
 
@@ -169,6 +158,7 @@ export default {
     ResultsTab,
     RecordingTab,
     HomeTab,
+    Header,
     Footer,
     RoundButton,
     RecordingLabel,
@@ -374,7 +364,7 @@ export default {
       this.showHelp = false
     },
 
-    toggleShowHelp() {
+    toggleHelp() {
       this.trackEvent('Help')
       this.showHelp = !this.showHelp
     },
@@ -418,7 +408,6 @@ export default {
 html {
   width: 360px;
   height: 535px;
-  min-height: 535px;
 }
 
 button:focus-visible {
