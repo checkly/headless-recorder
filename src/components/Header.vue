@@ -11,7 +11,7 @@
       <button class="ml-4">
         <img src="@/assets/icons/moon.svg" alt="help" class="w-4" />
       </button>
-      <button @click="$emit('question')" class="ml-2">
+      <button @click="$emit('help')" class="ml-2">
         <img src="@/assets/icons/question.svg" alt="help" class="w-4" />
       </button>
       <button @click="$emit('options')" class="ml-2">

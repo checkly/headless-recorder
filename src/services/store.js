@@ -27,15 +27,11 @@ export default class Store {
   }
 
   get(props) {
-    return Promise(resolve =>
-      chrome.storage.local.get(props, store => resolve(store))
-    )
+    return Promise(resolve => chrome.storage.local.get(props, store => resolve(store)))
   }
 
   save(store) {
-    return new Promise(resolve =>
-      chrome.storage.local.set(store, res => resolve(res))
-    )
+    return new Promise(resolve => chrome.storage.local.set(store, res => resolve(res)))
   }
 
   getAll() {

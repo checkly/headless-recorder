@@ -14,6 +14,7 @@
 <script>
 import { ref } from 'vue'
 import { version } from '../../package.json'
+
 export default {
   name: 'ChecklyBadge',
 

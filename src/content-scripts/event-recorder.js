@@ -1,12 +1,7 @@
 import { createApp } from 'vue'
 import { finder } from '@medv/finder'
 
-import {
-  uiActions,
-  controlMessages,
-  eventsToRecord,
-} from '@/services/constants'
-import Store from '@/services/store'
+import { uiActions, controlMessages, eventsToRecord, overlaySelectors } from '@/services/constants'
 
 import UIController from './screenshot-controller'
 import OverlayApp from './OverlayApp.vue'
@@ -29,9 +24,6 @@ export default class EventRecorder {
   }
 
   boot() {
-    const store = new Store('content-script')
-    store.sync()
-
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(['options'], ({ options }) => {
@@ -116,18 +108,15 @@ export default class EventRecorder {
       return
     }
 
-    const overlayId = 'headless-recorder'
-    const currentSelectorClass = 'headless-recorder-selected-element'
-
     this.overlayContainer = document.createElement('div')
-    this.overlayContainer.id = overlayId
+    this.overlayContainer.id = overlaySelectors.OVERLAY_ID
     document.body.appendChild(this.overlayContainer)
 
-    this.overlayApp = createApp(OverlayApp).mount('#' + overlayId)
+    this.overlayApp = createApp(OverlayApp).mount('#' + overlaySelectors.OVERLAY_ID)
 
     this.mouseOverEvent = e => {
       const selector = this._getSelector(e)
-      this.overlayApp.currentSelector = selector.includes('#' + overlayId)
+      this.overlayApp.currentSelector = selector.includes('#' + overlaySelectors.OVERLAY_ID)
         ? ''
         : selector
 
@@ -135,12 +124,14 @@ export default class EventRecorder {
         this.overlayApp.currentSelector &&
         (!this._screenShotMode || this._uiController._isClipped)
       ) {
-        e.target.classList.add(currentSelectorClass)
+        e.target.classList.add(overlaySelectors.CURRENT_SELECTOR_CLASS)
       }
+
+      return true
     }
 
     this.mouseOutEvent = e => {
-      e.target.classList.remove(currentSelectorClass)
+      e.target.classList.remove(overlaySelectors.CURRENT_SELECTOR_CLASS)
     }
 
     window.document.addEventListener('mouseover', this.mouseOverEvent)
@@ -158,9 +149,7 @@ export default class EventRecorder {
 
   _addAllListeners(events) {
     const boundedRecordEvent = this._recordEvent.bind(this)
-    events.forEach(type => {
-      window.addEventListener(type, boundedRecordEvent, true)
-    })
+    events.forEach(type => window.addEventListener(type, boundedRecordEvent, true))
   }
 
   _sendMessage(msg) {
@@ -193,7 +182,7 @@ export default class EventRecorder {
     try {
       const selector = this._getSelector(e)
 
-      if (selector.includes('#headless-recorder-overlay')) {
+      if (selector.includes('#' + overlaySelectors.OVERLAY_ID)) {
         return
       }
 
@@ -223,28 +212,22 @@ export default class EventRecorder {
     this._disableClickRecording()
     this._uiController = new UIController({ isClipped })
     this._screenShotMode = !this._screenShotMode
-    document.body.classList.add('headless-recorder-camera-cursor')
+    document.body.classList.add(overlaySelectors.CURSOR_CAMERA_CLASS)
 
     console.debug('screenshot mode:', this._screenShotMode)
 
-    if (this._screenShotMode) {
-      this._uiController.startScreenshotMode()
-    } else {
-      this._uiController.stopScreenshotMode()
-    }
+    this._screenShotMode
+      ? this._uiController.startScreenshotMode()
+      : this._uiController.stopScreenshotMode()
 
     this._uiController.on('click', event => {
       this._screenShotMode = false
       this.overlayApp.isScreenShotMode = false
-      document.body.classList.add('screenshot-this')
-      document.body.classList.remove('headless-recorder-camera-cursor')
-      setTimeout(() => {
-        document.body.classList.remove('screenshot-this')
-      }, 1000)
-      this._sendMessage({
-        control: controlMessages.GET_SCREENSHOT,
-        value: event.clip,
-      })
+      document.body.classList.add(overlaySelectors.FLASH_CLASS)
+      document.body.classList.remove(overlaySelectors.CURSOR_CAMERA_CLASS)
+      setTimeout(() => document.body.classList.remove(overlaySelectors.FLASH_CLASS), 1000)
+
+      this._sendMessage({ control: controlMessages.GET_SCREENSHOT, value: event.clip })
       this._enableClickRecording()
     })
   }
@@ -255,7 +238,7 @@ export default class EventRecorder {
     }
     this._screenShotMode = false
     this.overlayApp.isScreenShotMode = false
-    document.body.classList.remove('headless-recorder-camera-cursor')
+    document.body.classList.remove(overlaySelectors.CURSOR_CAMERA_CLASS)
     this._uiController.stopScreenshotMode()
     this._enableClickRecording()
   }
@@ -270,20 +253,23 @@ export default class EventRecorder {
 
   _getSelector(e) {
     if (this._dataAttribute && e.target.getAttribute(this._dataAttribute)) {
-      return `[${this._dataAttribute}="${e.target.getAttribute(
-        this._dataAttribute
-      )}"]`
+      return `[${this._dataAttribute}="${e.target.getAttribute(this._dataAttribute)}"]`
     }
 
     if (e.target.id) {
       return `#${e.target.id}`
     }
 
-    return finder(e.target, {
+    e.target.classList.remove(overlaySelectors.CURRENT_SELECTOR_CLASS)
+
+    const selector = finder(e.target, {
       seedMinLength: 5,
       optimizedMinLength: e.target.id ? 2 : 10,
       attr: name => name === this._dataAttribute,
     })
+
+    e.target.classList.add(overlaySelectors.CURRENT_SELECTOR_CLASS)
+    return selector
   }
 
   static _getCoordinates(evt) {
@@ -293,8 +279,6 @@ export default class EventRecorder {
       mousemove: true,
       mouseover: true,
     }
-    return eventsWithCoordinates[evt.type]
-      ? { x: evt.clientX, y: evt.clientY }
-      : null
+    return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null
   }
 }

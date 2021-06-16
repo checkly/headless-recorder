@@ -1,8 +1,5 @@
 <template>
-  <div
-    data-test-id="results-tab"
-    class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100"
-  >
+  <div data-test-id="results-tab" class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100">
     <div class="flex flex-row mb-2">
       <button
         v-for="tab in tabs"
@@ -15,14 +12,9 @@
       </button>
     </div>
 
-    <div class="sc p-2" style="background: #161616">
-      <pre
-        v-if="code"
-        v-highlightjs="code"
-        style="background: #161616"
-        class="overflow-auto  h-100"
-      >
-      <code ref="code" class="javascript px-2 break-word whitespace-pre-wrap overflow-x-hidden"></code>
+    <div class="sc p-2 bg-black">
+      <pre v-if="code" v-highlightjs="code" class="overflow-auto bg-black h-100">
+      <code ref="code" class="javascript px-2  break-word whitespace-pre-wrap overflow-x-hidden"></code>
       </pre>
       <pre v-else>
         <code>No code yet...</code>
@@ -59,9 +51,7 @@ export default {
 
   computed: {
     code() {
-      return this.activeTab === headlessTypes.PUPPETEER
-        ? this.puppeteer
-        : this.playwright
+      return this.activeTab === headlessTypes.PUPPETEER ? this.puppeteer : this.playwright
     },
   },
 
@@ -104,7 +94,7 @@ pre::-webkit-scrollbar-thumb {
   margin-right: 10px;
   padding: 10px;
   background: #e0e6ed;
-  -webkit-border-radius: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 pre::-webkit-scrollbar-corner {

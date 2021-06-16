@@ -1,18 +1,24 @@
 <template>
   <button
     class="p-2 bg-white rounded-full border-gray-light border-solid border-4"
+    :class="{ 'btn-small': small }"
   >
     <slot />
   </button>
 </template>
 
+<script>
+export default {
+  props: {
+    small: { type: Boolean, default: true },
+  },
+}
+</script>
+
 <style scoped>
-button {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  min-height: 44px;
-  min-width: 44px;
+.btn-small {
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
 }
 </style>

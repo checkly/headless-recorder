@@ -1,8 +1,4 @@
-import {
-  uiActions,
-  controlMessages,
-  headlessActions,
-} from '@/services/constants'
+import { uiActions, controlMessages, headlessActions } from '@/services/constants'
 class RecordingController {
   constructor() {
     this._recording = []
@@ -30,16 +26,20 @@ class RecordingController {
     chrome.extension.onConnect.addListener(port => {
       console.debug('listeners connected')
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === uiActions.START) {
+        if (!msg.action) {
+          return
+        }
+
+        if (msg.action === uiActions.START) {
           this.start()
         }
-        if (msg.action && msg.action === uiActions.STOP) {
+        if (msg.action === uiActions.STOP) {
           this.stop()
         }
-        if (msg.action && msg.action === uiActions.CLEAN_UP) {
+        if (msg.action === uiActions.CLEAN_UP) {
           this.cleanUp()
         }
-        if (msg.action && msg.action === uiActions.PAUSE) {
+        if (msg.action === uiActions.PAUSE) {
           chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
             chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.PAUSE })
           })
@@ -70,12 +70,8 @@ class RecordingController {
       this._boundedWaitHandler = this.handleWait.bind(this)
 
       chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
-      chrome.webNavigation.onCompleted.addListener(
-        this._boundedNavigationHandler
-      )
-      chrome.webNavigation.onBeforeNavigate.addListener(
-        this._boundedWaitHandler
-      )
+      chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
+      chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
 
       chrome.browserAction.setIcon({ path: './images/logo-red.png' })
       chrome.contextMenus.removeAll()
@@ -113,12 +109,8 @@ class RecordingController {
     this._badgeState = this._recording.length > 0 ? '1' : ''
 
     chrome.runtime.onMessage.removeListener(this._boundedMessageHandler)
-    chrome.webNavigation.onCompleted.removeListener(
-      this._boundedNavigationHandler
-    )
-    chrome.webNavigation.onBeforeNavigate.removeListener(
-      this._boundedWaitHandler
-    )
+    chrome.webNavigation.onCompleted.removeListener(this._boundedNavigationHandler)
+    chrome.webNavigation.onBeforeNavigate.removeListener(this._boundedWaitHandler)
     chrome.contextMenus.onClicked.removeListener(this._boundedMenuHandler)
 
     chrome.browserAction.setIcon({ path: './images/logo.png' })
@@ -150,7 +142,7 @@ class RecordingController {
     chrome.browserAction.setBadgeText({ text: '' })
     chrome.storage.local.remove('recording', () => {
       console.debug('stored recording cleared')
-      if (cb) cb()
+      cb && cb()
     })
   }
 
@@ -232,11 +224,12 @@ class RecordingController {
 
     if (msg.control === controlMessages.OVERLAY_STOP) {
       chrome.storage.local.set({ clear: true })
+      chrome.storage.local.set({ pause: false })
       this.stop()
     }
 
     if (msg.control === controlMessages.OVERLAY_PAUSE) {
-      chrome.storage.local.set({ pause: true })
+      chrome.storage.local.set({ pause: !this._isPaused })
       this._isPaused ? this.unPause() : this.pause()
     }
 
@@ -301,12 +294,9 @@ class RecordingController {
   }
 
   injectScript() {
-    chrome.tabs.executeScript(
-      { file: 'js/content-script.js', allFrames: false },
-      () => {
-        this.toggleSelectorHelper(true)
-      }
-    )
+    chrome.tabs.executeScript({ file: 'js/content-script.js', allFrames: false }, () => {
+      this.toggleSelectorHelper(true)
+    })
   }
 
   toggleSelectorHelper(value = false) {

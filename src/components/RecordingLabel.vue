@@ -10,8 +10,15 @@
 
 <script>
 export default {
+  name: 'RecordingLabel',
   props: {
-    text: { type: String, default: '' },
+    isPaused: { type: Boolean, default: false },
+  },
+
+  computed: {
+    text() {
+      return this.isPaused ? 'Paused' : 'Recording...'
+    },
   },
 }
 </script>

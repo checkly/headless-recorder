@@ -4,7 +4,7 @@
     <p class="text-gray text-xs mb-5 text-center w-44">
       Record browser events by clicking record button
     </p>
-    <round-button @click="$emit('start')" class="p-10 mt-12">
+    <RoundButton :small="false" @click="$emit('start')" class="p-10 mt-12">
       <svg
         width="86"
         height="86"
@@ -14,7 +14,7 @@
       >
         <circle cx="43" cy="43" r="43" fill="#FF4949" />
       </svg>
-    </round-button>
+    </RoundButton>
   </div>
 </template>
 
