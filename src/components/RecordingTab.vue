@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center bg-white rounded-md h-100 overflow-auto break-all whitespace-pre-wrap"
+    class="bg-white flex flex-col items-center overflow-auto break-all whitespace-pre-wrap h-100 "
     :class="{ 'justify-center': !liveEvents.length }"
   >
     <p class="text-sm text-gray animate-pulse" v-show="!liveEvents.length">

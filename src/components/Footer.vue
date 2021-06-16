@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex px-4 py-3 justify-between items-center">
     <a href="https://checklyhq.com" target="_blank">
       <img
         src="@/assets/images/text_racoon_logo.svg"
@@ -7,7 +7,7 @@
         class="w-24"
       />
     </a>
-    <span>Version {{ version }}</span>
+    <span class="text-gray-darkish">Version {{ version }}</span>
   </div>
 </template>
 

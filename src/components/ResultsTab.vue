@@ -1,7 +1,7 @@
 <template>
   <div
     data-test-id="results-tab"
-    class="flex flex-col  bg-blue-light pt-2 overflow-hidden"
+    class="flex flex-col bg-blue-light overflow-hidden mt-2"
   >
     <div class="flex flex-row mb-2">
       <button
@@ -15,24 +15,23 @@
       </button>
     </div>
 
-    <pre
-      v-if="code()"
-      v-highlightjs="code()"
-      style="background: #2b2b2b"
-      class="overflow-auto px-2 h-100"
-    >
-      <code class="javascript px-2 break-word whitespace-pre-wrap overflow-x-hidden"></code>
-    </pre>
-    <pre v-else>
-      <code>No code yet...</code>
-    </pre>
+    <div class="sc p-2" style="background: #161616">
+      <pre
+        v-if="code"
+        v-highlightjs="code"
+        style="background: #161616"
+        class="overflow-auto h-100"
+      >
+      <code ref="code" class="javascript px-2 break-word whitespace-pre-wrap overflow-x-hidden"></code>
+      </pre>
+      <pre v-else>
+        <code>No code yet...</code>
+      </pre>
+    </div>
   </div>
 </template>
 <script>
-export const TYPE = {
-  PUPPETEER: 'puppeteer',
-  PLAYWRIGHT: 'playwright',
-}
+import { headlessTypes } from '@/services/constants'
 
 export default {
   name: 'ResultsTab',
@@ -50,31 +49,41 @@ export default {
       default: () => ({}),
     },
   },
+
   data() {
     return {
-      activeTab: TYPE.PLAYWRIGHT,
-      tabs: [TYPE.PLAYWRIGHT, TYPE.PUPPETEER],
+      activeTab: headlessTypes.PLAYWRIGHT,
+      tabs: [headlessTypes.PLAYWRIGHT, headlessTypes.PUPPETEER],
     }
   },
 
-  mounted() {
-    if (
-      this.options &&
-      this.options.code &&
-      this.options.code.showPlaywrightFirst
-    ) {
-      this.activeTab = TYPE.PLAYWRIGHT
-      this.tabs = this.tabs.reverse()
-    }
-    this.$emit('update:tab', this.activeTab)
-  },
-
-  methods: {
+  computed: {
     code() {
-      return this.activeTab === TYPE.PUPPETEER
+      return this.activeTab === headlessTypes.PUPPETEER
         ? this.puppeteer
         : this.playwright
     },
+  },
+
+  mounted() {
+    if (this.options?.code?.showPlaywrightFirst) {
+      this.activeTab = headlessTypes.PLAYWRIGHT
+      this.tabs = this.tabs.reverse()
+    }
+    this.$emit('update:tab', this.activeTab)
+
+    // let line = 1
+    // this.$refs.code.innerHTML = `<span class="hljs-line">${line}</span>${this.$refs.code.innerHTML}`
+    // this.$refs.code.innerHTML = this.$refs.code.innerHTML.replaceAll(
+    //   '\n',
+    //   () => {
+    //     line += 1
+    //     return `\n<span class="hljs-line">${line}</span>`
+    //   }
+    // )
+  },
+
+  methods: {
     changeTab(tab) {
       this.activeTab = tab
       this.$emit('update:tab', tab)
@@ -82,3 +91,23 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+pre::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  margin-right: 10px;
+  padding: 10px;
+  background: transparent;
+}
+pre::-webkit-scrollbar-thumb {
+  margin-right: 10px;
+  padding: 10px;
+  background: #e0e6ed;
+  -webkit-border-radius: 0.5rem;
+}
+
+pre::-webkit-scrollbar-corner {
+  background: yellow;
+}
+</style>

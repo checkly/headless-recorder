@@ -6,6 +6,7 @@ import {
   controlMessages,
   eventsToRecord,
 } from '@/services/constants'
+import Store from '@/services/store'
 
 import UIController from './screenshot-controller'
 import OverlayApp from './OverlayApp.vue'
@@ -28,6 +29,9 @@ export default class EventRecorder {
   }
 
   boot() {
+    const store = new Store('content-script')
+    store.sync()
+
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(['options'], ({ options }) => {

@@ -22,10 +22,12 @@ module.exports = {
         light: '#E0E6ED',
         DEFAULT: '#8492A6',
         dark: '#3C4858;',
+        darkish: '#677281;',
         darkest: '#1F2D3D;',
       },
 
       blue: {
+        lightest: '#EEF8FF',
         light: '#F0F8FF',
         DEFAULT: '#45C8F1',
       },
@@ -38,7 +40,10 @@ module.exports = {
         DEFAULT: '#FF659D',
       },
 
-      black: '#161616',
+      black: {
+        DEFAULT: '#161616',
+        shady: '#1F1F1F',
+      },
       white: colors.white,
       yellow: colors.amber,
       green: colors.emerald,

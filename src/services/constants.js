@@ -49,3 +49,8 @@ export const eventsToRecord = {
   LOAD: 'load',
   UNLOAD: 'unload',
 }
+
+export const headlessTypes = {
+  PUPPETEER: 'puppeteer',
+  PLAYWRIGHT: 'playwright',
+}
