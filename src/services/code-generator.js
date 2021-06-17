@@ -9,7 +9,7 @@ export const defaults = {
   waitForSelectorOnClick: true,
   blankLinesBetweenBlocks: true,
   dataAttribute: '',
-  showPlaywrightFirst: false,
+  showPlaywrightFirst: true,
   keyCode: 9,
 }
 
@@ -32,9 +32,7 @@ export default class CodeGenerator {
   _getHeader() {
     console.debug(this._options)
     let hdr = this._options.wrapAsync ? this._wrappedHeader : this._header
-    hdr = this._options.headless
-      ? hdr
-      : hdr?.replace('launch()', 'launch({ headless: false })')
+    hdr = this._options.headless ? hdr : hdr?.replace('launch()', 'launch({ headless: false })')
     return hdr
   }
 
@@ -49,19 +47,8 @@ export default class CodeGenerator {
     if (!events) return result
 
     for (let i = 0; i < events.length; i++) {
-      const {
-        action,
-        selector,
-        value,
-        href,
-        keyCode,
-        tagName,
-        frameId,
-        frameUrl,
-      } = events[i]
-      const escapedSelector = selector
-        ? selector?.replace(/\\/g, '\\\\')
-        : selector
+      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
+      const escapedSelector = selector ? selector?.replace(/\\/g, '\\\\') : selector
 
       // we need to keep a handle on what frames events originate from
       this._setFrames(frameId, frameUrl)
@@ -69,9 +56,7 @@ export default class CodeGenerator {
       switch (action) {
         case 'keydown':
           if (keyCode === this._options.keyCode) {
-            this._blocks.push(
-              this._handleKeyDown(escapedSelector, value, keyCode)
-            )
+            this._blocks.push(this._handleKeyDown(escapedSelector, value, keyCode))
           }
           break
         case 'click':
@@ -149,9 +134,7 @@ export default class CodeGenerator {
     const block = new Block(this._frameId)
     block.addLine({
       type: eventsToRecord.KEYDOWN,
-      value: `await ${this._frame}.type('${selector}', '${this._escapeUserInput(
-        value
-      )}')`,
+      value: `await ${this._frame}.type('${selector}', '${this._escapeUserInput(value)}')`,
     })
     return block
   }
@@ -230,13 +213,10 @@ export default class CodeGenerator {
     for (let [i, block] of this._blocks.entries()) {
       const lines = block.getLines()
       for (let line of lines) {
-        if (
-          line.frameId &&
-          Object.keys(this._allFrames).includes(line.frameId.toString())
-        ) {
-          const declaration = `const frame_${
-            line.frameId
-          } = frames.find(f => f.url() === '${this._allFrames[line.frameId]}')`
+        if (line.frameId && Object.keys(this._allFrames).includes(line.frameId.toString())) {
+          const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${
+            this._allFrames[line.frameId]
+          }')`
           this._blocks[i].addLineToTop({
             type: headlessActions.FRAME_SET,
             value: declaration,

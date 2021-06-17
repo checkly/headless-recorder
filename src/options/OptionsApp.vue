@@ -1,177 +1,110 @@
 <template>
-  <div class="options">
-    <div class="container">
-      <div class="header">
-        Headless Recorder Options
-        <small class="saving-badge text-muted" v-show="saving">
-          Saving...
-        </small>
-      </div>
-      <div class="content" v-if="!loading">
-        <div class="settings-block">
-          <h4 class="settings-block-title">
-            Code Recorder settings
-          </h4>
-          <div class="settings-block-main">
-            <div class="settings-group">
-              <label class="settings-label">custom data attribute</label>
-              <input
-                id="options-code-dataAttribute"
-                type="text"
-                v-model.trim="options.code.dataAttribute"
-                @change="save"
-                placeholder="your custom data-* attribute"
-              />
-              <small
-                >Define an attribute that we'll attempt to use when selecting
-                the elements, i.e "data-custom". This is handy when React or Vue
-                based apps generate random class names.</small
-              >
-              <small class="settings-warning"
-                >⚠️ When data attribute is set, it will take precedence from
-                over other any selector (even ID)</small
-              >
-            </div>
-            <div class="settings-group">
-              <label class="settings-label">set key code</label>
-              <div class="settings-block">
-                <button
-                  class="btn btn-sm btn-primary"
-                  @click="listenForKeyCodePress"
-                >
-                  {{
-                    recordingKeyCodePress
-                      ? 'Capturing'
-                      : 'Click to capture key code'
-                  }}
-                </button>
-                <input
-                  id="options-code-keyCode"
-                  readonly
-                  disabled
-                  type="number"
-                  v-model.number="options.code.keyCode"
-                  placeholder="Key Code for input fields (ex. 9 = Tab)"
-                />
-              </div>
-              <small
-                >What key will be used for capturing input changes. The value
-                here is the key code. This will not handle multiple keys.</small
-              >
-            </div>
-          </div>
-        </div>
-        <div class="settings-block">
-          <h4 class="settings-block-title">
-            Code Generator settings
-          </h4>
-          <div class="settings-block-main">
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-code-wrapAsync"
-                  type="checkbox"
-                  v-model="options.code.wrapAsync"
-                  @change="save"
-                />
-                Wrap code in async function
-              </label>
-            </div>
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-code-headless"
-                  type="checkbox"
-                  v-model="options.code.headless"
-                  @change="save"
-                />
-                Set <code>headless</code> in puppeteer launch options
-              </label>
-            </div>
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-code-waitForNavigation"
-                  type="checkbox"
-                  v-model="options.code.waitForNavigation"
-                  @change="save"
-                />
-                Add <code>waitForNavigation</code> lines on navigation
-              </label>
-            </div>
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-code-waitForSelectorOnClick"
-                  type="checkbox"
-                  v-model="options.code.waitForSelectorOnClick"
-                  @change="save"
-                />
-                Add <code>waitForSelector</code> lines before every
-                <code>page.click()</code>
-              </label>
-            </div>
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-code-blankLinesBetweenBlocks"
-                  type="checkbox"
-                  v-model="options.code.blankLinesBetweenBlocks"
-                  @change="save"
-                />
-                Add blank lines between code blocks
-              </label>
-            </div>
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-code-showPlaywrightFirst"
-                  type="checkbox"
-                  v-model="options.code.showPlaywrightFirst"
-                  @change="save"
-                />
-                Show Playwright tab first
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="settings-block">
-          <h4 class="settings-block-title">
-            Extension settings
-          </h4>
-          <div class="settings-block-main">
-            <div class="settings-group">
-              <label>
-                <input
-                  id="options-telemetry"
-                  type="checkbox"
-                  v-model="options.extension.telemetry"
-                  @change="save"
-                />
-                Allow recording of usage telemetry
-              </label>
-              <br />
-              <small
-                >We only record clicks for basic product development, no website
-                content or input data. Data is never, ever shared with 3rd
-                parties.</small
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="footer">
-        sponsored by
-        <a href="https://checklyhq.com" target="_blank">
-          <img src="@/assets/images/text_racoon_logo.svg" alt="" />
-        </a>
-      </div>
+  <main class="container bg-gray-lightest flex py-9 w-full h-screen">
+    <div class="flex flex-col w-1/4 pt-12 pr-6">
+      <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
+      <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>
+      <a href="https://github.com/checkly/headless-recorder/blob/master/CHANGELOG.md"
+        >Release notes</a
+      >
+      <a
+        href="https://chrome.google.com/webstore/detail/headless-recorder/djeegiggegleadkkbgopoonhjimgehda"
+        target="_blank"
+        >Chrome Web Store</a
+      >
     </div>
-  </div>
+    <div class="flex flex-col w-1/2">
+      <header class="flex flex-row justify-between items-center mb-3.5">
+        <div class="flex items-baseline">
+          <h1 class="text-blue text-2xl font-bold mr-1">
+            Hedless Recorder
+          </h1>
+          <span class="text-gray text-sm">v{{ version }}</span>
+        </div>
+        <span class="text-gray text-sm" v-show="saving">Saving...</span>
+      </header>
+
+      <section>
+        <h2>Recorder</h2>
+        <label>Custom data attribute</label>
+        <div class="mb-6">
+          <input
+            class="w-full bg-gray-lighter h-7 rounded px-2 mb-2 text-sm"
+            type="text"
+            v-model.trim="options.code.dataAttribute"
+            @change="save"
+            placeholder="your custom data-* attribute"
+          />
+          <p>
+            Define an attribute that we'll attempt to use when selecting the elements, i.e
+            "data-custom". This is handy when React or Vue based apps generate random class names.
+          </p>
+          <p>
+            <span class="text-pink">
+              When data attribute is set, it will take precedence from over other any selector (even
+              ID)
+            </span>
+          </p>
+        </div>
+        <div>
+          <label>Set key code</label>
+          <div class="mb-2">
+            <Button @click="listenForKeyCodePress">
+              {{ recordingKeyCodePress ? 'Capturing...' : 'Record Key Stroke' }}
+            </Button>
+            <span class="text-gray-darkish text-sm ml-3">
+              {{ options.code.keyCode }}
+            </span>
+          </div>
+          <p>
+            What key will be used for capturing input changes. The value here is the key code. This
+            will not handle multiple keys.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Generator</h2>
+        <Toggle v-model="options.code.wrapAsync">
+          Wrap code in async function
+        </Toggle>
+        <Toggle v-model="options.code.headless">
+          Set <code>headless</code> in puppeteer launch options
+        </Toggle>
+        <Toggle v-model="options.code.waitForNavigation">
+          Add <code>waitForNavigation</code> lines on navigation
+        </Toggle>
+        <Toggle v-model="options.code.waitForSelectorOnClick">
+          Add <code>waitForSelector</code> lines before every
+          <code>page.click()</code>
+        </Toggle>
+        <Toggle v-model="options.code.blankLinesBetweenBlocks">
+          Add blank lines between code blocks
+        </Toggle>
+        <Toggle v-model="options.code.showPlaywrightFirst">
+          Show Playwright tab first
+        </Toggle>
+      </section>
+
+      <section>
+        <h2 class="">Extension</h2>
+        <Toggle v-model="options.extension.telemetry">
+          Allow recording of usage telemetry
+        </Toggle>
+        <p>
+          We only record clicks for basic product development, no website content or input data.
+          Data is never, ever shared with 3rd parties.
+        </p>
+      </section>
+    </div>
+  </main>
 </template>
 
 <script>
+import { version } from '../../package.json'
 import { defaults as code } from '@/services/code-generator'
+
+import Button from '@/components/Button'
+import Toggle from '@/components/Toggle'
 
 const defaults = {
   code,
@@ -181,18 +114,32 @@ const defaults = {
 }
 
 export default {
-  name: 'App',
+  name: 'OptionsApp',
+  components: { Toggle, Button },
+
   data() {
     return {
+      version,
       loading: true,
       saving: false,
       options: defaults,
       recordingKeyCodePress: false,
     }
   },
+
+  watch: {
+    options: {
+      handler() {
+        this.save()
+      },
+      deep: true,
+    },
+  },
+
   mounted() {
     this.load()
   },
+
   methods: {
     save() {
       this.saving = true
@@ -203,6 +150,7 @@ export default {
         }, 500)
       })
     },
+
     load() {
       chrome.storage.local.get('options', ({ options }) => {
         if (options) {
@@ -212,6 +160,7 @@ export default {
         this.loading = false
       })
     },
+
     listenForKeyCodePress() {
       this.recordingKeyCodePress = true
       const keyDownFunction = e => {
@@ -222,6 +171,7 @@ export default {
       }
       window.addEventListener('keydown', keyDownFunction, false)
     },
+
     updateKeyCodeWithNumber(evt) {
       this.options.code.keyCode = parseInt(evt.keyCode, 10)
       this.save()
@@ -230,99 +180,27 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../assets/styles/_variables.scss';
-@import '../assets/styles/_mixins.scss';
+<style scoped>
+code {
+  @apply font-semibold;
+}
+a {
+  @apply text-blue underline text-sm text-right;
+}
 
-.options {
-  height: 100%;
-  min-height: 580px;
-  background: $gray-lighter;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow: auto;
-  position: fixed;
-  left: 0;
-  top: 0;
+h2 {
+  @apply text-gray-darkish text-xl font-semibold mb-5;
+}
 
-  .container {
-    padding: 0 2 * $spacer;
-    width: 550px;
-    margin: 0 auto;
+label {
+  @apply text-black-dark font-semibold mb-2 block;
+}
 
-    .content {
-      background: white;
-      padding: 2 * $spacer;
-      border-radius: 4px;
-      min-height: 500px;
-    }
+section {
+  @apply bg-white border-gray-light border border-solid rounded-md p-4 pb-10 mb-6;
+}
 
-    .footer {
-      @include footer();
-      background: $gray-lighter;
-      font-weight: normal;
-      justify-content: center;
-      img {
-        margin-left: 8px;
-        width: 80px;
-        vertical-align: middle;
-      }
-    }
-
-    .header {
-      @include header();
-      background: $gray-lighter;
-      justify-content: space-between;
-    }
-
-    .settings-block {
-      .settings-label {
-        display: block;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin-bottom: $spacer;
-      }
-
-      .settings-warning {
-        display: block;
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: $pink;
-        margin: $spacer 0;
-      }
-
-      .settings-block-title {
-        margin: 0;
-        padding-bottom: $spacer;
-        border-bottom: 1px solid $gray-light;
-      }
-
-      .settings-block-main {
-        padding: $spacer 0;
-        margin-bottom: $spacer;
-
-        .settings-group {
-          margin-bottom: $spacer;
-          display: block;
-        }
-      }
-      input[type='text'],
-      input[type='number'] {
-        margin-bottom: 10px;
-        width: 100%;
-        border: 1px solid $gray-light;
-        padding-left: 15px;
-        height: 38px;
-        font-size: 14px;
-        border-radius: 10px;
-        -webkit-box-sizing: border-box;
-      }
-      input[type='number'] {
-        width: 50px;
-      }
-    }
-  }
+p {
+  @apply text-gray-darkish text-xs mb-2;
 }
 </style>

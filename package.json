@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@headlessui/vue": "1.2.0",
     "@medv/finder": "2.0.0",
     "@tailwindcss/postcss7-compat": "2.0.2",
     "@vueuse/core": "4.0.8",
