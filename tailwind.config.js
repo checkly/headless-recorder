@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors')
 module.exports = {
   purge: { content: ['./public/**/*.html', './src/**/*.vue'] },
   presets: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     screens: {
       sm: '640px',
@@ -41,6 +41,7 @@ module.exports = {
       },
 
       black: {
+        light: '#2E2E2E',
         dark: '#000',
         DEFAULT: '#161616',
         shady: '#1F1F1F',

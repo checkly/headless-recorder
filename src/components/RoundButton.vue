@@ -1,6 +1,6 @@
 <template>
   <button
-    class="p-2 bg-white rounded-full border-gray-light border-solid border-4"
+    class="p-2 bg-white rounded-full border-gray-light border-solid border-4 dark:bg-black-shady dark:border-gray-dark"
     :class="{ 'btn-small': small }"
   >
     <slot />

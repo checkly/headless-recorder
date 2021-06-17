@@ -1,7 +1,6 @@
 <template>
-  <div class="bg-blue-lightest flex flex-col overflow-hidden">
-    <Header @home="goHome" @options="openOptions" @help="goHelp" />
-
+  <div class="bg-blue-lightest dark:bg-black flex flex-col overflow-hidden">
+    <Header @home="goHome" @options="openOptions" @help="goHelp" @dark="toggleDarkMode" />
     <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
     <RecordingTab
       :code="code"
@@ -22,22 +21,13 @@
       v-show="showResultsTab"
     >
       <div class="flex">
-        <button
-          class="font-semibold text-sm text-white bg-blue flex justify-center items-center rounded-sm p-2 mr-3"
-          @click="restart"
-          v-show="code"
-        >
-          <img src="@/assets/icons/history.svg" alt="restart recording" />
-        </button>
-        <button
-          v-if="isLoggedIn"
-          class="font-semibold text-sm text-white bg-blue flex justify-center items-center rounded-sm p-2"
-          @click="run"
-          v-show="code"
-        >
-          <img src="@/assets/icons/zap.svg" class="mr-2" alt="thunder" />
+        <Button class="mr-3" @click="restart" v-show="code">
+          <img src="/icons/dark/restart.svg" alt="restart recording" />
+        </Button>
+        <Button v-if="isLoggedIn" @click="run" v-show="code">
+          <img src="/icons/dark/zap.svg" class="mr-2" alt="thunder" />
           Run on Checkly
-        </button>
+        </Button>
         <a v-else href="https://app.checklyhq.com/signup" class="text-xs text-white">
           Signup on Checkly
         </a>
@@ -55,6 +45,7 @@
       @restart="reset"
       :is-recording="isRecording"
       :is-paused="isPaused"
+      :dark-mode="options.extension.darkMode"
     />
 
     <Footer v-if="!isRecording && !showResultsTab" />
@@ -62,7 +53,7 @@
 </template>
 
 <script>
-import { uiActions } from '@/services/constants'
+import { uiActions, isDarkMode } from '@/services/constants'
 import PuppeteerCodeGenerator from '@/services/puppeteer-code-generator'
 import PlaywrightCodeGenerator from '@/services/playwright-code-generator'
 
@@ -73,6 +64,7 @@ import HomeTab from '@/components/HomeTab.vue'
 import ResultsTab from '@/components/ResultsTab.vue'
 import RecordingTab from '@/components/RecordingTab.vue'
 import ControlBar from '@/components/ControlBar.vue'
+import Button from '@/components/Button.vue'
 
 let bus
 
@@ -85,13 +77,19 @@ export default {
     Header,
     Footer,
     ControlBar,
+    Button,
   },
 
   data() {
     return {
       code: '',
       codeForPlaywright: '',
-      options: {},
+      options: {
+        extension: {
+          darkMode: isDarkMode(),
+        },
+        code: {},
+      },
       isLoggedIn: false,
       showResultsTab: false,
       liveEvents: [],
@@ -101,6 +99,16 @@ export default {
       isCopying: false,
       currentResultTab: null,
     }
+  },
+
+  watch: {
+    'options.extension.darkMode': {
+      handler(newVal) {
+        console.log(newVal)
+        document.body.classList[newVal ? 'add' : 'remove']('dark')
+      },
+      immediate: true,
+    },
   },
 
   mounted() {
@@ -280,14 +288,19 @@ export default {
 
     trackEvent(event) {
       if (this.options && this.options.extension && this.options.extension.telemetry) {
-        if (window._gaq) window._gaq.push(['_trackEvent', event, 'clicked'])
+        window._gaq && window._gaq.push(['_trackEvent', event, 'clicked'])
       }
     },
 
     trackPageView() {
       if (this.options && this.options.extension && this.options.extension.telemetry) {
-        if (window._gaq) window._gaq.push(['_trackPageview'])
+        window._gaq && window._gaq.push(['_trackPageview'])
       }
+    },
+
+    toggleDarkMode() {
+      this.options.extension.darkMode = !this.options.extension.darkMode
+      chrome.storage.local.set({ options: this.options })
     },
 
     getCodeForCopy() {

@@ -87,6 +87,9 @@
 
       <section>
         <h2 class="">Extension</h2>
+        <Toggle v-model="options.extension.darkMode">
+          Use Dark Mode
+        </Toggle>
         <Toggle v-model="options.extension.telemetry">
           Allow recording of usage telemetry
         </Toggle>
@@ -102,6 +105,7 @@
 <script>
 import { version } from '../../package.json'
 import { defaults as code } from '@/services/code-generator'
+import { isDarkMode } from '@/services/constants'
 
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
@@ -110,6 +114,7 @@ const defaults = {
   code,
   extension: {
     telemetry: true,
+    darkMode: isDarkMode(),
   },
 }
 

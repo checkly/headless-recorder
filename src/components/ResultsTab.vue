@@ -1,11 +1,14 @@
 <template>
-  <div data-test-id="results-tab" class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100">
+  <div
+    data-test-id="results-tab"
+    class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100 dark:bg-black"
+  >
     <div class="flex flex-row mb-2">
       <button
         v-for="tab in tabs"
         :key="tab"
         class="text-gray w-1/2 font-semibold text-xs capitalize"
-        :class="{ 'text-black': activeTab === tab }"
+        :class="{ 'text-black dark:text-white': activeTab === tab }"
         @click.prevent="changeTab(tab)"
       >
         {{ tab }}

@@ -3,12 +3,12 @@
     <h1
       @click="$emit('home')"
       role="button"
-      class="text-sm font-semibold text-gray-darkest"
+      class="text-sm font-semibold text-gray-darkest dark:text-gray-lightest"
     >
       Headless Recorder
     </h1>
     <div class="flex">
-      <button class="ml-4">
+      <button @click="$emit('dark')" class="ml-4">
         <img src="@/assets/icons/moon.svg" alt="help" class="w-4" />
       </button>
       <button @click="$emit('help')" class="ml-2">

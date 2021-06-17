@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col items-center rounded-md pt-10 h-100">
-    <h3 class="text-pink text-sm font-semibold mb-3">No recorded events yet</h3>
+    <h3 class="text-pink text-sm font-semibold mb-3 dark:text-gray-lightest">
+      No recorded events yet
+    </h3>
     <p class="text-gray text-xs mb-5 text-center w-44">
       Record browser events by clicking record button
     </p>

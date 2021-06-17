@@ -55,3 +55,6 @@ export const headlessTypes = {
   PUPPETEER: 'puppeteer',
   PLAYWRIGHT: 'playwright',
 }
+
+export const isDarkMode = () =>
+  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
