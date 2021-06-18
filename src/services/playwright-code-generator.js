@@ -26,12 +26,7 @@ export default class PlaywrightCodeGenerator extends CodeGenerator {
   }
 
   generate(events) {
-    return (
-      importPlaywright +
-      this._getHeader() +
-      this._parseEvents(events) +
-      this._getFooter()
-    )
+    return importPlaywright + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
   _handleViewport(width, height) {

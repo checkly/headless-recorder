@@ -1,6 +1,5 @@
-import { eventsToRecord } from '@/services/constants'
-import { headlessActions } from '@/services/constants'
-import Block from './block'
+import { headlessActions, eventsToRecord } from '@/services/constants'
+import Block from '@/services/block'
 
 export const defaults = {
   wrapAsync: true,

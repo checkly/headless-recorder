@@ -1,6 +1,6 @@
 import { headlessActions } from '@/services/constants'
-import Block from './block'
-import CodeGenerator from './code-generator'
+import Block from '@/services/block'
+import CodeGenerator from '@/services/code-generator'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
@@ -26,12 +26,7 @@ export default class PuppeteerCodeGenerator extends CodeGenerator {
   }
 
   generate(events) {
-    return (
-      importPuppeteer +
-      this._getHeader() +
-      this._parseEvents(events) +
-      this._getFooter()
-    )
+    return importPuppeteer + this._getHeader() + this._parseEvents(events) + this._getFooter()
   }
 
   _handleViewport(width, height) {
