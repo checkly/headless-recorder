@@ -1,5 +1,5 @@
 <template>
-  <nav v-show="!isScreenShotMode" id="headless-recorder-overlay">
+  <nav v-show="!isScreenShotMode">
     <button title="stop" @click="stop" v-tippy="{ content: 'Stop Recording' }">
       <svg
         width="24"
@@ -201,10 +201,6 @@ export default {
 </script>
 
 <style lang="scss">
-.headless-recorder-selected-element {
-  background: rgba(255, 73, 73, 0.1);
-}
-
 .headless-recorder-flash {
   animation-name: ss-animation;
   animation-duration: 0.5s;
@@ -221,31 +217,50 @@ export default {
   }
 }
 
+@keyframes aa {
+  0% {
+    transform: translateY(100%);
+  }
+  70% {
+    transform: translateY(-120%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
 .headless-recorder-camera-cursor {
   cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACMSURBVHgBzZDrDUBAEITnVEIHVIoKUAkd0MHphCXrstm4R/jBJF9yu5d9DfAXWWJT2DfFqVjDj0NGNd6QoEwVSC61RMEDKmLAzSQfHZETI8czx40cFGpQcpHMjdzkjA3Ct/r+XT5DWDkxqdzCmzmFTqi5yazW75HowWVkKTaq5X/Mg6gOD1Y814rPtQPiEFi9rPKoQQAAAABJRU5ErkJggg=='),
     auto;
 }
 
 #headless-recorder-overlay {
-  display: flex;
-  align-items: center;
-  z-index: 2147483647;
-  position: fixed;
-  bottom: 10px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: monospace;
-  font-size: 12px;
-  color: #1f2d3d;
-  padding: 0 1rem;
-  transition: all 0.1s ease;
-  width: 828px;
-  height: 56px;
-  background: #f9fafc;
-  box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
-  border-radius: 6px;
+  nav {
+    animation-name: aa;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    display: flex;
+    align-items: center;
+    z-index: 2147483647;
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: monospace;
+    font-size: 12px;
+    color: #1f2d3d;
+    padding: 0 1rem;
+    transition: all 0.1s ease;
+    width: 828px;
+    height: 56px;
+    background: #f9fafc;
+    box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+  }
 
   .separator {
     width: 1px;

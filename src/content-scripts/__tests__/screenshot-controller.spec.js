@@ -6,10 +6,7 @@ it('Registers mouse events', () => {
   jest.useFakeTimers()
 
   document.body.innerHTML =
-    '<div>' +
-    '  <div id="username">UserName</div>' +
-    '  <button id="button"></button>' +
-    '</div>'
+    '<div>' + '  <div id="username">UserName</div>' + '  <button id="button"></button>' + '</div>'
 
   const uic = new UIController()
   uic.showSelector()

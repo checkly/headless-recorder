@@ -5,6 +5,7 @@ import { uiActions, controlMessages, eventsToRecord, overlaySelectors } from '@/
 
 import UIController from './screenshot-controller'
 import OverlayApp from './OverlayApp.vue'
+import Selector from './Selector.vue'
 
 export default class EventRecorder {
   constructor() {
@@ -18,9 +19,11 @@ export default class EventRecorder {
     this._isRecordingClicks = true
 
     this.mouseOverEvent = null
-    this.mouseOutEvent = null
     this.overlayApp = null
     this.overlayContainer = null
+
+    this.selectorContainer = null
+    this.selectorApp = null
   }
 
   boot() {
@@ -112,6 +115,11 @@ export default class EventRecorder {
     this.overlayContainer.id = overlaySelectors.OVERLAY_ID
     document.body.appendChild(this.overlayContainer)
 
+    this.selectorContainer = document.createElement('div')
+    this.selectorContainer.id = overlaySelectors.OVERLAY_ID + 1
+    document.body.appendChild(this.selectorContainer)
+
+    this.selectorApp = createApp(Selector).mount('#' + overlaySelectors.OVERLAY_ID + 1)
     this.overlayApp = createApp(OverlayApp).mount('#' + overlaySelectors.OVERLAY_ID)
 
     this.mouseOverEvent = e => {
@@ -124,27 +132,24 @@ export default class EventRecorder {
         this.overlayApp.currentSelector &&
         (!this._screenShotMode || this._uiController._isClipped)
       ) {
-        e.target.classList.add(overlaySelectors.CURRENT_SELECTOR_CLASS)
+        this.selectorApp.move(e, [overlaySelectors.OVERLAY_ID])
       }
-
-      return true
-    }
-
-    this.mouseOutEvent = e => {
-      e.target.classList.remove(overlaySelectors.CURRENT_SELECTOR_CLASS)
     }
 
     window.document.addEventListener('mouseover', this.mouseOverEvent)
-    window.document.addEventListener('mouseout', this.mouseOutEvent)
   }
 
   _dettachOverlay() {
     console.debug('dettach overlay')
     document.body.removeChild(this.overlayContainer)
+    document.body.removeChild(this.selectorContainer)
+
     this.overlayContainer = null
     this.overlayApp = null
+    this.selectorContainer = null
+    this.selectorApp = null
+
     window.document.removeEventListener('mouseover', this.mouseOverEvent)
-    window.document.removeEventListener('mouseout', this.mouseOutEvent)
   }
 
   _addAllListeners(events) {
@@ -230,6 +235,8 @@ export default class EventRecorder {
       this._sendMessage({ control: controlMessages.GET_SCREENSHOT, value: event.clip })
       this._enableClickRecording()
     })
+
+    // this.selectorApp.$on('click', e => console.log(e.clip))
   }
 
   _cancelScreenshotMode() {
@@ -260,15 +267,12 @@ export default class EventRecorder {
       return `#${e.target.id}`
     }
 
-    e.target.classList.remove(overlaySelectors.CURRENT_SELECTOR_CLASS)
-
     const selector = finder(e.target, {
       seedMinLength: 5,
       optimizedMinLength: e.target.id ? 2 : 10,
       attr: name => name === this._dataAttribute,
     })
 
-    e.target.classList.add(overlaySelectors.CURRENT_SELECTOR_CLASS)
     return selector
   }
 

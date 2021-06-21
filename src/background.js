@@ -76,26 +76,6 @@ class RecordingController {
       chrome.browserAction.setIcon({ path: './images/logo-red.png' })
       chrome.contextMenus.removeAll()
 
-      chrome.contextMenus.create({
-        id: this._menuId,
-        title: 'Headless Recorder',
-        contexts: ['all'],
-      })
-
-      chrome.contextMenus.create({
-        id: this._menuId + this._menuOptions.SCREENSHOT,
-        title: 'Take Screenshot (Ctrl+Shift+A)',
-        parentId: this._menuId,
-        contexts: ['all'],
-      })
-
-      chrome.contextMenus.create({
-        id: this._menuId + this._menuOptions.SCREENSHOT_CLIPPED,
-        title: 'Take Screenshot Clipped (Ctrl+Shift+S)',
-        parentId: this._menuId,
-        contexts: ['all'],
-      })
-
       this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
       chrome.contextMenus.onClicked.addListener(this._boundedMenuHandler)
 

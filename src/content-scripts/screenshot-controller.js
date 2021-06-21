@@ -78,10 +78,8 @@ class ScreenshotController extends EventEmitter {
       this._dimensions.height = this._element.offsetHeight
 
       if (this._selector) {
-        this._selector.style.top =
-          this._dimensions.top - BORDER_THICKNESS + 'px'
-        this._selector.style.left =
-          this._dimensions.left - BORDER_THICKNESS + 'px'
+        this._selector.style.top = this._dimensions.top - BORDER_THICKNESS + 'px'
+        this._selector.style.left = this._dimensions.left - BORDER_THICKNESS + 'px'
         this._selector.style.width = this._dimensions.width + 'px'
         this._selector.style.height = this._dimensions.height + 'px'
       }

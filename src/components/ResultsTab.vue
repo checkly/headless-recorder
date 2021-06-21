@@ -3,21 +3,27 @@
     data-test-id="results-tab"
     class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100 dark:bg-black"
   >
-    <div class="flex flex-row mb-2">
+    <div class="flex flex-row">
       <button
         v-for="tab in tabs"
         :key="tab"
-        class="text-gray w-1/2 font-semibold text-xs capitalize"
-        :class="{ 'text-black dark:text-white': activeTab === tab }"
+        class="w-1/2 h-7 font-semibold text-xs capitalize rounded-t"
+        :class="
+          activeTab === tab ? 'bg-black text-gray-lightest dark:bg-black-shady' : 'text-gray '
+        "
         @click.prevent="changeTab(tab)"
       >
         {{ tab }}
       </button>
     </div>
 
-    <div class="sc p-2 bg-black">
-      <pre v-if="code" v-highlightjs="code" class="overflow-auto bg-black h-100">
-      <code ref="code" class="javascript px-2  break-word whitespace-pre-wrap overflow-x-hidden"></code>
+    <div class="sc p-2 bg-black dark:bg-black-shady">
+      <pre
+        v-if="code"
+        v-highlightjs="code"
+        class="overflow-auto bg-black dark:bg-black-shady h-100"
+      >
+      <code ref="code" class="javascript bg-black dark:bg-black-shady px-2 break-word whitespace-pre-wrap overflow-x-hidden"></code>
       </pre>
       <pre v-else>
         <code>No code yet...</code>
