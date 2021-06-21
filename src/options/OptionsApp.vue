@@ -1,5 +1,5 @@
 <template>
-  <main class="container bg-gray-lightest flex py-9 w-full h-screen">
+  <main class="container bg-gray-lightest flex py-9 w-full h-screen dark:bg-black">
     <div class="flex flex-col w-1/4 pt-12 pr-6">
       <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
       <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>
@@ -20,7 +20,7 @@
           </h1>
           <span class="text-gray text-sm">v{{ version }}</span>
         </div>
-        <span class="text-gray text-sm" v-show="saving">Saving...</span>
+        <span class="text-gray text-sm dark:text-gray-lightest" v-show="saving">Saving...</span>
       </header>
 
       <section>
@@ -139,6 +139,14 @@ export default {
       },
       deep: true,
     },
+
+    'options.extension.darkMode': {
+      handler(newVal) {
+        console.log(newVal)
+        document.body.classList[newVal ? 'add' : 'remove']('dark')
+      },
+      immediate: true,
+    },
   },
 
   mounted() {
@@ -189,6 +197,7 @@ export default {
 code {
   @apply font-semibold;
 }
+
 a {
   @apply text-blue underline text-sm text-right;
 }
@@ -198,14 +207,14 @@ h2 {
 }
 
 label {
-  @apply text-black-dark font-semibold mb-2 block;
+  @apply text-black-dark font-semibold mb-2 block dark:text-gray-lightest;
 }
 
 section {
-  @apply bg-white border-gray-light border border-solid rounded-md p-4 pb-10 mb-6;
+  @apply bg-white border-gray-light border border-solid rounded-md p-4 pb-10 mb-6 dark:bg-black-shady;
 }
 
 p {
-  @apply text-gray-darkish text-xs mb-2;
+  @apply text-gray-darkish text-xs mb-2 dark:text-white;
 }
 </style>

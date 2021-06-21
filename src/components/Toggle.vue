@@ -19,7 +19,7 @@
       ></span>
     </button>
     <span class="ml-4">
-      <span class="text-sm text-gray-dark">
+      <span class="text-sm text-gray-dark dark:text-gray-light">
         <slot />
       </span>
     </span>
