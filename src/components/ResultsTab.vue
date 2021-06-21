@@ -1,7 +1,7 @@
 <template>
   <div
     data-test-id="results-tab"
-    class="flex flex-col bg-blue-light overflow-hidden mt-2 h-100 dark:bg-black"
+    class="flex flex-col bg-blue-light overflow-hidden mt-4 h-100 dark:bg-black"
   >
     <div class="flex flex-row">
       <button

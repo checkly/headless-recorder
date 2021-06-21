@@ -20,7 +20,7 @@
           </h1>
           <span class="text-gray text-sm">v{{ version }}</span>
         </div>
-        <span class="text-gray text-sm dark:text-gray-lightest" v-show="saving">Saving...</span>
+        <span class="text-pink text-sm" v-show="saving">Saving...</span>
       </header>
 
       <section>
@@ -203,7 +203,7 @@ a {
 }
 
 h2 {
-  @apply text-gray-darkish text-xl font-semibold mb-5;
+  @apply text-gray-darkish text-xl font-semibold mb-5 dark:text-gray-light;
 }
 
 label {
@@ -211,7 +211,7 @@ label {
 }
 
 section {
-  @apply bg-white border-gray-light border border-solid rounded-md p-4 pb-10 mb-6 dark:bg-black-shady;
+  @apply bg-white border-gray-light border border-solid rounded-md p-4 pb-10 mb-6 dark:bg-black-shady dark:border-gray-dark;
 }
 
 p {

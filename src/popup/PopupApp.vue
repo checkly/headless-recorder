@@ -47,7 +47,6 @@
       v-show="!showResultsTab && isRecording"
       @stop="toggleRecord"
       @pause="togglePause"
-      @restart="reset"
       :is-recording="isRecording"
       :is-paused="isPaused"
       :dark-mode="options.extension.darkMode"
@@ -159,7 +158,7 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        // window.close()
+        window.close()
         this.start()
       }
 
@@ -209,12 +208,6 @@ export default {
     restart() {
       this.cleanUp()
       bus.postMessage({ action: uiActions.CLEAN_UP })
-    },
-
-    reset() {
-      this.cleanUp()
-      bus.postMessage({ action: uiActions.CLEAN_UP })
-      this.toggleRecord()
     },
 
     cleanUp() {

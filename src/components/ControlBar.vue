@@ -10,11 +10,6 @@
       </RoundButton>
     </div>
     <RecordingLabel class="w-1/3" :is-paused="isPaused" :v-show="isRecording" />
-    <div class="w-1/3 flex justify-end">
-      <RoundButton @click="$emit('restart')" v-show="isRecording">
-        <img :src="`/icons/${darkMode ? 'dark' : 'light'}/restart.svg`" />
-      </RoundButton>
-    </div>
   </div>
 </template>
 
