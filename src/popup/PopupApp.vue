@@ -20,22 +20,27 @@
       class="flex py-2 px-3 justify-between bg-black-shady"
       v-show="showResultsTab"
     >
-      <div class="flex">
-        <Button class="mr-3" @click="restart" v-show="code">
-          <img src="/icons/dark/restart.svg" alt="restart recording" />
-        </Button>
-        <Button v-if="isLoggedIn" @click="run" v-show="code">
-          <img src="/icons/dark/zap.svg" class="mr-2" alt="thunder" />
-          Run on Checkly
-        </Button>
-        <a v-else href="https://app.checklyhq.com/signup" class="text-xs text-white">
-          Signup on Checkly
-        </a>
-      </div>
-      <button @click="copyCode" v-show="code">
-        <img v-show="!isCopying" src="@/assets/icons/duplicate.svg" alt="copy code to clipboard" />
+      <Button class="mr-2" @click="restart" v-show="code">
+        <img src="/icons/dark/sync.svg" class="mr-1" alt="restart recording" />
+        Restart
+      </Button>
+      <Button class="mr-2" @click="copyCode" v-show="code">
+        <img
+          v-show="!isCopying"
+          src="@/assets/icons/duplicate.svg"
+          class="mr-1"
+          alt="copy code to clipboard"
+        />
+        <span v-show="!isCopying">Copy to clipboard</span>
         <span class="text-white text-xs" v-show="isCopying">copied!</span>
-      </button>
+      </Button>
+      <Button v-if="isLoggedIn" @click="run" v-show="code">
+        <img src="/icons/dark/zap.svg" class="mr-1" alt="thunder" />
+        Run on Checkly
+      </Button>
+      <a v-else href="https://app.checklyhq.com/signup" class="text-xs text-white">
+        Signup on Checkly
+      </a>
     </div>
 
     <ControlBar
@@ -318,7 +323,7 @@ export default {
 
 <style>
 html {
-  width: 360px;
+  width: 386px;
   height: 535px;
 }
 
