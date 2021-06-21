@@ -1,5 +1,9 @@
 <template>
-  <nav v-show="!isScreenShotMode">
+  <nav v-show="!isScreenShotMode" :class="showBorder ? 'recorded' : ''">
+    <div class="rec">
+      <span class="dot"></span>
+      REC
+    </div>
     <button title="stop" @click="stop" v-tippy="{ content: 'Stop Recording' }">
       <svg
         width="24"
@@ -156,10 +160,22 @@ export default {
 
   data() {
     return {
+      showBorder: false,
       isPaused: false,
       isScreenShotMode: false,
       currentSelector: '',
     }
+  },
+
+  watch: {
+    showBorder(newVal, oldVal) {
+      if (oldVal === newVal) {
+        return
+      }
+      if (newVal) {
+        setTimeout(() => (this.showBorder = false), 250)
+      }
+    },
   },
 
   mounted() {
@@ -221,7 +237,8 @@ export default {
   0% {
     transform: translateY(100%);
   }
-  70% {
+
+  50% {
     transform: translateY(-120%);
   }
 
@@ -236,9 +253,34 @@ export default {
 }
 
 #headless-recorder-overlay {
+  .recorded {
+    border: solid 2px #45c8f1;
+    transition: all 0.1s linear;
+  }
+
+  .rec {
+    font-family: sans-serif;
+    font-size: 12px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-weight: 600;
+    color: #ff4949;
+    text-transform: uppercase;
+  }
+
+  .dot {
+    display: inline-block;
+    border-radius: 50%;
+    width: 9px;
+    height: 9px;
+    background: #ff4949;
+  }
+
   nav {
+    box-sizing: border-box;
     animation-name: aa;
-    animation-duration: 0.5s;
+    animation-duration: 0.3s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out;
     display: flex;
@@ -253,10 +295,10 @@ export default {
     font-family: monospace;
     font-size: 12px;
     color: #1f2d3d;
-    padding: 0 1rem;
+    padding: 20px 16px;
     transition: all 0.1s ease;
     width: 828px;
-    height: 56px;
+    height: 72px;
     background: #f9fafc;
     box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
     border-radius: 6px;

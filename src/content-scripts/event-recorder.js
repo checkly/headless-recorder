@@ -191,6 +191,9 @@ export default class EventRecorder {
         return
       }
 
+      // HERE
+      this.overlayApp.showBorder = true
+
       this._sendMessage({
         selector,
         value: e.target.value,
