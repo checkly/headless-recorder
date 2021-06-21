@@ -37,7 +37,6 @@ class ScreenshotController extends EventEmitter {
         this._selector = document.createElement('div')
         this._selector.className = 'headlessRecorderOutline'
         this._selector.style.position = 'fixed'
-        this._selector.style.border = `${BORDER_THICKNESS}px dashed rgba(255, 73, 73, 0.7)`
         this._overlay.appendChild(this._selector)
       } else {
         this._overlay.style.border = `${BORDER_THICKNESS}px dashed rgba(255, 73, 73, 0.7)`

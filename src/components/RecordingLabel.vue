@@ -1,7 +1,7 @@
 <template>
   <div
     data-test-id="recording-badge"
-    class="flex text-base justify-center items-center text-red font-bold"
+    class="flex text-2xl justify-center items-center text-red font-bold"
     :class="{ 'text-yellow-500': text === 'Paused' }"
   >
     {{ text }}

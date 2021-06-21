@@ -1,68 +1,58 @@
 <template>
-  <div
-    class="bg-white flex flex-col items-center overflow-auto break-all whitespace-pre-wrap h-100 dark:bg-black-light"
-    :class="{ 'justify-center': !liveEvents.length }"
-  >
-    <div
-      v-if="!liveEvents.length"
-      class="text-sm text-gray flex flex-col justify-center items-center animate-pulse h-100 dark:text-gray-light"
-    >
-      Waiting for events...
+  <section class="flex flex-col items-center rounded-md pt-8 h-full">
+    <RecordingLabel class="w-1/3" :is-paused="isPaused" :v-show="isRecording" />
+    <p class="text-gray text-sm text-center w-72">
+      Headless recorder currently recording your browser events.
+    </p>
+    <RoundButton big @click="$emit('stop')" class="p-12 mt-10">
+      <div class="bg-gray-darkest rounded h-16 w-16 dark:bg-white"></div>
+    </RoundButton>
+
+    <div class="flex mt-13 mb-8 items-center justify-center">
+      <div class="flex flex-col items-center justify-center mr-10">
+        <RoundButton
+          medium
+          @click="$emit('pause')"
+          class="flex flex-col items-center justify-center"
+        >
+          <img
+            :src="`/icons/${darkMode ? 'dark' : 'light'}/play.svg`"
+            v-show="isPaused"
+            class="w-10 h-10"
+          />
+          <img
+            :src="`/icons/${darkMode ? 'dark' : 'light'}/pause.svg`"
+            v-show="!isPaused"
+            class="w-10 h-10"
+          />
+        </RoundButton>
+        <span class="mt-2 text-sm font-semibold text-gray-new">PAUSE</span>
+      </div>
+      <div class="flex flex-col items-center justify-center">
+        <RoundButton
+          medium
+          @click="$emit('reset')"
+          class="flex flex-col items-center justify-center"
+        >
+          <img :src="`/icons/${darkMode ? 'dark' : 'light'}/sync.svg`" class="w-10 h-10" />
+        </RoundButton>
+        <span class="mt-2 text-sm font-semibold text-gray-new">RESTART</span>
+      </div>
     </div>
-    <ul v-else class="flex flex-col items-start p-2 w-full h-100">
-      <li
-        v-for="(event, index) in liveEvents"
-        :key="index"
-        class="border-b border-gray-lighter mb-4 w-full p-2"
-      >
-        <div class="text-sm mb-1">
-          <span class="text-gray mr-1 dark:text-gray-light">{{ index + 1 }}.</span>
-          <span class="text-gray-dark font-semibold uppercase dark:text-gray-light">{{
-            event.action
-          }}</span>
-        </div>
-        <span class="text-xs text-gray dark:text-gray-lightest">
-          {{ parseEventValue(event) }}
-        </span>
-      </li>
-    </ul>
-  </div>
+  </section>
 </template>
+
 <script>
+import RoundButton from '@/components/RoundButton'
+import RecordingLabel from '@/components/RecordingLabel'
+
 export default {
-  name: 'RecordingTab',
+  components: { RoundButton, RecordingLabel },
 
   props: {
+    darkMode: { type: Boolean, default: false },
     isRecording: { type: Boolean, default: false },
-    liveEvents: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
-  },
-
-  methods: {
-    parseEventValue(event) {
-      if (!event) {
-        return ''
-      }
-
-      if (event.selector) {
-        return event.selector
-      }
-
-      const action = event?.action.toLowerCase()
-
-      if (action === 'viewport') {
-        return `width: ${event.value.width} - height: ${event.value.height}`
-      }
-      if (action === 'goto') {
-        return event.href
-      }
-
-      return ''
-    },
+    isPaused: { type: Boolean, default: false },
   },
 }
 </script>

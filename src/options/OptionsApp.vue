@@ -1,5 +1,5 @@
 <template>
-  <main class="container bg-gray-lightest flex py-9 w-full h-screen dark:bg-black">
+  <main class="bg-gray-lightest flex py-9 w-full h-screen dark:bg-black">
     <div class="flex flex-col w-1/4 pt-12 pr-6">
       <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
       <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>

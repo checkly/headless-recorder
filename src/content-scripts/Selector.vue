@@ -43,8 +43,8 @@ export default {
         elem = elem.offsetParent
       }
 
-      this.dimensions.width = this.element.offsetWidth
-      this.dimensions.height = this.element.offsetHeight
+      this.dimensions.width = this.element.offsetWidth + 2
+      this.dimensions.height = this.element.offsetHeight + 2
 
       this.$refs.selector.style.top = this.dimensions.top - 2 + 'px'
       this.$refs.selector.style.left = this.dimensions.left - 2 + 'px'
@@ -83,6 +83,7 @@ export default {
 }
 
 .selector {
+  padding: 1px;
   position: fixed;
   background: rgba(255, 73, 73, 0.1);
   border: 2px dashed rgba(255, 73, 73, 0.7);

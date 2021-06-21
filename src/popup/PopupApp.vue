@@ -3,9 +3,12 @@
     <Header @home="goHome" @options="openOptions" @help="goHelp" @dark="toggleDarkMode" />
     <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
     <RecordingTab
-      :code="code"
+      @stop="toggleRecord"
+      @pause="togglePause"
+      @restart="reset"
       :is-recording="isRecording"
-      :live-events="liveEvents"
+      :is-paused="isPaused"
+      :dark-mode="options.extension.darkMode"
       v-show="!showResultsTab && isRecording"
     />
     <ResultsTab
@@ -43,15 +46,6 @@
       </a>
     </div>
 
-    <ControlBar
-      v-show="!showResultsTab && isRecording"
-      @stop="toggleRecord"
-      @pause="togglePause"
-      :is-recording="isRecording"
-      :is-paused="isPaused"
-      :dark-mode="options.extension.darkMode"
-    />
-
     <Footer v-if="!isRecording && !showResultsTab" />
   </div>
 </template>
@@ -67,7 +61,6 @@ import Header from '@/components/Header.vue'
 import HomeTab from '@/components/HomeTab.vue'
 import ResultsTab from '@/components/ResultsTab.vue'
 import RecordingTab from '@/components/RecordingTab.vue'
-import ControlBar from '@/components/ControlBar.vue'
 import Button from '@/components/Button.vue'
 
 let bus
@@ -80,7 +73,6 @@ export default {
     HomeTab,
     Header,
     Footer,
-    ControlBar,
     Button,
   },
 
@@ -158,7 +150,7 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        window.close()
+        // window.close()
         this.start()
       }
 
@@ -208,6 +200,12 @@ export default {
     restart() {
       this.cleanUp()
       bus.postMessage({ action: uiActions.CLEAN_UP })
+    },
+
+    reset() {
+      this.cleanUp()
+      bus.postMessage({ action: uiActions.CLEAN_UP })
+      this.toggleRecord()
     },
 
     cleanUp() {

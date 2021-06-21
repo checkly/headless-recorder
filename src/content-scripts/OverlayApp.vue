@@ -1,6 +1,6 @@
 <template>
   <nav v-show="!isScreenShotMode" :class="showBorder ? 'recorded' : ''">
-    <div class="rec">
+    <div class="rec" v-show="!isPaused">
       <span class="dot"></span>
       REC
     </div>

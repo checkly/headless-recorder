@@ -7,15 +7,7 @@
       Record browser events by clicking record button
     </p>
     <RoundButton :small="false" @click="$emit('start')" class="p-10 mt-12">
-      <svg
-        width="86"
-        height="86"
-        viewBox="0 0 86 86"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle cx="43" cy="43" r="43" fill="#FF4949" />
-      </svg>
+      <div class="bg-red w-21 h-21 rounded-full"></div>
     </RoundButton>
   </div>
 </template>

@@ -7,7 +7,7 @@
       <button
         v-for="tab in tabs"
         :key="tab"
-        class="w-1/2 h-7 font-semibold text-xs capitalize rounded-t"
+        class="w-1/2 p-2 font-semibold text-xs capitalize rounded-t"
         :class="
           activeTab === tab ? 'bg-black text-gray-lightest dark:bg-black-shady' : 'text-gray '
         "
