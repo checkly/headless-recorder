@@ -50,7 +50,6 @@ export default class EventRecorder {
     }
 
     chrome.storage.onChanged.addListener(({ options = null }) => {
-      console.log(options)
       if (options) {
         this._darkMode = options.newValue.extension.darkMode
         this.overlayApp.darkMode = options.newValue.extension.darkMode
@@ -257,8 +256,6 @@ export default class EventRecorder {
       this._sendMessage({ control: controlMessages.GET_SCREENSHOT, value: event.clip })
       this._enableClickRecording()
     })
-
-    // this.selectorApp.$on('click', e => console.log(e.clip))
   }
 
   _cancelScreenshotMode() {

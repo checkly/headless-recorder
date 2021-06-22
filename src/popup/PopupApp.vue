@@ -100,7 +100,6 @@ export default {
   watch: {
     'options.extension.darkMode': {
       handler(newVal) {
-        console.log(newVal)
         document.body.classList[newVal ? 'add' : 'remove']('dark')
       },
       immediate: true,

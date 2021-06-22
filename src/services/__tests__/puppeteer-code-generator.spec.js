@@ -24,34 +24,24 @@ describe('PuppeteerCodeGenerator', () => {
   })
 
   test('it generates the correct waitForNavigation code', () => {
-    const events = [
-      { action: 'click', selector: 'a.link' },
-      { action: headlessActions.NAVIGATION },
-    ]
+    const events = [{ action: 'click', selector: 'a.link' }, { action: headlessActions.NAVIGATION }]
     const codeGenerator = new PuppeteerCodeGenerator()
     const code = codeGenerator._parseEvents(events)
     const lines = code.split('\n')
-    expect(lines[1].trim()).toEqual(
-      'const navigationPromise = page.waitForNavigation()'
-    )
+    expect(lines[1].trim()).toEqual('const navigationPromise = page.waitForNavigation()')
     expect(lines[4].trim()).toEqual("await page.click('a.link')")
     expect(lines[6].trim()).toEqual('await navigationPromise')
   })
 
   test('it does not generate waitForNavigation code when turned off', () => {
-    const events = [
-      { action: 'navigation*' },
-      { action: 'click', selector: 'a.link' },
-    ]
+    const events = [{ action: 'navigation*' }, { action: 'click', selector: 'a.link' }]
     const codeGenerator = new PuppeteerCodeGenerator({
       waitForNavigation: false,
     })
     expect(codeGenerator._parseEvents(events)).not.toContain(
       'const navigationPromise = page.waitForNavigation()\n'
     )
-    expect(codeGenerator._parseEvents(events)).not.toContain(
-      'await navigationPromise\n'
-    )
+    expect(codeGenerator._parseEvents(events)).not.toContain('await navigationPromise\n')
   })
 
   test('it generates the correct waitForSelector code before clicks', () => {
@@ -124,9 +114,7 @@ describe('PuppeteerCodeGenerator', () => {
     const codeGenerator = new PuppeteerCodeGenerator()
     const result = codeGenerator._parseEvents(events)
 
-    expect(result).toContain(
-      "await page.screenshot({ path: 'screenshot_1.png' })"
-    )
+    expect(result).toContain("await page.screenshot({ path: 'screenshot_1.png' })")
   })
 
   test('it generates the correct clipped page screenshot code', () => {
@@ -156,9 +144,7 @@ describe('PuppeteerCodeGenerator', () => {
     const codeGenerator = new PuppeteerCodeGenerator()
     const result = codeGenerator._parseEvents(events)
 
-    expect(result).toContain(
-      "await page.type('input.value', 'hello\\');console.log(\\'world')"
-    )
+    expect(result).toContain("await page.type('input.value', 'hello\\');console.log(\\'world')")
   })
 
   test('it generates the correct escaped value with backslash', () => {

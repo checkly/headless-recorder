@@ -40,26 +40,20 @@ export default class Store {
 
   sync() {
     watchEffect(() => {
-      console.log(this.context, 'watchEffect =>', this.isRecording.value)
       this.save(this.isRecording)
-
-      chrome.storage.local.get('isRecording', console.log)
     })
 
     chrome.storage.onChanged.addListener(changes => {
-      // console.log('Antes', this.isRecording.value)
       Object.keys(changes).forEach(key => {
         if (this[key] !== undefined && this[key] !== null) {
           this[key].value = changes[key].newValue
         }
       })
-      // console.log('Despues', this.isRecording.value)
     })
   }
 
   onChange(cb) {
     chrome.storage.onChanged.addListener(changes => {
-      // console.log(this.context, 'onChange =>', changes)
       cb.call(changes)
     })
   }
