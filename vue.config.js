@@ -1,4 +1,8 @@
 module.exports = {
+  css: {
+    extract: false,
+  },
+
   pages: {
     popup: {
       template: 'public/browser-extension.html',
