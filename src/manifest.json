@@ -53,5 +53,15 @@
       },
       "description": "Take screenshot clipped"
     }
-  }
+  },
+  "web_accessible_resources": [
+    "icons/dark/play.svg",
+    "icons/light/play.svg",
+    "icons/dark/pause.svg",
+    "icons/light/pause.svg",
+    "icons/dark/screen.svg",
+    "icons/light/screen.svg",
+    "icons/dark/clip.svg",
+    "icons/light/clip.svg"
+  ]
 }

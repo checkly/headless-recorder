@@ -1,7 +1,13 @@
 import { createApp } from 'vue'
 import { finder } from '@medv/finder'
 
-import { uiActions, controlMessages, eventsToRecord, overlaySelectors } from '@/services/constants'
+import {
+  uiActions,
+  isDarkMode,
+  controlMessages,
+  eventsToRecord,
+  overlaySelectors,
+} from '@/services/constants'
 
 import UIController from './screenshot-controller'
 import OverlayApp from './OverlayApp.vue'
@@ -13,6 +19,7 @@ export default class EventRecorder {
     this._eventLog = []
     this._previousEvent = null
     this._dataAttribute = null
+    this._darkMode = false
     this._uiController = null
     this._screenShotMode = false
     this._isTopFrame = window.location === window.parent.location
@@ -30,6 +37,8 @@ export default class EventRecorder {
     // We need to check the existence of chrome for testing purposes
     if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(['options'], ({ options }) => {
+        this._darkMode = options && options.extension ? options.extension.darkMode : isDarkMode()
+
         const { dataAttribute } = options ? options.code : {}
         if (dataAttribute) {
           this._dataAttribute = dataAttribute
@@ -39,6 +48,14 @@ export default class EventRecorder {
     } else {
       this._initializeRecorder()
     }
+
+    chrome.storage.onChanged.addListener(({ options = null }) => {
+      console.log(options)
+      if (options) {
+        this._darkMode = options.newValue.extension.darkMode
+        this.overlayApp.darkMode = options.newValue.extension.darkMode
+      }
+    })
   }
 
   _initializeRecorder() {
@@ -121,6 +138,8 @@ export default class EventRecorder {
 
     this.selectorApp = createApp(Selector).mount('#' + overlaySelectors.OVERLAY_ID + 1)
     this.overlayApp = createApp(OverlayApp).mount('#' + overlaySelectors.OVERLAY_ID)
+
+    this.overlayApp.darkMode = this._darkMode
 
     this.mouseOverEvent = e => {
       const selector = this._getSelector(e)
