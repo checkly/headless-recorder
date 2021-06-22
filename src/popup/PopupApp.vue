@@ -27,7 +27,7 @@
         <img src="/icons/dark/sync.svg" class="mr-1" alt="restart recording" />
         Restart
       </Button>
-      <Button class="mr-2" @click="copyCode" v-show="code">
+      <Button class="mr-2 w-34" @click="copyCode" v-show="code">
         <img
           v-show="!isCopying"
           src="@/assets/icons/duplicate.svg"
@@ -35,13 +35,13 @@
           alt="copy code to clipboard"
         />
         <span v-show="!isCopying">Copy to clipboard</span>
-        <span class="text-white text-xs" v-show="isCopying">copied!</span>
+        <span v-show="isCopying">copied!</span>
       </Button>
       <Button v-if="isLoggedIn" @click="run" v-show="code">
         <img src="/icons/dark/zap.svg" class="mr-1" alt="thunder" />
         Run on Checkly
       </Button>
-      <a v-else href="https://app.checklyhq.com/signup" class="text-xs text-white">
+      <a v-else href="https://app.checklyhq.com/signup">
         Signup on Checkly
       </a>
     </div>
@@ -150,7 +150,7 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        // window.close()
+        window.close()
         this.start()
       }
 

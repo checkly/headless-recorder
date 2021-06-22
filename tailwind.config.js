@@ -80,6 +80,7 @@ module.exports = {
       24: '6rem',
       28: '7rem',
       32: '8rem',
+      34: '8.6rem',
       36: '9rem',
       40: '10rem',
       44: '11rem',
