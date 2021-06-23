@@ -1,4 +1,3 @@
-import { wathEffect } from 'vue'
 import { uiActions, isDarkMode, controlMessages } from '@/services/constants'
 
 import store from '@/store'
@@ -53,11 +52,11 @@ export default class HeadlessController {
           break
 
         case uiActions.PAUSE:
-          store.commit('togglePause')
+          store.commit('pause')
           break
 
         case uiActions.UN_PAUSE:
-          store.commit('togglePause')
+          store.commit('pause')
           break
       }
     }
