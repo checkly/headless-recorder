@@ -48,13 +48,9 @@ export default class Recorder {
     }
 
     try {
-      // poor man's way of detecting whether this script was injected by an actual extension, or is loaded for
-      // testing purposes
-      if (chrome.runtime && chrome.runtime.onMessage) {
-        chrome.runtime.sendMessage(msg)
-      } else {
-        this._eventLog.push(msg)
-      }
+      chrome.runtime && chrome?.runtime?.onMessage
+        ? chrome.runtime.sendMessage(msg)
+        : this._eventLog.push(msg)
     } catch (err) {
       console.debug('caught error', err)
     }
@@ -114,6 +110,7 @@ export default class Recorder {
       mousemove: true,
       mouseover: true,
     }
+
     return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null
   }
 }
