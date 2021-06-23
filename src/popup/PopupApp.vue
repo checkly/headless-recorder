@@ -30,7 +30,7 @@
       <Button class="mr-2 w-34" @click="copyCode" v-show="code">
         <img
           v-show="!isCopying"
-          src="@/assets/icons/duplicate.svg"
+          src="/icons/dark/duplicate.svg"
           class="mr-1"
           alt="copy code to clipboard"
         />
@@ -52,8 +52,8 @@
 
 <script>
 import { uiActions, isDarkMode } from '@/services/constants'
-import PuppeteerCodeGenerator from '@/services/puppeteer-code-generator'
-import PlaywrightCodeGenerator from '@/services/playwright-code-generator'
+import PuppeteerCodeGenerator from '@/services/code-generator/puppeteer-code-generator'
+import PlaywrightCodeGenerator from '@/services/code-generator/playwright-code-generator'
 
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'

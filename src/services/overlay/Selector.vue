@@ -16,10 +16,6 @@ export default {
     }
   },
 
-  // mounted() {
-  //   document.body.addEventListener('click', this._boundeMouseUp, false)
-  // },
-
   methods: {
     move(e, skippedSelectors = []) {
       if (this.element === e.target) {

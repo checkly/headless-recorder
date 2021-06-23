@@ -1,40 +1,58 @@
 <template>
-  <nav v-show="!isScreenShotMode" :class="{ recorded: showBorder, dark: darkMode }">
-    <div class="rec" v-show="!isPaused">
-      <span class="dot"></span>
-      REC
-    </div>
-    <button title="stop" @click="stop" v-tippy="{ content: 'Stop Recording' }">
-      <div class="stop"></div>
-    </button>
-    <button
-      class="btn"
-      title="pause"
-      @click="pause"
-      v-tippy="{ content: isPaused ? 'Resume Recording' : 'Pause Recording' }"
-    >
-      <img v-show="isPaused" width="27" height="27" :src="getIcon('play')" alt="play" />
-      <img v-show="!isPaused" width="27" height="27" :src="getIcon('pause')" alt="pause" />
-    </button>
-    <div class="separator"></div>
-    <button
-      class="btn-big"
-      @click.prevent="fullScreenshot"
-      v-tippy="{ content: 'Full Screenshot' }"
-    >
-      <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
-    </button>
-    <button
-      class="btn-big"
-      @click.prevent="clippedScreenshot"
-      v-tippy="{ content: 'Clipped Screenshot' }"
-    >
-      <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
-    </button>
-    <div class="separator"></div>
-    <span>
-      {{ currentSelector }}
-    </span>
+  <nav v-show="!screenshotMode" :class="{ recorded: hasRecorded, dark: darkMode }">
+    <template v-if="isStopped">
+      <div>
+        <p>Recording finished!</p>
+        <p>You can copy the code to clipboard right away!</p>
+      </div>
+      <div>
+        <Button>
+          <img width="16" height="16" :src="getIcon('sync')" alt="full page sreenshot" />
+          Copy to clipboard
+        </Button>
+        <Button>
+          <img width="16" height="16" :src="getIcon('sync')" alt="full page sreenshot" />
+          Restart Recording
+        </Button>
+      </div>
+    </template>
+    <template v-else>
+      <div class="rec" v-show="!isPaused">
+        <span class="dot"></span>
+        REC
+      </div>
+      <button title="stop" @click="stop" v-tippy="{ content: 'Stop Recording' }">
+        <div class="stop"></div>
+      </button>
+      <button
+        class="btn"
+        title="pause"
+        @click="pause"
+        v-tippy="{ content: isPaused ? 'Resume Recording' : 'Pause Recording' }"
+      >
+        <img v-show="isPaused" width="27" height="27" :src="getIcon('play')" alt="play" />
+        <img v-show="!isPaused" width="27" height="27" :src="getIcon('pause')" alt="pause" />
+      </button>
+      <div class="separator"></div>
+      <button
+        class="btn-big"
+        @click.prevent="fullScreenshot"
+        v-tippy="{ content: 'Full Screenshot' }"
+      >
+        <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
+      </button>
+      <button
+        class="btn-big"
+        @click.prevent="clippedScreenshot"
+        v-tippy="{ content: 'Clipped Screenshot' }"
+      >
+        <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
+      </button>
+      <div class="separator"></div>
+      <span>
+        {{ currentSelector }}
+      </span>
+    </template>
   </nav>
 </template>
 
@@ -43,30 +61,23 @@ import { directive } from 'vue-tippy'
 import { controlMessages } from '@/services/constants'
 import 'tippy.js/dist/tippy.css'
 
+import {mapState} from 'vuex'
+
+import Button from '@/components/Button'
+
 export default {
   name: 'Overlay',
-
+  components: { Button },
   directives: { tippy: directive },
 
   data() {
     return {
-      darkMode: false,
-      showBorder: false,
-      isPaused: false,
-      isScreenShotMode: false,
       currentSelector: '',
     }
   },
 
-  watch: {
-    showBorder(newVal, oldVal) {
-      if (oldVal === newVal) {
-        return
-      }
-      if (newVal) {
-        setTimeout(() => (this.showBorder = false), 250)
-      }
-    },
+  computed: {
+    ...mapState(['isPaused', 'isStopped', 'screenshotMode', 'darkMode', 'hasRecorded'])
   },
 
   mounted() {
@@ -74,6 +85,7 @@ export default {
       if (e.code !== 'Escape') {
         return
       }
+
       chrome.runtime.sendMessage({
         control: controlMessages.OVERLAY_ABORT_SCREENSHOT,
       })
@@ -82,7 +94,7 @@ export default {
 
   methods: {
     stop() {
-      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_STOP })
+      this.$store.commit('stop')
     },
 
     getIcon(icon) {
@@ -90,22 +102,15 @@ export default {
     },
 
     pause() {
-      this.isPaused = !this.isPaused
-      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_PAUSE })
+      this.$store.commit('pause')
     },
 
     fullScreenshot() {
-      this.isScreenShotMode = true
-      chrome.runtime.sendMessage({
-        control: controlMessages.OVERLAY_FULL_SCREENSHOT,
-      })
+      this.$store.commit('startScreenshotMode', false)
     },
 
     clippedScreenshot() {
-      this.isScreenShotMode = true
-      chrome.runtime.sendMessage({
-        control: controlMessages.OVERLAY_CLIPPED_SCREENSHOT,
-      })
+      this.$store.commit('startScreenshotMode', true)
     },
   },
 }

@@ -104,7 +104,7 @@
 
 <script>
 import { version } from '../../package.json'
-import { defaults as code } from '@/services/code-generator'
+import { defaults as code } from '@/services/code-generator/code-generator'
 import { isDarkMode } from '@/services/constants'
 
 import Button from '@/components/Button'

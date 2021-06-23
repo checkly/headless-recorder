@@ -62,6 +62,10 @@
     "icons/dark/screen.svg",
     "icons/light/screen.svg",
     "icons/dark/clip.svg",
-    "icons/light/clip.svg"
+    "icons/light/clip.svg",
+    "icons/dark/sync.svg",
+    "icons/light/sync.svg",
+    "icons/dark/duplicate.svg",
+    "icons/light/duplicate.svg"
   ]
 }

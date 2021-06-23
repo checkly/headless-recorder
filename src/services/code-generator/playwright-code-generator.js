@@ -1,6 +1,6 @@
-import Block from '@/services/block'
-import CodeGenerator from '@/services/code-generator'
-import { headlessActions } from '@/services/constants'
+import Block from '@/services/code-generator/block'
+import { headlessActions } from '@/services/code-generator/constants'
+import CodeGenerator from '@/services/code-generator/code-generator'
 
 const importPlaywright = `const { chromium } = require('playwright');\n`
 

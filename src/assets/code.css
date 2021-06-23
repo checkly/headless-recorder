@@ -1,12 +1,3 @@
-/* a11y-dark theme */
-/* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */
-/* @author: ericwbailey */
-
-
-/* code.hljs {
-  background: #8b8787 !important;
-} */
-
 .hljs-line {
   color: '#ADAACC';
   margin-right: 8px;

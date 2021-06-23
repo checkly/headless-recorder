@@ -101,7 +101,7 @@ class RecordingController {
       console.debug('recording stored')
     })
 
-    this.toggleSelectorHelper()
+    // this.toggleOverlay()
   }
 
   pause() {
@@ -275,12 +275,11 @@ class RecordingController {
 
   injectScript() {
     chrome.tabs.executeScript({ file: 'js/content-script.js', allFrames: false }, () => {
-      this.toggleSelectorHelper(true)
+      this.toggleOverlay(true)
     })
   }
 
-  toggleSelectorHelper(value = false) {
-    console.debug('toggling overlay')
+  toggleOverlay(value = false) {
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       chrome.tabs.sendMessage(tabs[0].id, {
         action: uiActions.TOGGLE_OVERLAY,

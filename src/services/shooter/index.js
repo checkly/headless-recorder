@@ -1,28 +1,32 @@
 import EventEmitter from 'events'
+import { overlaySelectors } from '@/services/constants'
 
 const BORDER_THICKNESS = 2
-
-const defaults = {
-  isClipped: false,
-}
-
-class ScreenshotController extends EventEmitter {
-  constructor(options) {
-    options = Object.assign({}, defaults, options)
-
+class Shooter extends EventEmitter {
+  constructor() {
     super()
     this._overlay = null
     this._selector = null
     this._element = null
     this._dimensions = {}
-    this._isClipped = options.isClipped
+    this._isClipped = false
 
-    this._boundeMouseMove = this._mousemove.bind(this)
-    this._boundeMouseUp = this._mouseup.bind(this)
+    this._boundeMouseMove = this.mousemove.bind(this)
+    this._boundeMouseUp = this.mouseup.bind(this)
   }
 
+  // init({ isClipped = false }) {
+  //   this._overlay = null
+  //   this._selector = null
+  //   this._element = null
+  //   this._dimensions = {}
+  //   this._isClipped = isClipped
+
+  //   this._boundeMouseMove = this.mousemove.bind(this)
+  //   this._boundeMouseUp = this.mouseup.bind(this)
+  // }
+
   startScreenshotMode() {
-    console.debug('ScreenshotController:show')
     if (!this._overlay) {
       this._overlay = document.createElement('div')
       this._overlay.className = 'headlessRecorderOverlay'
@@ -51,7 +55,6 @@ class ScreenshotController extends EventEmitter {
   }
 
   stopScreenshotMode() {
-    console.debug('ScreenshotController:hide')
     if (this._overlay) {
       document.body.removeChild(this._overlay)
     }
@@ -59,7 +62,21 @@ class ScreenshotController extends EventEmitter {
     this._dimensions = {}
   }
 
-  _mousemove(e) {
+  showScreenshotEffect() {
+    document.body.classList.add(overlaySelectors.FLASH_CLASS)
+    document.body.classList.remove(overlaySelectors.CURSOR_CAMERA_CLASS)
+    setTimeout(() => document.body.classList.remove(overlaySelectors.FLASH_CLASS), 1000)
+  }
+
+  addCameraIcon() {
+    document.body.classList.add(overlaySelectors.CURSOR_CAMERA_CLASS)
+  }
+
+  removeCameraIcon() {
+    document.body.classList.remove(overlaySelectors.CURSOR_CAMERA_CLASS)
+  }
+
+  mousemove(e) {
     if (this._element !== e.target) {
       this._element = e.target
 
@@ -84,9 +101,10 @@ class ScreenshotController extends EventEmitter {
       }
     }
   }
-  _mouseup(e) {
+
+  mouseup(e) {
     setTimeout(() => {
-      this._cleanup()
+      this.cleanup()
 
       let clip = null
 
@@ -103,7 +121,7 @@ class ScreenshotController extends EventEmitter {
     }, 100)
   }
 
-  _cleanup() {
+  cleanup() {
     document.body.removeEventListener('mousemove', this._boundeMouseMove, false)
     document.body.removeEventListener('mouseup', this._boundeMouseUp, false)
 
@@ -112,4 +130,4 @@ class ScreenshotController extends EventEmitter {
   }
 }
 
-export default ScreenshotController
+export default Shooter
