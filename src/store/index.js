@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 
-import { controlMessages, overlayActions } from '@/services/constants'
+import { overlayActions } from '@/modules/overlay/constants'
 
 function clearState(state) {
   state.isClosed = false
@@ -24,6 +24,8 @@ const store = createStore({
 
       dataAttribute: '',
       takeScreenshot: false,
+
+      recording: [],
     }
   },
 
@@ -42,22 +44,26 @@ const store = createStore({
       state.takeScreenshot = true
     },
 
-    setDataAttribute(state, value) {
-      state.dataAttribute = value
+    setDataAttribute(state, dataAttribute) {
+      state.dataAttribute = dataAttribute
     },
 
-    setDarkMode(state, value) {
-      state.darkMode = value
+    setDarkMode(state, darkMode) {
+      state.darkMode = darkMode
+    },
+
+    setRecording(state, recording) {
+      state.recording = recording
     },
 
     unpause(state) {
       state.isPaused = false
-      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_UNPAUSE })
+      chrome.runtime.sendMessage({ control: overlayActions.UNPAUSE })
     },
 
     pause(state) {
       state.isPaused = true
-      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_PAUSE })
+      chrome.runtime.sendMessage({ control: overlayActions.PAUSE })
     },
 
     close(state) {
@@ -76,7 +82,7 @@ const store = createStore({
 
     stop(state) {
       state.isStopped = true
-      chrome.runtime.sendMessage({ control: controlMessages.OVERLAY_STOP })
+      chrome.runtime.sendMessage({ control: overlayActions.STOP })
     },
 
     copy() {
@@ -89,9 +95,7 @@ const store = createStore({
 
     startScreenshotMode(state, isClipped = false) {
       chrome.runtime.sendMessage({
-        control: isClipped
-          ? controlMessages.OVERLAY_CLIPPED_SCREENSHOT
-          : controlMessages.OVERLAY_FULL_SCREENSHOT,
+        control: isClipped ? overlayActions.CLIPPED_SCREENSHOT : overlayActions.FULL_SCREENSHOT,
       })
 
       state.screenshotClippedMode = isClipped
@@ -105,9 +109,13 @@ const store = createStore({
 })
 
 // TODO: load state from local storage
-chrome.storage.onChanged.addListener(({ options = null }) => {
+chrome.storage.onChanged.addListener(({ options = null, recording = null }) => {
   if (options) {
     store.commit('setDarkMode', options.newValue.extension.darkMode)
+  }
+
+  if (recording) {
+    store.commit('setRecording', recording.newValue)
   }
 })
 

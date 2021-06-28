@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-import { overlaySelectors } from '@/services/constants'
+import { overlaySelectors } from '@/modules/overlay/constants'
 
 const BORDER_THICKNESS = 2
 class Shooter extends EventEmitter {
@@ -14,17 +14,6 @@ class Shooter extends EventEmitter {
     this._boundeMouseMove = this.mousemove.bind(this)
     this._boundeMouseUp = this.mouseup.bind(this)
   }
-
-  // init({ isClipped = false }) {
-  //   this._overlay = null
-  //   this._selector = null
-  //   this._element = null
-  //   this._dimensions = {}
-  //   this._isClipped = isClipped
-
-  //   this._boundeMouseMove = this.mousemove.bind(this)
-  //   this._boundeMouseUp = this.mouseup.bind(this)
-  // }
 
   startScreenshotMode() {
     if (!this._overlay) {

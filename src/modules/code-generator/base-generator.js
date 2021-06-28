@@ -29,7 +29,6 @@ export default class BaseGenerator {
   }
 
   _getHeader() {
-    console.debug(this._options)
     let hdr = this._options.wrapAsync ? this._wrappedHeader : this._header
     hdr = this._options.headless ? hdr : hdr?.replace('launch()', 'launch({ headless: false })')
     return hdr
@@ -40,7 +39,6 @@ export default class BaseGenerator {
   }
 
   _parseEvents(events) {
-    console.debug(`generating code for ${events ? events.length : 0} events`)
     let result = ''
 
     if (!events) return result
@@ -83,7 +81,6 @@ export default class BaseGenerator {
     }
 
     if (this._hasNavigation && this._options.waitForNavigation) {
-      console.debug('Adding navigationPromise declaration')
       const block = new Block(this._frameId, {
         type: headlessActions.NAVIGATION_PROMISE,
         value: 'const navigationPromise = page.waitForNavigation()',
@@ -91,7 +88,6 @@ export default class BaseGenerator {
       this._blocks.unshift(block)
     }
 
-    console.debug('post processing blocks:', this._blocks)
     this._postProcess()
 
     const indent = this._options.wrapAsync ? '  ' : ''

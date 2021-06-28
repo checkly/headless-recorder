@@ -1,4 +1,5 @@
-import { uiActions, isDarkMode, controlMessages } from '@/services/constants'
+import { overlayActions } from '@/modules/overlay/constants'
+import { popupActions, recordingControls, isDarkMode } from '@/services/constants'
 
 import storage from '@/services/storage'
 import browser from '@/services/browser'
@@ -38,31 +39,31 @@ export default class HeadlessController {
     }
 
     switch (msg.action) {
-      case uiActions.TOGGLE_SCREENSHOT_MODE:
+      case overlayActions.TOGGLE_SCREENSHOT_MODE:
         this.handleScreenshot(false)
         break
 
-      case uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
+      case overlayActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
         this.handleScreenshot(true)
         break
 
-      case uiActions.CLOSE_SCREENSHOT_MODE:
+      case overlayActions.CLOSE_SCREENSHOT_MODE:
         this.cancelScreenshot()
         break
 
-      case uiActions.TOGGLE_OVERLAY:
+      case overlayActions.TOGGLE_OVERLAY:
         msg?.value?.open ? this.overlay.mount(msg.value) : this.overlay.unmount()
         break
 
-      case uiActions.STOP:
+      case popupActions.STOP:
         this.store.commit('close')
         break
 
-      case uiActions.PAUSE:
+      case popupActions.PAUSE:
         this.store.commit('pause')
         break
 
-      case uiActions.UN_PAUSE:
+      case popupActions.UN_PAUSE:
         this.store.commit('unpause')
         break
 
@@ -87,7 +88,7 @@ export default class HeadlessController {
       this.store.commit('stopScreenshotMode')
 
       this.shooter.showScreenshotEffect()
-      this.recorder._sendMessage({ control: controlMessages.GET_SCREENSHOT, value: clip })
+      this.recorder._sendMessage({ control: recordingControls.GET_SCREENSHOT, value: clip })
       this.recorder.enableClickRecording()
     })
   }

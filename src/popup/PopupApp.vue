@@ -8,7 +8,7 @@
       @restart="restart(true)"
       :is-recording="isRecording"
       :is-paused="isPaused"
-      :dark-mode="options.extension.darkMode"
+      :dark-mode="options?.extension?.darkMode"
       v-show="!showResultsTab && isRecording"
     />
     <ResultsTab
@@ -54,7 +54,7 @@
 import browser from '@/services/browser'
 import storage from '@/services/storage'
 import analytics from '@/services/analytics'
-import { uiActions, isDarkMode } from '@/services/constants'
+import { popupActions, isDarkMode } from '@/services/constants'
 
 import CodeGenerator from '@/modules/code-generator'
 
@@ -112,7 +112,6 @@ export default {
 
   async mounted() {
     this.loadState()
-
     bus = browser.getBackgroundBus()
     this.isLoggedIn = await browser.getChecklyCookie()
   },
@@ -122,7 +121,7 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        window.close()
+        // window.close()
         this.start()
       }
 
@@ -131,7 +130,7 @@ export default {
     },
 
     togglePause(stop = false) {
-      bus.postMessage({ action: this.isPaused ? uiActions.UN_PAUSE : uiActions.PAUSE, stop })
+      bus.postMessage({ action: this.isPaused ? popupActions.UN_PAUSE : popupActions.PAUSE, stop })
       this.isPaused = !this.isPaused
 
       this.storeState()
@@ -140,12 +139,12 @@ export default {
     start() {
       analytics.trackEvent({ options: this.options, event: 'Start' })
       this.cleanUp()
-      bus.postMessage({ action: uiActions.START })
+      bus.postMessage({ action: popupActions.START })
     },
 
     async stop() {
       analytics.trackEvent({ options: this.options, event: 'Stop' })
-      bus.postMessage({ action: uiActions.STOP })
+      bus.postMessage({ action: popupActions.STOP })
 
       const { recording, options = {} } = await storage.get(['recording', 'options'])
       const generator = new CodeGenerator(options)
@@ -161,7 +160,7 @@ export default {
 
     restart(stop = false) {
       this.cleanUp()
-      bus.postMessage({ action: uiActions.CLEAN_UP, value: stop })
+      bus.postMessage({ action: popupActions.CLEAN_UP, value: stop })
     },
 
     cleanUp() {

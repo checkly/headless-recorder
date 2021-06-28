@@ -156,20 +156,14 @@ export default {
   methods: {
     save() {
       this.saving = true
-      chrome.storage.local.set({ options: this.options }, () => {
-        console.debug('saved options')
-        setTimeout(() => {
-          this.saving = false
-        }, 500)
-      })
+      chrome.storage.local.set({ options: this.options }, () =>
+        setTimeout(() => (this.saving = false), 500)
+      )
     },
 
     load() {
-      chrome.storage.local.get('options', ({ options }) => {
-        if (options) {
-          console.debug('loaded options', JSON.stringify(options))
-          this.options = options
-        }
+      chrome.storage.local.get('options', ({ options = {} }) => {
+        this.options = options
         this.loading = false
       })
     },

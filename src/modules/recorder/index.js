@@ -1,5 +1,7 @@
 import getSelector from '@/services/selector'
-import { controlMessages, eventsToRecord, overlaySelectors } from '@/services/constants'
+import { recordingControls } from '@/services/constants'
+import { overlaySelectors } from '@/modules/overlay/constants'
+import { eventsToRecord } from '@/modules/code-generator/constants'
 
 export default class Recorder {
   constructor({ store }) {
@@ -27,10 +29,10 @@ export default class Recorder {
     }
 
     if (this._isTopFrame) {
-      this._sendMessage({ control: controlMessages.EVENT_RECORDER_STARTED })
-      this._sendMessage({ control: controlMessages.GET_CURRENT_URL, href: window.location.href })
+      this._sendMessage({ control: recordingControls.EVENT_RECORDER_STARTED })
+      this._sendMessage({ control: recordingControls.GET_CURRENT_URL, href: window.location.href })
       this._sendMessage({
-        control: controlMessages.GET_VIEWPORT_SIZE,
+        control: recordingControls.GET_VIEWPORT_SIZE,
         coordinates: { width: window.innerWidth, height: window.innerHeight },
       })
     }

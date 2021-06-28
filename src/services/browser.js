@@ -1,5 +1,6 @@
-import { urls } from '@/services/constants'
 const CONTENT_SCRIPT_PATH = 'js/content-script.js'
+const RUN_URL = 'https://app.checklyhq.com/checks/new/browser'
+const DOCS_URL = 'https://www.checklyhq.com/docs/headless-recorder'
 
 export default {
   getActiveTab() {
@@ -48,12 +49,12 @@ export default {
   },
 
   openHelpPage() {
-    chrome.tabs.create({ url: urls.DOCS_URL })
+    chrome.tabs.create({ url: DOCS_URL })
   },
 
   openChecklyRunner({ code, runner }) {
     const script = encodeURIComponent(btoa(code))
-    const url = `${urls.RUN_URL}?framework=${runner}&script=${script}`
+    const url = `${RUN_URL}?framework=${runner}&script=${script}`
     chrome.tabs.create({ url })
   },
 }

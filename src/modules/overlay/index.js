@@ -1,10 +1,9 @@
 import { createApp } from 'vue'
 
 import getSelector from '@/services/selector'
-import { overlaySelectors } from '@/services/constants'
-
 import SelectorApp from '@/modules/overlay/Selector.vue'
 import OverlayApp from '@/modules/overlay/Overlay.vue'
+import { overlaySelectors } from '@/modules/overlay/constants'
 
 export default class Overlay {
   constructor({ store }) {

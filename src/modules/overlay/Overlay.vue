@@ -24,13 +24,15 @@
           <img width="16" height="16" :src="getIcon('sync')" alt="restart recording" />
           Restart Recording
         </button> -->
-        <button @click="close" class="btn-large">
-          <img width="16" height="16" :src="getIcon('sync')" alt="exit" />
-          Exit
+        <button @click="close" class="btn-close">
+          &times;
         </button>
       </div>
     </template>
     <template v-else>
+      <div class="events" :class="{ 'events-recorded': hasRecorded }">
+        {{ recording.length }}
+      </div>
       <div class="rec" v-show="!isPaused">
         <span class="dot"></span>
         REC
@@ -74,10 +76,10 @@
 
 <script>
 import { directive } from 'vue-tippy'
-import { controlMessages } from '@/services/constants'
 import 'tippy.js/dist/tippy.css'
 
 import { mapState, mapMutations } from 'vuex'
+import { overlayActions } from '@/modules/overlay/constants'
 
 export default {
   name: 'Overlay',
@@ -97,6 +99,7 @@ export default {
       'darkMode',
       'hasRecorded',
       'isCopying',
+      'recording',
     ]),
   },
 
@@ -107,7 +110,7 @@ export default {
       }
 
       chrome.runtime.sendMessage({
-        control: controlMessages.OVERLAY_ABORT_SCREENSHOT,
+        control: overlayActions.ABORT_SCREENSHOT,
       })
     })
   },
@@ -188,6 +191,26 @@ export default {
     text-transform: uppercase;
   }
 
+  .events {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    font-size: 11px;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: #f9fafc;
+    border-radius: 50%;
+    background: #45c8f1;
+    width: 17px;
+    height: 17px;
+  }
+
+  .events-recorded {
+    animation: pulse 0.7s ease-in-out;
+  }
+
   .dot {
     display: inline-block;
     border-radius: 50%;
@@ -251,6 +274,10 @@ export default {
     .btn-large {
       background: #1f2d3d;
       color: #f9fafc;
+    }
+
+    .btn-close {
+      color: #ffffff;
     }
   }
 
@@ -327,6 +354,12 @@ export default {
     display: flex;
     width: 60%;
     justify-content: flex-end;
+  }
+
+  .btn-close {
+    font-size: 18px;
+    color: #161616;
+    margin-right: 0;
   }
 
   .finish {

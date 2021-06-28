@@ -1,7 +1,9 @@
 import badge from '@/services/badge'
 import browser from '@/services/browser'
 import storage from '@/services/storage'
-import { uiActions, overlayActions, controlMessages, headlessActions } from '@/services/constants'
+import { popupActions, recordingControls } from '@/services/constants'
+import { overlayActions } from '@/modules/overlay/constants'
+import { headlessActions } from '@/modules/code-generator/constants'
 
 import CodeGenerator from '@/modules/code-generator'
 
@@ -63,7 +65,7 @@ class Background {
 
     badge.stop(this._badgeState)
 
-    chrome.storage.local.set({ recording: this._recording })
+    storage.set({ recording: this._recording })
   }
 
   pause() {
@@ -140,7 +142,7 @@ class Background {
 
     if (!this._isPaused) {
       this._recording.push(msg)
-      chrome.storage.local.set({ recording: this._recording })
+      storage.set({ recording: this._recording })
     }
   }
 
@@ -170,53 +172,55 @@ class Background {
       })
     }
 
-    if (msg.control === controlMessages.OVERLAY_STOP) {
+    if (msg.control === overlayActions.STOP) {
       chrome.storage.local.set({ clear: true })
       chrome.storage.local.set({ pause: false })
       this.stop()
     }
 
-    if (msg.control === controlMessages.OVERLAY_UNPAUSE) {
+    if (msg.control === overlayActions.UNPAUSE) {
       chrome.storage.local.set({ pause: false })
       this.unPause()
     }
 
-    if (msg.control === controlMessages.OVERLAY_PAUSE) {
+    if (msg.control === overlayActions.PAUSE) {
       chrome.storage.local.set({ pause: true })
       this.pause()
     }
 
-    if (msg.control === controlMessages.OVERLAY_CLIPPED_SCREENSHOT) {
-      browser.sendTabMessage({ action: uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE })
+    // TODO: the next 3 events do not need to be listened in background
+    // content script controller, should be able to handle that directly from overlay
+    if (msg.control === overlayActions.CLIPPED_SCREENSHOT) {
+      browser.sendTabMessage({ action: overlayActions.TOGGLE_SCREENSHOT_CLIPPED_MODE })
     }
 
-    if (msg.control === controlMessages.OVERLAY_FULL_SCREENSHOT) {
-      browser.sendTabMessage({ action: uiActions.TOGGLE_SCREENSHOT_MODE })
+    if (msg.control === overlayActions.FULL_SCREENSHOT) {
+      browser.sendTabMessage({ action: overlayActions.TOGGLE_SCREENSHOT_MODE })
     }
 
-    if (msg.control === controlMessages.OVERLAY_ABORT_SCREENSHOT) {
-      browser.sendTabMessage({ action: uiActions.CLOSE_SCREENSHOT_MODE })
+    if (msg.control === overlayActions.ABORT_SCREENSHOT) {
+      browser.sendTabMessage({ action: overlayActions.CLOSE_SCREENSHOT_MODE })
     }
   }
 
   handleContenScriptMessage(msg) {
-    if (msg.control === controlMessages.EVENT_RECORDER_STARTED) {
+    if (msg.control === recordingControls.EVENT_RECORDER_STARTED) {
       badge.setText(this._badgeState)
     }
 
-    if (msg.control === controlMessages.GET_VIEWPORT_SIZE) {
+    if (msg.control === recordingControls.GET_VIEWPORT_SIZE) {
       this.recordCurrentViewportSize(msg.coordinates)
     }
 
-    if (msg.control === controlMessages.GET_CURRENT_URL) {
+    if (msg.control === recordingControls.GET_CURRENT_URL) {
       this.recordCurrentUrl(msg.href)
     }
 
-    if (msg.control === controlMessages.GET_SCREENSHOT) {
+    if (msg.control === recordingControls.GET_SCREENSHOT) {
       this.recordScreenshot(msg.value)
     }
 
-    // if (msg.control === controlMessages.RESTART) {
+    // if (msg.control === recordingControls.RESTART) {
     //   this.start()
     // }
   }
@@ -226,31 +230,31 @@ class Background {
       return
     }
 
-    if (msg.action === uiActions.START) {
+    if (msg.action === popupActions.START) {
       this.start()
     }
 
-    if (msg.action === uiActions.STOP) {
-      browser.sendTabMessage({ action: uiActions.STOP })
+    if (msg.action === popupActions.STOP) {
+      browser.sendTabMessage({ action: popupActions.STOP })
       this.stop()
     }
 
-    if (msg.action === uiActions.CLEAN_UP) {
+    if (msg.action === popupActions.CLEAN_UP) {
       msg.value && this.stop()
       this.toggleOverlay()
       this.cleanUp()
     }
 
-    if (msg.action === uiActions.PAUSE) {
+    if (msg.action === popupActions.PAUSE) {
       if (!msg.stop) {
-        browser.sendTabMessage({ action: uiActions.PAUSE })
+        browser.sendTabMessage({ action: popupActions.PAUSE })
       }
       this.pause()
     }
 
-    if (msg.action === uiActions.UN_PAUSE) {
+    if (msg.action === popupActions.UN_PAUSE) {
       if (!msg.stop) {
-        browser.sendTabMessage({ action: uiActions.UN_PAUSE })
+        browser.sendTabMessage({ action: popupActions.UN_PAUSE })
       }
       this.unPause()
     }
@@ -266,7 +270,7 @@ class Background {
   }
 
   toggleOverlay({ open = false, clear = false, pause = false } = {}) {
-    browser.sendTabMessage({ action: uiActions.TOGGLE_OVERLAY, value: { open, clear, pause } })
+    browser.sendTabMessage({ action: overlayActions.TOGGLE_OVERLAY, value: { open, clear, pause } })
   }
 }
 

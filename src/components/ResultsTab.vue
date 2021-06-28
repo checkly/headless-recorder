@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { headlessTypes } from '@/services/constants'
+import { headlessTypes } from '@/modules/code-generator/constants'
 
 export default {
   name: 'ResultsTab',
@@ -66,7 +66,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.options.code)
     if (!this.options?.code?.showPlaywrightFirst) {
       this.activeTab = headlessTypes.PUPPETEER
       this.tabs = this.tabs.reverse()
