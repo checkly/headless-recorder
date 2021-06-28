@@ -1,13 +1,13 @@
 import { uiActions, isDarkMode, controlMessages } from '@/services/constants'
 
-import store from '@/store'
 import storage from '@/services/storage'
 import Shooter from '@/modules/shooter'
 
 export default class HeadlessController {
-  constructor({ overlay, recorder }) {
+  constructor({ overlay, recorder, store }) {
     this.backgroundListener = null
 
+    this.store = store
     this.shooter = null
     this.overlay = overlay
     this.recorder = recorder
@@ -19,8 +19,8 @@ export default class HeadlessController {
     const darkMode = options && options.extension ? options.extension.darkMode : isDarkMode()
     const { dataAttribute } = options ? options.code : {}
 
-    store.commit('setDarkMode', darkMode)
-    store.commit('setDataAttribute', dataAttribute)
+    this.store.commit('setDarkMode', darkMode)
+    this.store.commit('setDataAttribute', dataAttribute)
 
     this.recorder.init(() => this.listenBackgroundMessages())
   }
@@ -53,21 +53,21 @@ export default class HeadlessController {
         break
 
       case uiActions.STOP:
-        store.commit('close')
+        this.store.commit('close')
         break
 
       case uiActions.PAUSE:
-        store.commit('pause')
+        this.store.commit('pause')
         break
 
       case uiActions.UN_PAUSE:
-        store.commit('unpause')
+        this.store.commit('unpause')
         break
 
       case 'CODE':
         navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
           if (result.state == 'granted' || result.state == 'prompt') {
-            store.commit('showCopy')
+            this.store.commit('showCopy')
             navigator.clipboard.writeText(msg.value)
           }
         })
@@ -81,12 +81,12 @@ export default class HeadlessController {
 
     this.shooter.addCameraIcon()
 
-    store.state.screenshotMode
+    this.store.state.screenshotMode
       ? this.shooter.startScreenshotMode()
       : this.shooter.stopScreenshotMode()
 
     this.shooter.on('click', ({ clip }) => {
-      store.commit('stopScreenshotMode')
+      this.store.commit('stopScreenshotMode')
 
       this.shooter.showScreenshotEffect()
       this.recorder._sendMessage({ control: controlMessages.GET_SCREENSHOT, value: clip })
@@ -95,11 +95,11 @@ export default class HeadlessController {
   }
 
   cancelScreenshot() {
-    if (!store.state.screenshotMode) {
+    if (!this.store.state.screenshotMode) {
       return
     }
 
-    store.commit('stopScreenshotMode')
+    this.store.commit('stopScreenshotMode')
     this.shooter.removeCameraIcon()
     this.shooter.stopScreenshotMode()
     this.recorder.enableClickRecording()
