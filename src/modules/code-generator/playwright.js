@@ -1,6 +1,6 @@
-import Block from '@/services/code-generator/block'
-import { headlessActions } from '@/services/code-generator/constants'
-import CodeGenerator from '@/services/code-generator/code-generator'
+import Block from '@/modules/code-generator/block'
+import { headlessActions } from '@/modules/code-generator/constants'
+import BaseGenerator from '@/modules/code-generator/base-generator'
 
 const importPlaywright = `const { chromium } = require('playwright');\n`
 
@@ -16,7 +16,7 @@ const wrappedHeader = `(async () => {
 const wrappedFooter = `  ${footer}
 })()`
 
-export default class PlaywrightCodeGenerator extends CodeGenerator {
+export default class PlaywrightCodeGenerator extends BaseGenerator {
   constructor(options) {
     super(options)
     this._header = header

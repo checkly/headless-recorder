@@ -35,6 +35,7 @@ export const headlessActions = {
 
 export const overlaySelectors = {
   OVERLAY_ID: 'headless-recorder-overlay',
+  SELECTOR_ID: 'headless-recorder-selector',
   CURRENT_SELECTOR_CLASS: 'headless-recorder-selected-element',
   CURSOR_CAMERA_CLASS: 'headless-recorder-camera-cursor',
   FLASH_CLASS: 'headless-recorder-flash',
@@ -58,3 +59,14 @@ export const headlessTypes = {
 
 export const isDarkMode = () =>
   window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+
+export const url = {
+  RUN_URL: '',
+  DOCS_URL: '',
+}
+
+export const overlayActions = {
+  RESTART: 'RESTART',
+  CLOSE: 'CLOSE',
+  COPY: 'COPY',
+}

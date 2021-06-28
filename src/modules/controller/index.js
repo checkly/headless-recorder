@@ -2,7 +2,7 @@ import { uiActions, isDarkMode, controlMessages } from '@/services/constants'
 
 import store from '@/store'
 import storage from '@/services/storage'
-import Shooter from '@/services/shooter'
+import Shooter from '@/modules/shooter'
 
 export default class HeadlessController {
   constructor({ overlay, recorder }) {
@@ -23,8 +23,6 @@ export default class HeadlessController {
     store.commit('setDataAttribute', dataAttribute)
 
     this.recorder.init(() => this.listenBackgroundMessages())
-
-    this.overlay.init()
   }
 
   listenBackgroundMessages() {
@@ -33,32 +31,47 @@ export default class HeadlessController {
   }
 
   handleBackgroundMessages(msg) {
-    if (msg && msg.action) {
-      switch (msg.action) {
-        case uiActions.TOGGLE_SCREENSHOT_MODE:
-          this.handleScreenshot(false)
-          break
+    if (!msg?.action) {
+      return
+    }
 
-        case uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
-          this.handleScreenshot(true)
-          break
+    switch (msg.action) {
+      case uiActions.TOGGLE_SCREENSHOT_MODE:
+        this.handleScreenshot(false)
+        break
 
-        case uiActions.CLOSE_SCREENSHOT_MODE:
-          this.cancelScreenshot()
-          break
+      case uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE:
+        this.handleScreenshot(true)
+        break
 
-        case uiActions.TOGGLE_OVERLAY:
-          msg.value ? this.overlay.mount() : this.overlay.unmount()
-          break
+      case uiActions.CLOSE_SCREENSHOT_MODE:
+        this.cancelScreenshot()
+        break
 
-        case uiActions.PAUSE:
-          store.commit('pause')
-          break
+      case uiActions.TOGGLE_OVERLAY:
+        msg?.value?.open ? this.overlay.mount(msg.value) : this.overlay.unmount()
+        break
 
-        case uiActions.UN_PAUSE:
-          store.commit('pause')
-          break
-      }
+      case uiActions.STOP:
+        store.commit('close')
+        break
+
+      case uiActions.PAUSE:
+        store.commit('pause')
+        break
+
+      case uiActions.UN_PAUSE:
+        store.commit('unpause')
+        break
+
+      case 'CODE':
+        navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
+          if (result.state == 'granted' || result.state == 'prompt') {
+            store.commit('showCopy')
+            navigator.clipboard.writeText(msg.value)
+          }
+        })
+        break
     }
   }
 

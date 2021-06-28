@@ -2,7 +2,7 @@
   <div
     data-test-id="recording-badge"
     class="flex text-2xl justify-center items-center text-red font-bold"
-    :class="{ 'text-yellow-500': text === 'Paused' }"
+    :class="{ 'text-yellow': text === 'Paused', 'animate-pulse': text !== 'Paused' }"
   >
     {{ text }}
   </div>

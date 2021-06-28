@@ -1,15 +1,17 @@
 import badge from '@/services/badge'
-// import browser from '@/services/browser'
-import { uiActions, headlessActions } from '@/services/constants'
+import browser from '@/services/browser'
+import { uiActions, overlayActions, controlMessages, headlessActions } from '@/services/constants'
 
-import H from './handler'
+import CodeGenerator from '@/modules/code-generator'
 
-const CONTENT_SCRIPT_PATH = 'js/content-script.js'
 class Background {
-  constructor(h) {
+  constructor() {
     this._recording = []
+    this._boundedMessageHandler = null
     this._boundedNavigationHandler = null
     this._boundedWaitHandler = null
+
+    this.overlayHandler = null
 
     this._badgeState = ''
     this._isPaused = false
@@ -18,79 +20,51 @@ class Background {
     // We keep some simple state to disregard events if needed.
     this._hasGoto = false
     this._hasViewPort = false
-
-    this.h = h
   }
 
   init() {
     chrome.extension.onConnect.addListener(port => {
-      console.debug('listeners connected')
-      port.onMessage.addListener(msg => {
-        if (!msg.action) {
-          return
-        }
-
-        if (msg.action === uiActions.START) {
-          this.start()
-        }
-
-        if (msg.action === uiActions.STOP) {
-          this.stop()
-        }
-
-        if (msg.action === uiActions.CLEAN_UP) {
-          this.cleanUp()
-        }
-
-        if (msg.action === uiActions.PAUSE) {
-          chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.PAUSE })
-          })
-          this.pause()
-        }
-
-        if (msg.action === uiActions.UN_PAUSE) {
-          chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, { action: uiActions.UN_PAUSE })
-          })
-          this.unPause()
-        }
-      })
+      port.onMessage.addListener(msg => this.handlePopupMessage(msg))
     })
   }
 
-  start() {
-    this.cleanUp(() => {
-      this._badgeState = ''
-      this._hasGoto = false
-      this._hasViewPort = false
+  async start() {
+    await this.cleanUp()
 
-      this.injectContentScript()
+    console.log('RECORDING', this._recording)
 
-      this._boundedNavigationHandler = this.handleNavigation.bind(this)
-      this._boundedWaitHandler = () => badge.wait()
+    this._badgeState = ''
+    this._hasGoto = false
+    this._hasViewPort = false
 
-      chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
-      chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
+    await browser.injectContentScript()
+    this.toggleOverlay({ open: true, clear: true })
 
-      badge.start()
-      this.h.start()
-    })
+    this._boundedMessageHandler = this.handleMessage.bind(this)
+    this._boundedNavigationHandler = this.handleNavigation.bind(this)
+    this._boundedWaitHandler = () => badge.wait()
+
+    this.overlayHandler = this.handleOverlayMessage.bind(this)
+
+    chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
+    chrome.runtime.onMessage.addListener(this.overlayHandler)
+
+    chrome.webNavigation.onCompleted.addListener(this._boundedNavigationHandler)
+    chrome.webNavigation.onBeforeNavigate.addListener(this._boundedWaitHandler)
+
+    badge.start()
   }
 
   stop() {
-    console.debug('stop recording')
     this._badgeState = this._recording.length > 0 ? '1' : ''
 
+    chrome.runtime.onMessage.removeListener(this._boundedMessageHandler)
     chrome.webNavigation.onCompleted.removeListener(this._boundedNavigationHandler)
     chrome.webNavigation.onBeforeNavigate.removeListener(this._boundedWaitHandler)
 
     badge.stop(this._badgeState)
-    this.h.stop()
 
-    chrome.storage.local.set({ recording: this._recording }, () => {
-      console.debug('recording stored')
-    })
+    chrome.storage.local.set({ recording: this._recording })
   }
 
   pause() {
@@ -103,34 +77,37 @@ class Background {
     this._isPaused = false
   }
 
-  cleanUp(cb) {
+  cleanUp() {
     this._recording = []
     badge.reset()
 
-    chrome.storage.local.remove('recording', () => cb && cb())
+    return new Promise(function(resolve) {
+      chrome.storage.local.remove('recording', () => resolve())
+    })
   }
 
-  handleNavigation({ frameId }) {
-    this.injectContentScript()
-
-    if (frameId === 0) {
-      this.recordNavigation()
+  recordCurrentUrl(href) {
+    if (!this._hasGoto) {
+      console.debug('recording goto* for:', href)
+      this.handleMessage({
+        selector: undefined,
+        value: undefined,
+        action: headlessActions.GOTO,
+        href,
+      })
+      this._hasGoto = true
     }
   }
 
-  injectContentScript() {
-    chrome.tabs.executeScript({ file: CONTENT_SCRIPT_PATH, allFrames: false }, () => {
-      this.toggleOverlay(true)
-    })
-  }
-
-  toggleOverlay(value = false) {
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: uiActions.TOGGLE_OVERLAY,
+  recordCurrentViewportSize(value) {
+    if (!this._hasViewPort) {
+      this.handleMessage({
+        selector: undefined,
         value,
+        action: headlessActions.VIEWPORT,
       })
-    })
+      this._hasViewPort = true
+    }
   }
 
   recordNavigation() {
@@ -140,7 +117,161 @@ class Background {
       action: headlessActions.NAVIGATION,
     })
   }
+
+  recordScreenshot(value) {
+    this.handleMessage({
+      selector: undefined,
+      value,
+      action: headlessActions.SCREENSHOT,
+    })
+  }
+
+  handleMessage(msg, sender) {
+    if (msg.control) {
+      return this.handleContenScriptMessage(msg, sender)
+    }
+
+    if (msg.type === 'SIGN_CONNECT') {
+      return
+    }
+
+    // NOTE: To account for clicks etc. we need to record the frameId
+    // and url to later target the frame in playback
+    msg.frameId = sender ? sender.frameId : null
+    msg.frameUrl = sender ? sender.url : null
+
+    if (!this._isPaused) {
+      this._recording.push(msg)
+      chrome.storage.local.set({ recording: this._recording })
+    }
+  }
+
+  handleOverlayMessage(msg) {
+    if (!msg.control) {
+      return
+    }
+
+    if (msg.control === overlayActions.RESTART) {
+      chrome.storage.local.set({ restart: true })
+      this.start()
+    }
+
+    if (msg.control === overlayActions.CLOSE) {
+      this.toggleOverlay()
+      chrome.runtime.onMessage.removeListener(this.overlayHandler)
+    }
+
+    if (msg.control === overlayActions.COPY) {
+      chrome.storage.local.get(['options'], ({ options = {} }) => {
+        const generator = new CodeGenerator(options)
+        const code = generator.generate(this._recording)
+
+        browser.sendTabMessage({
+          action: 'CODE',
+          value: !options?.code?.showPlaywrightFirst ? code.puppeteer : code.playwright,
+        })
+      })
+    }
+
+    if (msg.control === controlMessages.OVERLAY_STOP) {
+      chrome.storage.local.set({ clear: true })
+      chrome.storage.local.set({ pause: false })
+      this.stop()
+    }
+
+    if (msg.control === controlMessages.OVERLAY_UNPAUSE) {
+      chrome.storage.local.set({ pause: false })
+      this.unPause()
+    }
+
+    if (msg.control === controlMessages.OVERLAY_PAUSE) {
+      chrome.storage.local.set({ pause: true })
+      this.pause()
+    }
+
+    if (msg.control === controlMessages.OVERLAY_CLIPPED_SCREENSHOT) {
+      browser.sendTabMessage({ action: uiActions.TOGGLE_SCREENSHOT_CLIPPED_MODE })
+    }
+
+    if (msg.control === controlMessages.OVERLAY_FULL_SCREENSHOT) {
+      browser.sendTabMessage({ action: uiActions.TOGGLE_SCREENSHOT_MODE })
+    }
+
+    if (msg.control === controlMessages.OVERLAY_ABORT_SCREENSHOT) {
+      browser.sendTabMessage({ action: uiActions.CLOSE_SCREENSHOT_MODE })
+    }
+  }
+
+  handleContenScriptMessage(msg) {
+    if (msg.control === controlMessages.EVENT_RECORDER_STARTED) {
+      badge.setText(this._badgeState)
+    }
+
+    if (msg.control === controlMessages.GET_VIEWPORT_SIZE) {
+      this.recordCurrentViewportSize(msg.coordinates)
+    }
+
+    if (msg.control === controlMessages.GET_CURRENT_URL) {
+      this.recordCurrentUrl(msg.href)
+    }
+
+    if (msg.control === controlMessages.GET_SCREENSHOT) {
+      this.recordScreenshot(msg.value)
+    }
+
+    // if (msg.control === controlMessages.RESTART) {
+    //   this.start()
+    // }
+  }
+
+  handlePopupMessage(msg) {
+    if (!msg.action) {
+      return
+    }
+
+    if (msg.action === uiActions.START) {
+      this.start()
+    }
+
+    if (msg.action === uiActions.STOP) {
+      browser.sendTabMessage({ action: uiActions.STOP })
+      this.stop()
+    }
+
+    if (msg.action === uiActions.CLEAN_UP) {
+      console.log('CLEAN UP')
+      this.toggleOverlay()
+      this.cleanUp()
+    }
+
+    if (msg.action === uiActions.PAUSE) {
+      if (!msg.stop) {
+        browser.sendTabMessage({ action: uiActions.PAUSE })
+      }
+      this.pause()
+    }
+
+    if (msg.action === uiActions.UN_PAUSE) {
+      if (!msg.stop) {
+        browser.sendTabMessage({ action: uiActions.UN_PAUSE })
+      }
+      this.unPause()
+    }
+  }
+
+  async handleNavigation({ frameId }) {
+    await browser.injectContentScript()
+    this.toggleOverlay({ open: true, pause: this._isPaused })
+
+    if (frameId === 0) {
+      this.recordNavigation()
+    }
+  }
+
+  toggleOverlay({ open = false, clear = false, pause = false } = {}) {
+    browser.sendTabMessage({ action: uiActions.TOGGLE_OVERLAY, value: { open, clear, pause } })
+  }
 }
 
-window.headlessRecorder = new Background(new H())
+window.headlessRecorder = new Background()
 window.headlessRecorder.init()

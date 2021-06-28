@@ -3,8 +3,8 @@ import { createApp } from 'vue'
 import getSelector from '@/services/selector'
 import { overlaySelectors } from '@/services/constants'
 
-import Selector from './Selector.vue'
-import OverlayApp from './Overlay.vue'
+import SelectorApp from '@/modules/overlay/Selector.vue'
+import OverlayApp from '@/modules/overlay/Overlay.vue'
 
 export default class Overlay {
   constructor({ store }) {
@@ -19,11 +19,7 @@ export default class Overlay {
     this.store = store
   }
 
-  init() {
-    // TODO: look for dark mode (and default settings)
-  }
-
-  mount() {
+  mount({ clear = false, pause = false } = {}) {
     if (this.overlayContainer) {
       return
     }
@@ -33,18 +29,23 @@ export default class Overlay {
     document.body.appendChild(this.overlayContainer)
 
     this.selectorContainer = document.createElement('div')
-    this.selectorContainer.id = overlaySelectors.OVERLAY_ID + 1
+    this.selectorContainer.id = overlaySelectors.SELECTOR_ID
     document.body.appendChild(this.selectorContainer)
 
-    this.selectorApp = createApp(Selector)
+    if (clear) {
+      this.store.commit('clear')
+    }
+    if (pause) {
+      this.store.commit('pause')
+    }
+
+    this.selectorApp = createApp(SelectorApp)
       .use(this.store)
-      .mount('#' + overlaySelectors.OVERLAY_ID + 1)
+      .mount('#' + overlaySelectors.SELECTOR_ID)
 
     this.overlayApp = createApp(OverlayApp)
       .use(this.store)
       .mount('#' + overlaySelectors.OVERLAY_ID)
-
-    this.overlayApp.darkMode = this._darkMode
 
     this.mouseOverEvent = e => {
       const selector = getSelector(e)
@@ -54,7 +55,7 @@ export default class Overlay {
 
       if (
         this.overlayApp.currentSelector &&
-        (!this._screenShotMode || this._uiController._isClipped)
+        (!this.store.state.screenshotMode || this.store.state.screenshotClippedMode)
       ) {
         this.selectorApp.move(e, [overlaySelectors.OVERLAY_ID])
       }

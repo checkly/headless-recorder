@@ -5,7 +5,7 @@
     <RecordingTab
       @stop="toggleRecord"
       @pause="togglePause"
-      @restart="reset"
+      @restart="restart"
       :is-recording="isRecording"
       :is-paused="isPaused"
       :dark-mode="options.extension.darkMode"
@@ -51,9 +51,8 @@
 </template>
 
 <script>
+import CodeGenerator from '@/modules/code-generator'
 import { uiActions, isDarkMode } from '@/services/constants'
-import PuppeteerCodeGenerator from '@/services/code-generator/puppeteer-code-generator'
-import PlaywrightCodeGenerator from '@/services/code-generator/playwright-code-generator'
 
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
@@ -78,6 +77,16 @@ export default {
 
   data() {
     return {
+      isLoggedIn: false,
+      showResultsTab: false,
+      isRecording: false,
+      isPaused: false,
+      isCopying: false,
+      currentResultTab: null,
+
+      liveEvents: [],
+      recording: [],
+
       code: '',
       codeForPlaywright: '',
       options: {
@@ -86,14 +95,6 @@ export default {
         },
         code: {},
       },
-      isLoggedIn: false,
-      showResultsTab: false,
-      liveEvents: [],
-      recording: [],
-      isRecording: false,
-      isPaused: false,
-      isCopying: false,
-      currentResultTab: null,
     }
   },
 
@@ -123,7 +124,8 @@ export default {
             }
 
             if (pause) {
-              this.togglePause()
+              console.log('pausing..')
+              this.togglePause(true)
               chrome.storage.local.remove(['pause'])
             }
           }
@@ -157,14 +159,15 @@ export default {
       this.storeState()
     },
 
-    togglePause() {
+    togglePause(stop = false) {
       if (this.isPaused) {
-        bus.postMessage({ action: uiActions.UN_PAUSE })
+        bus.postMessage({ action: uiActions.UN_PAUSE, stop })
         this.isPaused = false
       } else {
-        bus.postMessage({ action: uiActions.PAUSE })
+        bus.postMessage({ action: uiActions.PAUSE, stop })
         this.isPaused = true
       }
+
       this.storeState()
     },
 
@@ -180,18 +183,15 @@ export default {
       console.debug('stop recorder')
       bus.postMessage({ action: uiActions.STOP })
 
-      chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
-        console.debug('loaded recording', recording)
-        console.debug('loaded options', options)
+      chrome.storage.local.get(['recording', 'options'], ({ recording, options = {} }) => {
+        const generator = new CodeGenerator(options)
+        const { puppeteer, playwright } = generator.generate(recording)
 
-        this.recording = recording
-        const codeOptions = options ? options.code : {}
-
-        const codeGen = new PuppeteerCodeGenerator(codeOptions)
-        const codeGenPlaywright = new PlaywrightCodeGenerator(codeOptions)
-        this.code = codeGen.generate(this.recording)
-        this.codeForPlaywright = codeGenPlaywright.generate(this.recording)
         this.showResultsTab = true
+        this.recording = recording
+        this.code = puppeteer
+        this.codeForPlaywright = playwright
+
         this.storeState()
       })
     },
@@ -199,12 +199,6 @@ export default {
     restart() {
       this.cleanUp()
       bus.postMessage({ action: uiActions.CLEAN_UP })
-    },
-
-    reset() {
-      this.cleanUp()
-      bus.postMessage({ action: uiActions.CLEAN_UP })
-      this.toggleRecord()
     },
 
     cleanUp() {
@@ -240,6 +234,7 @@ export default {
           }
 
           if (options) {
+            console.log(options)
             this.options = options
           }
           cb()
@@ -260,9 +255,10 @@ export default {
 
     copyCode() {
       navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
-        if (result.state == 'granted' || result.state == 'prompt') {
+        if (result.state === 'granted' || result.state === 'prompt') {
           this.trackEvent('Copy')
           this.isCopying = true
+
           setTimeout(() => {
             this.isCopying = false
             navigator.clipboard.writeText(this.code)

@@ -1,19 +1,33 @@
 <template>
-  <nav v-show="!screenshotMode" :class="{ recorded: hasRecorded, dark: darkMode }">
+  <nav
+    v-show="!screenshotMode"
+    :class="{ recorded: hasRecorded && !isPaused && !isStopped, dark: darkMode }"
+  >
     <template v-if="isStopped">
-      <div>
-        <p>Recording finished!</p>
+      <div class="finish">
+        <h3>Recording finished!</h3>
         <p>You can copy the code to clipboard right away!</p>
       </div>
-      <div>
-        <Button>
-          <img width="16" height="16" :src="getIcon('sync')" alt="full page sreenshot" />
-          Copy to clipboard
-        </Button>
-        <Button>
-          <img width="16" height="16" :src="getIcon('sync')" alt="full page sreenshot" />
+      <div class="btn-bar">
+        <button @click="copy" class="btn-large">
+          <img
+            v-show="!isCopying"
+            width="16"
+            height="16"
+            :src="getIcon('duplicate')"
+            alt="copy to clipboard"
+          />
+          <span v-show="!isCopying">Copy to clipboard</span>
+          <span v-show="isCopying">Copied</span>
+        </button>
+        <!-- <button @click="restart" class="btn-large">
+          <img width="16" height="16" :src="getIcon('sync')" alt="restart recording" />
           Restart Recording
-        </Button>
+        </button> -->
+        <button @click="close" class="btn-large">
+          <img width="16" height="16" :src="getIcon('sync')" alt="exit" />
+          Exit
+        </button>
       </div>
     </template>
     <template v-else>
@@ -35,6 +49,7 @@
       </button>
       <div class="separator"></div>
       <button
+        :disabled="isPaused"
         class="btn-big"
         @click.prevent="fullScreenshot"
         v-tippy="{ content: 'Full Screenshot' }"
@@ -42,6 +57,7 @@
         <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
       </button>
       <button
+        :disabled="isPaused"
         class="btn-big"
         @click.prevent="clippedScreenshot"
         v-tippy="{ content: 'Clipped Screenshot' }"
@@ -49,7 +65,7 @@
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>
       <div class="separator"></div>
-      <span>
+      <span class="code">
         {{ currentSelector }}
       </span>
     </template>
@@ -61,13 +77,10 @@ import { directive } from 'vue-tippy'
 import { controlMessages } from '@/services/constants'
 import 'tippy.js/dist/tippy.css'
 
-import {mapState} from 'vuex'
-
-import Button from '@/components/Button'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'Overlay',
-  components: { Button },
   directives: { tippy: directive },
 
   data() {
@@ -77,7 +90,14 @@ export default {
   },
 
   computed: {
-    ...mapState(['isPaused', 'isStopped', 'screenshotMode', 'darkMode', 'hasRecorded'])
+    ...mapState([
+      'isPaused',
+      'isStopped',
+      'screenshotMode',
+      'darkMode',
+      'hasRecorded',
+      'isCopying',
+    ]),
   },
 
   mounted() {
@@ -92,17 +112,19 @@ export default {
     })
   },
 
+  unmount() {
+    // TODO: remove esc listener
+  },
+
   methods: {
-    stop() {
-      this.$store.commit('stop')
-    },
+    ...mapMutations(['copy', 'stop', 'close', 'restart']),
 
     getIcon(icon) {
       return browser.runtime.getURL(`icons/${this.darkMode ? 'dark' : 'light'}/${icon}.svg`)
     },
 
     pause() {
-      this.$store.commit('pause')
+      this.isPaused ? this.$store.commit('unpause') : this.$store.commit('pause')
     },
 
     fullScreenshot() {
@@ -155,6 +177,7 @@ export default {
   }
 
   .rec {
+    animation: pulse 1s infinite;
     font-family: sans-serif;
     font-size: 12px;
     position: absolute;
@@ -224,6 +247,11 @@ export default {
     .stop {
       background-color: #f9fafc;
     }
+
+    .btn-large {
+      background: #1f2d3d;
+      color: #f9fafc;
+    }
   }
 
   .separator {
@@ -257,6 +285,10 @@ export default {
       padding: 5px 15px;
       background: #eff2f7;
       border-radius: 3px;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -267,10 +299,52 @@ export default {
     background-color: #1f2d3d;
   }
 
-  span {
-    font-weight: 600;
+  span.code {
+    font-weight: 500;
     font-size: 10px;
     line-height: 20px;
+  }
+
+  .btn-large {
+    font-family: sans-serif;
+    border-radius: 3px;
+    background: #eff2f7;
+    padding: 9px 17px 9px 8px;
+    color: #1f2d3d;
+    font-weight: 600;
+    margin-right: 16px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    img {
+      margin-right: 8px;
+    }
+  }
+
+  .btn-bar {
+    display: flex;
+    width: 60%;
+    justify-content: flex-end;
+  }
+
+  .finish {
+    width: 40%;
+  }
+
+  h3 {
+    font-family: sans-serif;
+    font-size: 14px;
+    margin: 0;
+    color: #45c8f1;
+  }
+
+  p {
+    font-family: sans-serif;
+    font-size: 12px;
+    margin: 0;
+    color: #8492a6;
   }
 }
 
@@ -284,5 +358,15 @@ export default {
 
 .tippy-arrow {
   color: #f9fafc;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 </style>

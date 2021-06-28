@@ -36,6 +36,7 @@ import { headlessTypes } from '@/services/constants'
 
 export default {
   name: 'ResultsTab',
+
   props: {
     puppeteer: {
       type: String,
@@ -65,21 +66,13 @@ export default {
   },
 
   mounted() {
-    if (this.options?.code?.showPlaywrightFirst) {
-      this.activeTab = headlessTypes.PLAYWRIGHT
+    console.log(this.options.code)
+    if (!this.options?.code?.showPlaywrightFirst) {
+      this.activeTab = headlessTypes.PUPPETEER
       this.tabs = this.tabs.reverse()
     }
-    this.$emit('update:tab', this.activeTab)
 
-    // let line = 1
-    // this.$refs.code.innerHTML = `<span class="hljs-line">${line}</span>${this.$refs.code.innerHTML}`
-    // this.$refs.code.innerHTML = this.$refs.code.innerHTML.replaceAll(
-    //   '\n',
-    //   () => {
-    //     line += 1
-    //     return `\n<span class="hljs-line">${line}</span>`
-    //   }
-    // )
+    this.$emit('update:tab', this.activeTab)
   },
 
   methods: {

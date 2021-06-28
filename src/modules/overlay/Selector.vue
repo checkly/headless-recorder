@@ -1,19 +1,36 @@
 <template>
   <div class="overlay" :class="screenshotMode ? 'camera' : ''">
-    <div class="selector" ref="selector"></div>
+    <div :class="selectorClass" ref="selector"></div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
-      screenshotMode: false,
       overlay: null,
       selector: null,
       dimensions: {},
       element: null,
     }
+  },
+
+  computed: {
+    ...mapState(['screenshotClippedMode', 'screenshotMode', 'isStopped']),
+
+    selectorClass() {
+      if (this.isStopped) {
+        return ''
+      }
+
+      if (!this.screenshotMode || this.screenshotClippedMode) {
+        return 'selector'
+      }
+
+      return ''
+    },
   },
 
   methods: {
@@ -48,6 +65,7 @@ export default {
       this.$refs.selector.style.height = this.dimensions.height + 'px'
     },
 
+    // TODO: Integrate shooter with selector
     click(e) {
       setTimeout(() => {
         let clip = null
