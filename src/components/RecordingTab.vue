@@ -19,11 +19,13 @@
             :src="`/icons/${darkMode ? 'dark' : 'light'}/play.svg`"
             v-show="isPaused"
             class="w-10 h-10"
+            alt="resume recording"
           />
           <img
             :src="`/icons/${darkMode ? 'dark' : 'light'}/pause.svg`"
             v-show="!isPaused"
             class="w-10 h-10"
+            alt="pause recording"
           />
         </RoundButton>
         <span class="mt-2 text-sm font-semibold text-gray-new">{{
@@ -36,7 +38,11 @@
           @click="$emit('restart')"
           class="flex flex-col items-center justify-center"
         >
-          <img :src="`/icons/${darkMode ? 'dark' : 'light'}/sync.svg`" class="w-10 h-10" />
+          <img
+            :src="`/icons/${darkMode ? 'dark' : 'light'}/sync.svg`"
+            class="w-10 h-10"
+            alt="restart recording"
+          />
         </RoundButton>
         <span class="mt-2 text-sm font-semibold text-gray-new">RESTART</span>
       </div>
