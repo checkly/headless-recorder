@@ -25,9 +25,10 @@
 
       <section>
         <h2>Recorder</h2>
-        <label>Custom data attribute</label>
+        <label for="custom-data-attribute">Custom data attribute</label>
         <div class="mb-6">
           <input
+            id="custom-data-attribute"
             class="w-full bg-gray-lighter h-7 rounded px-2 mb-2 text-sm"
             type="text"
             v-model.trim="options.code.dataAttribute"

@@ -6,7 +6,12 @@ module.exports = {
     webextensions: true,
   },
 
-  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', '@vue/prettier'],
+  extends: [
+    'plugin:vuejs-accessibility/recommended',
+    'plugin:vue/vue3-essential',
+    'eslint:recommended',
+    '@vue/prettier',
+  ],
 
   parserOptions: {
     parser: 'babel-eslint',
@@ -15,14 +20,12 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'vuejs-accessibility/label-has-for': 'off',
   },
 
   overrides: [
     {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
-      ],
+      files: ['**/__tests__/*.{j,t}s?(x)', '**/tests/unit/**/*.spec.{j,t}s?(x)'],
       env: {
         jest: true,
       },

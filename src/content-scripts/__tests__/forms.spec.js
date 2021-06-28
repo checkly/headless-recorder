@@ -49,10 +49,7 @@ describe('forms', () => {
     await page.type('input[type="text"]', string)
     await page.keyboard.press('Tab')
 
-    const eventLog = await waitForAndGetEvents(
-      page,
-      string.length + tab + change
-    )
+    const eventLog = await waitForAndGetEvents(page, string.length + tab + change)
     const event = _.find(eventLog, e => {
       return e.action === 'keydown' && e.keyCode === 9
     })
@@ -64,10 +61,7 @@ describe('forms', () => {
     await page.type('textarea', string)
     await page.keyboard.press('Tab')
 
-    const eventLog = await waitForAndGetEvents(
-      page,
-      string.length + tab + change
-    )
+    const eventLog = await waitForAndGetEvents(page, string.length + tab + change)
     const event = _.find(eventLog, e => {
       return e.action === 'keydown' && e.keyCode === 9
     })

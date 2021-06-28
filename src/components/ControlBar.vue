@@ -2,11 +2,19 @@
   <div class="flex justify-between items-center py-4 px-2">
     <div class="flex w-1/3">
       <RoundButton @click="$emit('stop')" class="mr-1">
-        <img :src="`/icons/${darkMode ? 'dark' : 'light'}/stop.svg`" />
+        <img :src="`/icons/${darkMode ? 'dark' : 'light'}/stop.svg`" alt="stop recording" />
       </RoundButton>
       <RoundButton @click="$emit('pause')" v-show="isRecording">
-        <img :src="`/icons/${darkMode ? 'dark' : 'light'}/play.svg`" v-show="isPaused" />
-        <img :src="`/icons/${darkMode ? 'dark' : 'light'}/pause.svg`" v-show="!isPaused" />
+        <img
+          :src="`/icons/${darkMode ? 'dark' : 'light'}/play.svg`"
+          v-show="isPaused"
+          alt="resume recording"
+        />
+        <img
+          :src="`/icons/${darkMode ? 'dark' : 'light'}/pause.svg`"
+          v-show="!isPaused"
+          alt="pause recording"
+        />
       </RoundButton>
     </div>
     <RecordingLabel class="w-1/3" :is-paused="isPaused" :v-show="isRecording" />

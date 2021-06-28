@@ -1,6 +1,6 @@
 <template>
   <div class="bg-blue-lightest dark:bg-black flex flex-col overflow-hidden">
-    <Header @home="goHome" @options="openOptions" @help="goHelp" @dark="toggleDarkMode" />
+    <Header @options="openOptions" @help="goHelp" @dark="toggleDarkMode" />
     <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
     <RecordingTab
       @stop="toggleRecord"
@@ -265,11 +265,6 @@ export default {
           }, 500)
         }
       })
-    },
-
-    goHome() {
-      this.showResultsTab = false
-      this.showHelp = false
     },
 
     goHelp() {
