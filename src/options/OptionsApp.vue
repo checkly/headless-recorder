@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-gray-lightest flex py-9 w-full h-screen dark:bg-black">
+  <main class="bg-gray-lightest flex py-9 w-full dark:bg-black">
     <div class="flex flex-col w-1/4 pt-12 pr-6">
       <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
       <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>
@@ -16,7 +16,7 @@
       <header class="flex flex-row justify-between items-center mb-3.5">
         <div class="flex items-baseline">
           <h1 class="text-blue text-2xl font-bold mr-1">
-            Hedless Recorder
+            Headless Recorder
           </h1>
           <span class="text-gray text-sm">v{{ version }}</span>
         </div>
@@ -104,7 +104,7 @@
 
 <script>
 import { version } from '../../package.json'
-import { defaults as code } from '@/services/code-generator/code-generator'
+import { defaults as code } from '@/modules/code-generator/base-generator'
 import { isDarkMode } from '@/services/constants'
 
 import Button from '@/components/Button'

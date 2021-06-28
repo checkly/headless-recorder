@@ -1,5 +1,5 @@
-import Block from '@/services/code-generator/block'
-import { headlessActions, eventsToRecord } from '@/services/code-generator/constants'
+import Block from '@/modules/code-generator/block'
+import { headlessActions, eventsToRecord } from '@/modules/code-generator/constants'
 
 export const defaults = {
   wrapAsync: true,
@@ -12,7 +12,7 @@ export const defaults = {
   keyCode: 9,
 }
 
-export default class CodeGenerator {
+export default class BaseGenerator {
   constructor(options) {
     this._options = Object.assign(defaults, options)
     this._blocks = []

@@ -1,6 +1,6 @@
-import Block from '@/services/code-generator/block'
-import { headlessActions } from '@/services/code-generator/constants'
-import CodeGenerator from '@/services/code-generator/code-generator'
+import Block from '@/modules/code-generator/block'
+import { headlessActions } from '@/modules/code-generator/constants'
+import BaseGenerator from '@/modules/code-generator/base-generator'
 
 const importPuppeteer = `const puppeteer = require('puppeteer');\n`
 
@@ -16,7 +16,7 @@ const wrappedHeader = `(async () => {
 const wrappedFooter = `  await browser.close()
 })()`
 
-export default class PuppeteerCodeGenerator extends CodeGenerator {
+export default class PuppeteerCodeGenerator extends BaseGenerator {
   constructor(options) {
     super(options)
     this._header = header

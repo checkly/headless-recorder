@@ -48,7 +48,11 @@ module.exports = {
         shady: '#1F1F1F',
       },
       white: colors.white,
-      yellow: colors.amber,
+
+      yellow: {
+        DEFAULT: '#ffc82c',
+      },
+
       green: colors.emerald,
       indigo: colors.indigo,
       purple: colors.violet,

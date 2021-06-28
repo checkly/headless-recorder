@@ -3,13 +3,13 @@ import { overlaySelectors } from '@/services/constants'
 
 const BORDER_THICKNESS = 2
 class Shooter extends EventEmitter {
-  constructor() {
+  constructor({ isClipped = false } = {}) {
     super()
     this._overlay = null
     this._selector = null
     this._element = null
     this._dimensions = {}
-    this._isClipped = false
+    this._isClipped = isClipped
 
     this._boundeMouseMove = this.mousemove.bind(this)
     this._boundeMouseUp = this.mouseup.bind(this)

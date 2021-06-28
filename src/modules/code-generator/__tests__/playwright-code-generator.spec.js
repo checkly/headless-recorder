@@ -1,4 +1,4 @@
-import PlaywrightCodeGenerator from '../playwright-code-generator'
+import PlaywrightCodeGenerator from '../playwright'
 
 describe('PlaywrightCodeGenerator', () => {
   test('it should generate nothing when there are no events', () => {

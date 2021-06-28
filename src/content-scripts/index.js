@@ -1,9 +1,9 @@
 import store from '@/store'
 
-import Overlay from '@/services/overlay'
-import Recorder from '@/services/recorder'
-import Shooter from '@/services/shooter'
-import Controller from '@/services/controller'
+import Overlay from '@/modules/overlay'
+import Recorder from '@/modules/recorder'
+import Shooter from '@/modules/shooter'
+import Controller from '@/modules/controller'
 
 window.headlessRecorder = new Controller({
   shooter: new Shooter(),

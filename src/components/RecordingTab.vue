@@ -26,12 +26,14 @@
             class="w-10 h-10"
           />
         </RoundButton>
-        <span class="mt-2 text-sm font-semibold text-gray-new">PAUSE</span>
+        <span class="mt-2 text-sm font-semibold text-gray-new">{{
+          isPaused ? 'RESUME' : 'PAUSE'
+        }}</span>
       </div>
       <div class="flex flex-col items-center justify-center">
         <RoundButton
           medium
-          @click="$emit('reset')"
+          @click="$emit('restart')"
           class="flex flex-col items-center justify-center"
         >
           <img :src="`/icons/${darkMode ? 'dark' : 'light'}/sync.svg`" class="w-10 h-10" />

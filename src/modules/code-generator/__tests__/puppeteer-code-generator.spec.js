@@ -1,4 +1,4 @@
-import PuppeteerCodeGenerator from '../puppeteer-code-generator'
+import PuppeteerCodeGenerator from '../puppeteer'
 import { headlessActions } from '@/services/constants'
 
 describe('PuppeteerCodeGenerator', () => {

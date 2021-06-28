@@ -38,22 +38,6 @@
     "browser_style": true,
     "open_in_tab": true
   },
-  "commands": {
-    "TOGGLE_SCREENSHOT_MODE": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+A",
-        "mac": "Command+Shift+A"
-      },
-      "description": "Take screenshot"
-    },
-    "TOGGLE_SCREENSHOT_CLIPPED_MODE": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+S",
-        "mac": "Command+Shift+S"
-      },
-      "description": "Take screenshot clipped"
-    }
-  },
   "web_accessible_resources": [
     "icons/dark/play.svg",
     "icons/light/play.svg",
