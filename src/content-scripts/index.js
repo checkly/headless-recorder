@@ -4,9 +4,9 @@ import Overlay from '@/modules/overlay'
 import Shooter from '@/modules/shooter'
 import Recorder from '@/modules/recorder'
 
-import Controller from '@/content-scripts/controller'
+import HeadlessController from '@/content-scripts/controller'
 
-window.headlessRecorder = new Controller({
+window.headlessRecorder = new HeadlessController({
   shooter: new Shooter(),
   overlay: new Overlay({ store }),
   recorder: new Recorder({ store }),

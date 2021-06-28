@@ -60,9 +60,9 @@ export const headlessTypes = {
 export const isDarkMode = () =>
   window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
-export const url = {
-  RUN_URL: '',
-  DOCS_URL: '',
+export const urls = {
+  RUN_URL: 'https://app.checklyhq.com/checks/new/browser',
+  DOCS_URL: 'https://www.checklyhq.com/docs/headless-recorder/',
 }
 
 export const overlayActions = {
