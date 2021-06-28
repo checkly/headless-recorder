@@ -67,6 +67,13 @@ import RecordingTab from '@/components/RecordingTab.vue'
 
 let bus
 
+const defaultOptions = {
+  extension: {
+    darkMode: isDarkMode(),
+  },
+  code: {},
+}
+
 export default {
   name: 'PopupApp',
   components: {
@@ -92,12 +99,7 @@ export default {
 
       code: '',
       codeForPlaywright: '',
-      options: {
-        extension: {
-          darkMode: isDarkMode(),
-        },
-        code: {},
-      },
+      options: defaultOptions,
     }
   },
 
@@ -180,7 +182,7 @@ export default {
       const {
         controls = {},
         code = '',
-        options = {},
+        options,
         codeForPlaywright = '',
         recording,
         clear,
@@ -197,7 +199,7 @@ export default {
 
       this.isRecording = controls.isRecording
       this.isPaused = controls.isPaused
-      this.options = options
+      this.options = options || defaultOptions
 
       this.code = code
       this.codeForPlaywright = codeForPlaywright
@@ -238,6 +240,7 @@ export default {
     },
 
     toggleDarkMode() {
+      console.log(this.options.extension)
       this.options.extension.darkMode = !this.options.extension.darkMode
       storage.set({ options: this.options })
     },
