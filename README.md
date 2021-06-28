@@ -10,12 +10,7 @@
   </p>
 </p>
 
-> ⭐️ Puppeteer Recorder is now **Headless Recorder** and supports Playwright! ⭐️   
-
-<p align="center">
-  <img src="src/images/recorder.png" alt="Headless Recorder Screenshot" />
-<p>
-
+> 🎥 Headless recorder is a Chrome extension that records your browser interactions and generates a Puppeteer or Playwright script.
 
 ## 📝 Overview
 
@@ -57,7 +52,7 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 1. Open the terminal and clone the project: `$ git clone https://github.com/checkly/headless-recorder.git`
 1. Access project directory and use npm to install dependencies: `$ cd headless-recorder && npm i`
 1. Use the build npm script to build it: `$ npm run dev`
-1. Open chrome and navigate to extensions page using this URL: `chrome://extensions` 
+1. Open chrome and navigate to extensions page using this URL: `chrome://extensions`
 1. Make sure 'Developer mode' is enabled
 1. Click "Load unpacked extension" button, browse the `headless-recorder/build` directory and select it
 
@@ -75,9 +70,9 @@ with the name of the tag.
 
 <br>
 
-## 🙏 Credits 
+## 🙏 Credits
 
-Headless recorder is the spiritual successor & love child of segment.io's [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder). 
+Headless recorder is the spiritual successor & love child of segment.io's [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder).
 
 <br>
 
