@@ -5,7 +5,7 @@
     <RecordingTab
       @stop="toggleRecord"
       @pause="togglePause"
-      @restart="restart"
+      @restart="restart(true)"
       :is-recording="isRecording"
       :is-paused="isPaused"
       :dark-mode="options.extension.darkMode"
@@ -159,9 +159,9 @@ export default {
       this.storeState()
     },
 
-    restart() {
+    restart(stop = false) {
       this.cleanUp()
-      bus.postMessage({ action: uiActions.CLEAN_UP })
+      bus.postMessage({ action: uiActions.CLEAN_UP, value: stop })
     },
 
     cleanUp() {

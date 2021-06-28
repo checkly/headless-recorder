@@ -1,5 +1,6 @@
 import badge from '@/services/badge'
 import browser from '@/services/browser'
+import storage from '@/services/storage'
 import { uiActions, overlayActions, controlMessages, headlessActions } from '@/services/constants'
 
 import CodeGenerator from '@/modules/code-generator'
@@ -30,8 +31,6 @@ class Background {
 
   async start() {
     await this.cleanUp()
-
-    console.log('RECORDING', this._recording)
 
     this._badgeState = ''
     this._hasGoto = false
@@ -88,7 +87,6 @@ class Background {
 
   recordCurrentUrl(href) {
     if (!this._hasGoto) {
-      console.debug('recording goto* for:', href)
       this.handleMessage({
         selector: undefined,
         value: undefined,
@@ -146,7 +144,7 @@ class Background {
     }
   }
 
-  handleOverlayMessage(msg) {
+  async handleOverlayMessage(msg) {
     if (!msg.control) {
       return
     }
@@ -162,14 +160,13 @@ class Background {
     }
 
     if (msg.control === overlayActions.COPY) {
-      chrome.storage.local.get(['options'], ({ options = {} }) => {
-        const generator = new CodeGenerator(options)
-        const code = generator.generate(this._recording)
+      const { options = {} } = storage.get(['options'])
+      const generator = new CodeGenerator(options)
+      const code = generator.generate(this._recording)
 
-        browser.sendTabMessage({
-          action: 'CODE',
-          value: !options?.code?.showPlaywrightFirst ? code.puppeteer : code.playwright,
-        })
+      browser.sendTabMessage({
+        action: 'CODE',
+        value: !options?.code?.showPlaywrightFirst ? code.puppeteer : code.playwright,
       })
     }
 
@@ -239,7 +236,7 @@ class Background {
     }
 
     if (msg.action === uiActions.CLEAN_UP) {
-      console.log('CLEAN UP')
+      msg.value && this.stop()
       this.toggleOverlay()
       this.cleanUp()
     }
