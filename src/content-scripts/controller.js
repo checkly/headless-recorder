@@ -1,6 +1,8 @@
 import { uiActions, isDarkMode, controlMessages } from '@/services/constants'
 
 import storage from '@/services/storage'
+import browser from '@/services/browser'
+
 import Shooter from '@/modules/shooter'
 
 export default class HeadlessController {
@@ -30,7 +32,7 @@ export default class HeadlessController {
     chrome.runtime.onMessage.addListener(this.backgroundListener)
   }
 
-  handleBackgroundMessages(msg) {
+  async handleBackgroundMessages(msg) {
     if (!msg?.action) {
       return
     }
@@ -65,12 +67,8 @@ export default class HeadlessController {
         break
 
       case 'CODE':
-        navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
-          if (result.state == 'granted' || result.state == 'prompt') {
-            this.store.commit('showCopy')
-            navigator.clipboard.writeText(msg.value)
-          }
-        })
+        await browser.copyToClipboard(msg.value)
+        this.store.commit('showCopy')
         break
     }
   }

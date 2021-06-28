@@ -51,8 +51,10 @@
 </template>
 
 <script>
+import analytics from '@/services/analytics'
+import browser from '@/services/browser'
 import CodeGenerator from '@/modules/code-generator'
-import { uiActions, isDarkMode } from '@/services/constants'
+import { uiActions, isDarkMode, urls } from '@/services/constants'
 
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
@@ -109,13 +111,13 @@ export default {
 
   mounted() {
     this.loadState(() => {
-      this.trackPageView()
+      analytics.trackPageView(this.options)
+
       if (this.isRecording) {
         console.debug('opened in recording state, fetching recording events')
         chrome.storage.local.get(
           ['recording', 'options', 'clear', 'pause'],
           ({ recording, clear, pause }) => {
-            console.debug('loaded recording', recording)
             this.liveEvents = recording
 
             if (clear) {
@@ -130,9 +132,7 @@ export default {
             }
           }
         )
-      }
-
-      if (!this.isRecording && this.code) {
+      } else if (this.code) {
         this.showResultsTab = true
       }
     })
@@ -172,15 +172,14 @@ export default {
     },
 
     start() {
-      this.trackEvent('Start')
+      analytics.trackEvent({ options: this.options, event: 'Start' })
       this.cleanUp()
-      console.debug('start recorder')
       bus.postMessage({ action: uiActions.START })
     },
 
     stop() {
-      this.trackEvent('Stop')
-      console.debug('stop recorder')
+      analytics.trackEvent({ options: this.options, event: 'Stop' })
+
       bus.postMessage({ action: uiActions.STOP })
 
       chrome.storage.local.get(['recording', 'options'], ({ recording, options = {} }) => {
@@ -210,7 +209,7 @@ export default {
     },
 
     openOptions() {
-      this.trackEvent('Options')
+      analytics.trackEvent({ options: this.options, event: 'Options' })
       if (chrome.runtime.openOptionsPage) {
         chrome.runtime.openOptionsPage()
       }
@@ -234,7 +233,6 @@ export default {
           }
 
           if (options) {
-            console.log(options)
             this.options = options
           }
           cb()
@@ -253,35 +251,14 @@ export default {
       })
     },
 
-    copyCode() {
-      navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
-        if (result.state === 'granted' || result.state === 'prompt') {
-          this.trackEvent('Copy')
-          this.isCopying = true
-
-          setTimeout(() => {
-            this.isCopying = false
-            navigator.clipboard.writeText(this.code)
-          }, 500)
-        }
-      })
+    async copyCode() {
+      this.isCopying = true
+      await browser.copyToClipboard(this.getCode())
+      setTimeout(() => (this.isCopying = false), 500)
     },
 
     goHelp() {
-      const url = 'https://www.checklyhq.com/docs/headless-recorder/'
-      chrome.tabs.create({ url })
-    },
-
-    trackEvent(event) {
-      if (this.options && this.options.extension && this.options.extension.telemetry) {
-        window._gaq && window._gaq.push(['_trackEvent', event, 'clicked'])
-      }
-    },
-
-    trackPageView() {
-      if (this.options && this.options.extension && this.options.extension.telemetry) {
-        window._gaq && window._gaq.push(['_trackPageview'])
-      }
+      chrome.tabs.create({ url: urls.DOCS_URL })
     },
 
     toggleDarkMode() {
@@ -289,13 +266,13 @@ export default {
       chrome.storage.local.set({ options: this.options })
     },
 
-    getCodeForCopy() {
+    getCode() {
       return this.currentResultTab === 'puppeteer' ? this.code : this.codeForPlaywright
     },
 
     run() {
-      const script = encodeURIComponent(btoa(this.getCodeForCopy()))
-      const url = `https://app.checklyhq.com/checks/new/browser?framework=${this.currentResultTab}&script=${script}`
+      const script = encodeURIComponent(btoa(this.getCode()))
+      const url = `${urls.RUN_URL}?framework=${this.currentResultTab}&script=${script}`
       chrome.tabs.create({ url })
     },
   },
