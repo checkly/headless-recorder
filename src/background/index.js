@@ -80,6 +80,7 @@ class Background {
 
   cleanUp() {
     this._recording = []
+    this._isPaused = false
     badge.reset()
 
     return new Promise(function(resolve) {
@@ -146,22 +147,22 @@ class Background {
     }
   }
 
-  async handleOverlayMessage(msg) {
-    if (!msg.control) {
+  async handleOverlayMessage({ control }) {
+    if (!control) {
       return
     }
 
-    if (msg.control === overlayActions.RESTART) {
+    if (control === overlayActions.RESTART) {
       chrome.storage.local.set({ restart: true })
       this.start()
     }
 
-    if (msg.control === overlayActions.CLOSE) {
+    if (control === overlayActions.CLOSE) {
       this.toggleOverlay()
       chrome.runtime.onMessage.removeListener(this.overlayHandler)
     }
 
-    if (msg.control === overlayActions.COPY) {
+    if (control === overlayActions.COPY) {
       const { options = {} } = storage.get(['options'])
       const generator = new CodeGenerator(options)
       const code = generator.generate(this._recording)
@@ -172,33 +173,33 @@ class Background {
       })
     }
 
-    if (msg.control === overlayActions.STOP) {
+    if (control === overlayActions.STOP) {
       chrome.storage.local.set({ clear: true })
       chrome.storage.local.set({ pause: false })
       this.stop()
     }
 
-    if (msg.control === overlayActions.UNPAUSE) {
+    if (control === overlayActions.UNPAUSE) {
       chrome.storage.local.set({ pause: false })
       this.unPause()
     }
 
-    if (msg.control === overlayActions.PAUSE) {
+    if (control === overlayActions.PAUSE) {
       chrome.storage.local.set({ pause: true })
       this.pause()
     }
 
     // TODO: the next 3 events do not need to be listened in background
     // content script controller, should be able to handle that directly from overlay
-    if (msg.control === overlayActions.CLIPPED_SCREENSHOT) {
+    if (control === overlayActions.CLIPPED_SCREENSHOT) {
       browser.sendTabMessage({ action: overlayActions.TOGGLE_SCREENSHOT_CLIPPED_MODE })
     }
 
-    if (msg.control === overlayActions.FULL_SCREENSHOT) {
+    if (control === overlayActions.FULL_SCREENSHOT) {
       browser.sendTabMessage({ action: overlayActions.TOGGLE_SCREENSHOT_MODE })
     }
 
-    if (msg.control === overlayActions.ABORT_SCREENSHOT) {
+    if (control === overlayActions.ABORT_SCREENSHOT) {
       browser.sendTabMessage({ action: overlayActions.CLOSE_SCREENSHOT_MODE })
     }
   }
@@ -269,6 +270,7 @@ class Background {
     }
   }
 
+  // TODO: Use a better naming convention for this arguments
   toggleOverlay({ open = false, clear = false, pause = false } = {}) {
     browser.sendTabMessage({ action: overlayActions.TOGGLE_OVERLAY, value: { open, clear, pause } })
   }

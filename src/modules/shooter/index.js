@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-import { overlaySelectors } from '@/modules/overlay/constants'
+import { overlayActions, overlaySelectors } from '@/modules/overlay/constants'
 
 const BORDER_THICKNESS = 2
 class Shooter extends EventEmitter {
@@ -13,6 +13,7 @@ class Shooter extends EventEmitter {
 
     this._boundeMouseMove = this.mousemove.bind(this)
     this._boundeMouseUp = this.mouseup.bind(this)
+    this._boundedKeyUp = this.keyup.bind(this)
   }
 
   startScreenshotMode() {
@@ -40,6 +41,7 @@ class Shooter extends EventEmitter {
       document.body.appendChild(this._overlay)
       document.body.addEventListener('mousemove', this._boundeMouseMove, false)
       document.body.addEventListener('click', this._boundeMouseUp, false)
+      document.body.addEventListener('keyup', this._boundedKeyUp, false)
     }
   }
 
@@ -110,9 +112,20 @@ class Shooter extends EventEmitter {
     }, 100)
   }
 
+  keyup(e) {
+    if (e.code !== 'Escape') {
+      return
+    }
+
+    this.cleanup()
+    this.removeCameraIcon()
+    chrome.runtime.sendMessage({ control: overlayActions.ABORT_SCREENSHOT })
+  }
+
   cleanup() {
     document.body.removeEventListener('mousemove', this._boundeMouseMove, false)
-    document.body.removeEventListener('mouseup', this._boundeMouseUp, false)
+    document.body.removeEventListener('click', this._boundeMouseUp, false)
+    document.body.removeEventListener('keyup', this._boundedKeyUp, false)
 
     document.body.removeChild(this._overlay)
     this._overlay = null

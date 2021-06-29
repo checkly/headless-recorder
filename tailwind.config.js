@@ -17,6 +17,7 @@ module.exports = {
       current: 'currentColor',
 
       gray: {
+        hover: '#474747',
         lightest: '#F9FAFC',
         lighter: '#EFF2F7',
         light: '#E0E6ED',
@@ -31,6 +32,7 @@ module.exports = {
         lightest: '#EEF8FF',
         light: '#F0F8FF',
         DEFAULT: '#45C8F1',
+        dark: '#18c2f8',
       },
 
       red: {

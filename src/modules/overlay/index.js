@@ -64,6 +64,10 @@ export default class Overlay {
   }
 
   unmount() {
+    if (!this.overlayContainer) {
+      return
+    }
+
     document.body.removeChild(this.overlayContainer)
     document.body.removeChild(this.selectorContainer)
 

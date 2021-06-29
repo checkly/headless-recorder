@@ -123,7 +123,7 @@ export default {
       if (this.isRecording) {
         this.stop()
       } else {
-        // window.close()
+        window.close()
         this.start()
       }
 
@@ -240,7 +240,6 @@ export default {
     },
 
     toggleDarkMode() {
-      console.log(this.options.extension)
       this.options.extension.darkMode = !this.options.extension.darkMode
       storage.set({ options: this.options })
     },

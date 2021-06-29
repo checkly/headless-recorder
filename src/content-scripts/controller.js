@@ -99,8 +99,6 @@ export default class HeadlessController {
     }
 
     this.store.commit('stopScreenshotMode')
-    this.shooter.removeCameraIcon()
-    this.shooter.stopScreenshotMode()
     this.recorder.enableClickRecording()
   }
 }

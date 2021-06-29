@@ -30,8 +30,8 @@
       </div>
     </template>
     <template v-else>
-      <div class="events" :class="{ 'events-recorded': hasRecorded }">
-        {{ recording.length }}
+      <div class="events" :class="{ 'events-recorded': hasRecorded && !isPaused }">
+        {{ recording?.length }}
       </div>
       <div class="rec" v-show="!isPaused">
         <span class="dot"></span>
@@ -103,22 +103,6 @@ export default {
     ]),
   },
 
-  mounted() {
-    document.body.addEventListener('keyup', e => {
-      if (e.code !== 'Escape') {
-        return
-      }
-
-      chrome.runtime.sendMessage({
-        control: overlayActions.ABORT_SCREENSHOT,
-      })
-    })
-  },
-
-  unmount() {
-    // TODO: remove esc listener
-  },
-
   methods: {
     ...mapMutations(['copy', 'stop', 'close', 'restart']),
 
@@ -180,7 +164,7 @@ export default {
   }
 
   .rec {
-    animation: pulse 1s infinite;
+    animation: pulse 2s infinite;
     font-family: sans-serif;
     font-size: 12px;
     position: absolute;
@@ -208,7 +192,7 @@ export default {
   }
 
   .events-recorded {
-    animation: pulse 0.7s ease-in-out;
+    animation: pulse 1s linear;
   }
 
   .dot {
