@@ -151,6 +151,20 @@ export default {
   }
 }
 
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+
+  0% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 .headless-recorder-camera-cursor {
   cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACMSURBVHgBzZDrDUBAEITnVEIHVIoKUAkd0MHphCXrstm4R/jBJF9yu5d9DfAXWWJT2DfFqVjDj0NGNd6QoEwVSC61RMEDKmLAzSQfHZETI8czx40cFGpQcpHMjdzkjA3Ct/r+XT5DWDkxqdzCmzmFTqi5yazW75HowWVkKTaq5X/Mg6gOD1Y814rPtQPiEFi9rPKoQQAAAABJRU5ErkJggg=='),
     auto;
@@ -191,7 +205,7 @@ export default {
   }
 
   .events-recorded {
-    animation: pulse 1s linear;
+    animation: pop 0.25s;
   }
 
   .dot {
@@ -199,7 +213,7 @@ export default {
     border-radius: 50%;
     width: 9px;
     height: 9px;
-    background: #ff4949;
+    background: #ffeeee;
   }
 
   nav {

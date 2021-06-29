@@ -37,13 +37,10 @@
         <span v-show="!isCopying">Copy to clipboard</span>
         <span v-show="isCopying">copied!</span>
       </Button>
-      <Button v-if="isLoggedIn" @click="run" v-show="code">
+      <Button @click="run" v-show="code">
         <img src="/icons/dark/zap.svg" class="mr-1" alt="thunder" />
         Run on Checkly
       </Button>
-      <a v-else href="https://app.checklyhq.com/signup">
-        Signup on Checkly
-      </a>
     </div>
 
     <Footer v-if="!isRecording && !showResultsTab" />
@@ -249,7 +246,11 @@ export default {
     },
 
     run() {
-      browser.openChecklyRunner({ code: this.getCode(), runner: this.currentResultTab })
+      browser.openChecklyRunner({
+        code: this.getCode(),
+        runner: this.currentResultTab,
+        isLoggedIn: this.isLoggedIn,
+      })
     },
   },
 }

@@ -1,4 +1,5 @@
 const CONTENT_SCRIPT_PATH = 'js/content-script.js'
+const SIGNUP_URL = 'https://app.checklyhq.com/signup'
 const RUN_URL = 'https://app.checklyhq.com/checks/new/browser'
 const DOCS_URL = 'https://www.checklyhq.com/docs/headless-recorder'
 
@@ -52,7 +53,12 @@ export default {
     chrome.tabs.create({ url: DOCS_URL })
   },
 
-  openChecklyRunner({ code, runner }) {
+  openChecklyRunner({ code, runner, isLoggedIn }) {
+    if (!isLoggedIn) {
+      chrome.tabs.create({ url: SIGNUP_URL })
+      return
+    }
+
     const script = encodeURIComponent(btoa(code))
     const url = `${RUN_URL}?framework=${runner}&script=${script}`
     chrome.tabs.create({ url })
