@@ -79,7 +79,6 @@ import { directive } from 'vue-tippy'
 import 'tippy.js/dist/tippy.css'
 
 import { mapState, mapMutations } from 'vuex'
-import { overlayActions } from '@/modules/overlay/constants'
 
 export default {
   name: 'Overlay',

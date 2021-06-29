@@ -47,7 +47,7 @@ export default class Overlay {
       .mount('#' + overlaySelectors.OVERLAY_ID)
 
     this.mouseOverEvent = e => {
-      const selector = getSelector(e)
+      const selector = getSelector(e, { dataAttribute: this.store.state.dataAttribute })
       this.overlayApp.currentSelector = selector.includes('#' + overlaySelectors.OVERLAY_ID)
         ? ''
         : selector

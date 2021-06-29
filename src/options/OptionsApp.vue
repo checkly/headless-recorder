@@ -105,13 +105,15 @@
 
 <script>
 import { version } from '../../package.json'
-import { defaults as code } from '@/modules/code-generator/base-generator'
+
+import storage from '@/services/storage'
 import { isDarkMode } from '@/services/constants'
+import { defaults as code } from '@/modules/code-generator/base-generator'
 
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
 
-const defaults = {
+const defaultOptions = {
   code,
   extension: {
     telemetry: true,
@@ -128,7 +130,7 @@ export default {
       version,
       loading: true,
       saving: false,
-      options: defaults,
+      options: defaultOptions,
       recordingKeyCodePress: false,
     }
   },
@@ -154,18 +156,17 @@ export default {
   },
 
   methods: {
-    save() {
+    async save() {
       this.saving = true
-      chrome.storage.local.set({ options: this.options }, () =>
-        setTimeout(() => (this.saving = false), 500)
-      )
+      await storage.set({ options: this.options })
+
+      setTimeout(() => (this.saving = false), 500)
     },
 
-    load() {
-      chrome.storage.local.get('options', ({ options = {} }) => {
-        this.options = options
-        this.loading = false
-      })
+    async load() {
+      const { options } = await storage.get('options')
+      this.options = { ...defaultOptions, ...options }
+      this.loading = false
     },
 
     listenForKeyCodePress() {

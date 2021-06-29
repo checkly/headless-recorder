@@ -1,6 +1,6 @@
 {
   "name": "headless-recorder",
-  "version": "1.0.0",
+  "version": "v1.0.0-alpha.1",
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
