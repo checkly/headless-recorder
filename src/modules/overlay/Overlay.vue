@@ -37,14 +37,19 @@
         <span class="dot"></span>
         REC
       </div>
-      <button title="stop" @click="stop" v-tippy="{ content: 'Stop Recording' }">
+      <button
+        class="btn"
+        title="stop"
+        @click="stop"
+        v-tippy="{ content: 'Stop Recording', appendTo: 'parent' }"
+      >
         <div class="stop"></div>
       </button>
       <button
         class="btn"
         title="pause"
         @click="pause"
-        v-tippy="{ content: isPaused ? 'Resume Recording' : 'Pause Recording' }"
+        v-tippy="{ content: isPaused ? 'Resume Recording' : 'Pause Recording', appendTo: 'parent' }"
       >
         <img v-show="isPaused" width="27" height="27" :src="getIcon('play')" alt="play" />
         <img v-show="!isPaused" width="27" height="27" :src="getIcon('pause')" alt="pause" />
@@ -54,7 +59,7 @@
         :disabled="isPaused"
         class="btn-big"
         @click.prevent="fullScreenshot"
-        v-tippy="{ content: 'Full Screenshot' }"
+        v-tippy="{ content: 'Full Screenshot', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
       </button>
@@ -62,7 +67,7 @@
         :disabled="isPaused"
         class="btn-big"
         @click.prevent="clippedScreenshot"
-        v-tippy="{ content: 'Clipped Screenshot' }"
+        v-tippy="{ content: 'Clipped Screenshot', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>
@@ -213,7 +218,7 @@ export default {
     border-radius: 50%;
     width: 9px;
     height: 9px;
-    background: #ffeeee;
+    background: #ff4949;
   }
 
   nav {
@@ -253,6 +258,15 @@ export default {
       padding: 5px 15px;
       background: #2e2e2e;
       border-radius: 3px;
+    }
+
+    .tippy-box {
+      color: #f9fafc;
+      background: #161616;
+    }
+
+    .tippy-arrow {
+      color: #161616;
     }
 
     svg {
@@ -314,6 +328,10 @@ export default {
         cursor: not-allowed;
       }
     }
+  }
+
+  .btn {
+    padding: 5px 0;
   }
 
   .stop {
@@ -381,6 +399,7 @@ export default {
 .tippy-box {
   box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
   margin-top: -45px;
+  font-family: sans-serif;
   color: #1f2d3d;
   background: #f9fafc;
   border-radius: 4px;

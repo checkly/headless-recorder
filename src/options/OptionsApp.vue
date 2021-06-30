@@ -20,7 +20,7 @@
           </h1>
           <span class="text-gray text-sm">v{{ version }}</span>
         </div>
-        <span class="text-pink text-sm" v-show="saving">Saving...</span>
+        <span role="alert" class="text-pink text-sm" v-show="saving">Saving...</span>
       </header>
 
       <section>
@@ -153,6 +153,13 @@ export default {
 
   mounted() {
     this.load()
+
+    // TODO: load state from local storage
+    chrome.storage.onChanged.addListener(({ options = null }) => {
+      if (options) {
+        this.darkModer = options.newValue.extension.darkMode
+      }
+    })
   },
 
   methods: {
