@@ -9,7 +9,9 @@
         :key="tab"
         class="w-1/2 p-2 font-semibold text-xs capitalize rounded-t"
         :class="
-          activeTab === tab ? 'bg-black text-gray-lightest dark:bg-black-shady' : 'text-gray '
+          activeTab === tab
+            ? 'bg-black text-gray-lightest dark:bg-black-shady'
+            : 'text-gray-dark dark:text-gray'
         "
         @click.prevent="changeTab(tab)"
       >

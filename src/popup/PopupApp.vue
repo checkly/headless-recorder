@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-lightest dark:bg-black flex flex-col overflow-hidden">
+  <div class="bg-gray-lightest dark:bg-black flex flex-col overflow-hidden">
     <Header @options="openOptions" @help="goHelp" @dark="toggleDarkMode" />
     <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
     <RecordingTab
@@ -23,11 +23,11 @@
       class="flex py-2 px-3 justify-between bg-black-shady"
       v-show="showResultsTab"
     >
-      <Button class="mr-2" @click="restart" v-show="code">
+      <Button dark class="mr-2" @click="restart" v-show="code">
         <img src="/icons/dark/sync.svg" class="mr-1" alt="restart recording" />
         Restart
       </Button>
-      <Button class="mr-2 w-34" @click="copyCode" v-show="code">
+      <Button dark class="mr-2 w-34" @click="copyCode" v-show="code">
         <img
           v-show="!isCopying"
           src="/icons/dark/duplicate.svg"
@@ -38,7 +38,7 @@
         <span v-show="isCopying">copied!</span>
       </Button>
       <Button @click="run" v-show="code">
-        <img src="/icons/dark/zap.svg" class="mr-1" alt="thunder" />
+        <img src="/icons/light/zap.svg" class="mr-1" alt="thunder" />
         Run on Checkly
       </Button>
     </div>

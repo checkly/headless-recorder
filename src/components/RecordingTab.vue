@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-col items-center rounded-md pt-8 h-full">
     <RecordingLabel class="w-1/3" :is-paused="isPaused" :v-show="isRecording" />
-    <p class="text-gray text-sm text-center w-72">
+    <p class="text-gray-dark text-sm text-center w-72">
       Headless recorder currently recording your browser events.
     </p>
     <RoundButton big @click="$emit('stop')" class="p-12 mt-10">
