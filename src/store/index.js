@@ -37,7 +37,7 @@ const store = createStore({
 
     showCopy(state) {
       state.isCopying = true
-      setTimeout(() => (state.isCopying = false), 250)
+      setTimeout(() => (state.isCopying = false), 500)
     },
 
     takeScreenshot(state) {
