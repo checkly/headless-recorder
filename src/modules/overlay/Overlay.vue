@@ -9,7 +9,7 @@
         <p>You can copy the code to clipboard right away!</p>
       </div>
       <div class="btn-bar">
-        <button @click="copy" class="btn-large">
+        <button @click="copy" class="btn-large" style="width: 151px;">
           <img
             v-show="!isCopying"
             width="16"
@@ -18,7 +18,7 @@
             alt="copy to clipboard"
           />
           <span v-show="!isCopying">Copy to clipboard</span>
-          <span v-show="isCopying">Copied</span>
+          <span v-show="isCopying">Copied!</span>
         </button>
         <!-- <button @click="restart" class="btn-large">
           <img width="16" height="16" :src="getIcon('sync')" alt="restart recording" />

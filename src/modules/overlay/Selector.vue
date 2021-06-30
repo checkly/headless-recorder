@@ -1,5 +1,5 @@
 <template>
-  <div class="overlay" :class="screenshotMode ? 'camera' : ''">
+  <div v-show="!hide" class="overlay" :class="{ camera: screenshotMode }">
     <div :class="selectorClass" ref="selector"></div>
   </div>
 </template>
@@ -12,8 +12,9 @@ export default {
     return {
       overlay: null,
       selector: null,
-      dimensions: {},
       element: null,
+      hide: false,
+      dimensions: {},
     }
   },
 
@@ -34,6 +35,10 @@ export default {
   },
 
   methods: {
+    toggleHide() {
+      this.hide = !this.hide
+    },
+
     move(e, skippedSelectors = []) {
       if (this.element === e.target) {
         return
