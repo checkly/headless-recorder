@@ -82,7 +82,6 @@
 <script>
 import { directive } from 'vue-tippy'
 import 'tippy.js/dist/tippy.css'
-import '@/assets/tailwind.css'
 
 import { mapState, mapMutations } from 'vuex'
 
@@ -130,7 +129,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .headless-recorder-flash {
   animation-name: flash;
   animation-duration: 0.5s;

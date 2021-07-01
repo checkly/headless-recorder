@@ -1,8 +1,10 @@
 <template>
   <div class="bg-gray-lightest dark:bg-black flex flex-col overflow-hidden">
     <Header @options="openOptions" @help="goHelp" @dark="toggleDarkMode" />
-    <HomeTab v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
-    <RecordingTab
+
+    <Home v-if="!showResultsTab && !isRecording" @start="toggleRecord" />
+
+    <Recording
       @stop="toggleRecord"
       @pause="togglePause"
       @restart="restart(true)"
@@ -11,13 +13,16 @@
       :dark-mode="options?.extension?.darkMode"
       v-show="!showResultsTab && isRecording"
     />
-    <ResultsTab
+
+    <Results
       :puppeteer="code"
       :playwright="codeForPlaywright"
       :options="options"
       v-if="showResultsTab"
       v-on:update:tab="currentResultTab = $event"
     />
+
+    <!-- TODO: Move this into its own component -->
     <div
       data-test-id="results-footer"
       class="flex py-2 px-3 justify-between bg-black-shady"
@@ -55,12 +60,13 @@ import { popupActions, isDarkMode } from '@/services/constants'
 
 import CodeGenerator from '@/modules/code-generator'
 
+import Home from '@/views/Home.vue'
+import Results from '@/views/Results.vue'
+import Recording from '@/views/Recording.vue'
+
 import Button from '@/components/Button.vue'
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
-import HomeTab from '@/components/HomeTab.vue'
-import ResultsTab from '@/components/ResultsTab.vue'
-import RecordingTab from '@/components/RecordingTab.vue'
 
 let bus
 
@@ -74,9 +80,9 @@ const defaultOptions = {
 export default {
   name: 'PopupApp',
   components: {
-    ResultsTab,
-    RecordingTab,
-    HomeTab,
+    Results,
+    Recording,
+    Home,
     Header,
     Footer,
     Button,
