@@ -1,15 +1,15 @@
 <template>
   <nav
     v-show="!screenshotMode"
-    :class="{ recorded: hasRecorded && !isPaused && !isStopped, dark: darkMode }"
+    :class="{ 'hr-event-recorded': hasRecorded && !isPaused && !isStopped, dark: darkMode }"
   >
     <template v-if="isStopped">
-      <div class="finish">
+      <div class="hr-success-message">
         <h3>Recording finished!</h3>
         <p>You can copy the code to clipboard right away!</p>
       </div>
-      <div class="btn-bar">
-        <button @click="copy" class="btn-large" style="width: 151px;">
+      <div class="hr-success-bar">
+        <button @click="copy" class="hr-btn-large" style="width: 151px;">
           <img
             v-show="!isCopying"
             width="16"
@@ -20,7 +20,7 @@
           <span v-show="!isCopying">Copy to clipboard</span>
           <span v-show="isCopying">Copied!</span>
         </button>
-        <button @click="restart" class="btn-large">
+        <button @click="restart" class="hr-btn-large">
           <img width="16" height="16" :src="getIcon('sync')" alt="restart recording" />
           Restart Recording
         </button>
@@ -30,23 +30,20 @@
       </div>
     </template>
     <template v-else>
-      <!-- <div class="events" :class="{ 'events-recorded': hasRecorded && !isPaused }">
-        {{ recording?.length }}
-      </div> -->
-      <div class="rec" v-show="!isPaused">
-        <span class="dot"></span>
+      <div class="hr-rec" v-show="!isPaused">
+        <span class="hr-red-dot"></span>
         REC
       </div>
       <button
-        class="btn"
+        class="hr-btn"
         title="stop"
         @click="stop"
         v-tippy="{ content: 'Stop Recording', appendTo: 'parent' }"
       >
-        <div class="stop"></div>
+        <div class="hr-stop-square"></div>
       </button>
       <button
-        class="btn"
+        class="hr-btn"
         title="pause"
         @click="pause"
         v-tippy="{ content: isPaused ? 'Resume Recording' : 'Pause Recording', appendTo: 'parent' }"
@@ -54,10 +51,10 @@
         <img v-show="isPaused" width="27" height="27" :src="getIcon('play')" alt="play" />
         <img v-show="!isPaused" width="27" height="27" :src="getIcon('pause')" alt="pause" />
       </button>
-      <div class="separator"></div>
+      <div class="hr-separator"></div>
       <button
         :disabled="isPaused"
-        class="btn-big"
+        class="hr-btn-big"
         @click.prevent="fullScreenshot"
         v-tippy="{ content: 'Full Screenshot', appendTo: 'parent' }"
       >
@@ -65,14 +62,14 @@
       </button>
       <button
         :disabled="isPaused"
-        class="btn-big"
+        class="hr-btn-big"
         @click.prevent="clippedScreenshot"
         v-tippy="{ content: 'Clipped Screenshot', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>
-      <div class="separator"></div>
-      <span class="code">
+      <div class="hr-separator"></div>
+      <span class="hr-current-selector">
         {{ currentSelector }}
       </span>
     </template>
@@ -129,99 +126,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.headless-recorder-flash {
-  animation-name: flash;
-  animation-duration: 0.5s;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in-out;
-}
+<style lang="scss">
+@import '../../assets/animations.css';
 
-@keyframes flash {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideup {
-  0% {
-    transform: translateY(100%);
-  }
-
-  100% {
-    transform: translateY(0%);
-  }
-}
-
-@keyframes pop {
-  0% {
-    transform: scale(1);
-  }
-
-  0% {
-    transform: scale(1.25);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-.headless-recorder-camera-cursor {
-  cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACMSURBVHgBzZDrDUBAEITnVEIHVIoKUAkd0MHphCXrstm4R/jBJF9yu5d9DfAXWWJT2DfFqVjDj0NGNd6QoEwVSC61RMEDKmLAzSQfHZETI8czx40cFGpQcpHMjdzkjA3Ct/r+XT5DWDkxqdzCmzmFTqi5yazW75HowWVkKTaq5X/Mg6gOD1Y814rPtQPiEFi9rPKoQQAAAABJRU5ErkJggg=='),
-    auto;
-}
+$namespace: 'hr';
 
 #headless-recorder-overlay {
-  .recorded {
-    border: solid 2px #45c8f1 !important;
-    transition: all 0.1s linear;
-  }
-
-  .rec {
-    animation: pulse 2s infinite;
-    font-family: sans-serif;
-    font-size: 12px;
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    font-weight: 600;
-    color: #ff4949;
-    text-transform: uppercase;
-  }
-
-  .events {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-    font-size: 11px;
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    color: #f9fafc;
-    border-radius: 50%;
-    background: #45c8f1;
-    width: 17px;
-    height: 17px;
-  }
-
-  .events-recorded {
-    animation: pop 0.25s;
-  }
-
-  .dot {
-    display: inline-block;
-    border-radius: 50%;
-    width: 9px;
-    height: 9px;
-    background: #ff4949;
-  }
-
   nav {
+    font-family: sans-serif;
     box-sizing: border-box;
     animation-name: slideup;
     border: solid 2px #f9fafc;
@@ -237,7 +149,6 @@ export default {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    font-family: monospace;
     font-size: 12px;
     color: #1f2d3d;
     padding: 20px 16px;
@@ -247,6 +158,146 @@ export default {
     background: #f9fafc;
     box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
     border-radius: 6px;
+
+    button {
+      border: none;
+      margin: 0;
+      padding: 0;
+
+      overflow: visible;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      line-height: normal;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 10px;
+
+      &.#{$namespace}-btn-big {
+        padding: 5px 15px;
+        background: #eff2f7;
+        border-radius: 3px;
+
+        &:disabled {
+          cursor: not-allowed;
+        }
+      }
+
+      &.#{$namespace}-btn {
+        padding: 5px 0;
+      }
+
+      &.#{$namespace}-btn-large {
+        border-radius: 3px;
+        background: #eff2f7;
+        padding: 9px 17px 9px 8px;
+        color: #1f2d3d;
+        font-weight: 600;
+        margin-right: 16px;
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+
+        &:hover {
+          background: #e0e6ed;
+        }
+
+        img {
+          margin-right: 8px;
+        }
+      }
+
+      &.#{$namespace}-btn-close {
+        font-size: 18px;
+        color: #161616;
+        margin-right: 0;
+      }
+    }
+
+    .#{$namespace}-event-recorded {
+      border: solid 2px #45c8f1 !important;
+      transition: all 0.1s linear;
+    }
+
+    .#{$namespace}-rec {
+      font-family: sans-serif;
+      animation: pulse 2s infinite;
+      font-size: 12px;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      font-weight: 600;
+      color: #ff4949;
+      text-transform: uppercase;
+
+      .#{$namespace}-red-dot {
+        display: inline-block;
+        border-radius: 50%;
+        width: 9px;
+        height: 9px;
+        background: #ff4949;
+      }
+    }
+
+    .#{$namespace}-separator {
+      width: 1px;
+      height: 32px;
+      background: #e0e6ed;
+      margin-right: 0.8rem;
+    }
+
+    .#{$namespace}-stop-square {
+      width: 24px;
+      height: 24px;
+      border-radius: 3px;
+      background-color: #1f2d3d;
+    }
+
+    .#{$namespace}-current-selector {
+      font-weight: 500;
+      font-size: 10px;
+      line-height: 20px;
+      font-family: monospace;
+    }
+
+    .#{$namespace}-success-bar {
+      display: flex;
+      width: 60%;
+      justify-content: flex-end;
+    }
+
+    .#{$namespace}-success-message {
+      width: 40%;
+
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        color: #1f2d3d;
+      }
+
+      p {
+        font-size: 12px;
+        margin: 0;
+        color: #3c4858;
+      }
+    }
+
+    .tippy-box {
+      box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
+      margin-top: -45px;
+      color: #1f2d3d;
+      background: #f9fafc;
+      border-radius: 4px;
+    }
+
+    .tippy-arrow {
+      color: #f9fafc;
+    }
   }
 
   nav.dark {
@@ -254,10 +305,48 @@ export default {
     border: solid 2px #161616;
     color: #f9fafc;
 
-    .btn-big {
-      padding: 5px 15px;
+    button {
+      &.#{$namespace}-btn-big {
+        padding: 5px 15px;
+        background: #2e2e2e;
+        border-radius: 3px;
+      }
+
+      &.#{$namespace}-btn-large {
+        background: #1f2d3d;
+        color: #f9fafc;
+
+        &:hover {
+          background: #474747;
+        }
+      }
+
+      &.#{$namespace}-btn-close {
+        color: #fff;
+      }
+
+      //   svg {
+      //   stroke: #f9fafc;
+      //   fill: #f9fafc;
+      // }
+    }
+
+    .#{$namespace}-success-message {
+      h3 {
+        color: #fff;
+      }
+
+      p {
+        color: #e0e6ed;
+      }
+    }
+
+    .#{$namespace}-separator {
       background: #2e2e2e;
-      border-radius: 3px;
+    }
+
+    .#{$namespace}-stop-square {
+      background-color: #f9fafc;
     }
 
     .tippy-box {
@@ -268,162 +357,6 @@ export default {
     .tippy-arrow {
       color: #161616;
     }
-
-    svg {
-      stroke: #f9fafc;
-      fill: #f9fafc;
-    }
-
-    .separator {
-      background: #2e2e2e;
-    }
-
-    .stop {
-      background-color: #f9fafc;
-    }
-
-    .btn-large {
-      background: #1f2d3d;
-      color: #f9fafc;
-    }
-
-    .btn-close {
-      color: #fff;
-    }
-
-    h3 {
-      color: #fff;
-    }
-
-    p {
-      color: #e0e6ed;
-    }
-  }
-
-  .separator {
-    width: 1px;
-    height: 32px;
-    background: #e0e6ed;
-    margin-right: 0.8rem;
-  }
-
-  button {
-    border: none;
-    margin: 0;
-    padding: 0;
-
-    overflow: visible;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    line-height: normal;
-    -webkit-font-smoothing: inherit;
-    -moz-osx-font-smoothing: inherit;
-    -webkit-appearance: none;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-right: 10px;
-
-    &.btn-big {
-      padding: 5px 15px;
-      background: #eff2f7;
-      border-radius: 3px;
-
-      &:disabled {
-        cursor: not-allowed;
-      }
-    }
-  }
-
-  .btn {
-    padding: 5px 0;
-  }
-
-  .stop {
-    width: 24px;
-    height: 24px;
-    border-radius: 3px;
-    background-color: #1f2d3d;
-  }
-
-  span.code {
-    font-weight: 500;
-    font-size: 10px;
-    line-height: 20px;
-  }
-
-  .btn-large {
-    font-family: sans-serif;
-    border-radius: 3px;
-    background: #eff2f7;
-    padding: 9px 17px 9px 8px;
-    color: #1f2d3d;
-    font-weight: 600;
-    margin-right: 16px;
-
-    &:last-of-type {
-      margin-right: 0;
-    }
-
-    img {
-      margin-right: 8px;
-    }
-  }
-
-  .btn-bar {
-    display: flex;
-    width: 60%;
-    justify-content: flex-end;
-  }
-
-  .btn-close {
-    font-size: 18px;
-    color: #161616;
-    margin-right: 0;
-  }
-
-  .finish {
-    width: 40%;
-  }
-
-  h3 {
-    font-family: sans-serif;
-    font-size: 14px;
-    margin: 0;
-    color: #1f2d3d;
-  }
-
-  p {
-    font-family: sans-serif;
-    font-size: 12px;
-    margin: 0;
-    color: #3c4858;
-  }
-}
-
-.tippy-box {
-  box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
-  margin-top: -45px;
-  font-family: sans-serif;
-  color: #1f2d3d;
-  background: #f9fafc;
-  border-radius: 4px;
-}
-
-.tippy-arrow {
-  color: #f9fafc;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
   }
 }
 </style>

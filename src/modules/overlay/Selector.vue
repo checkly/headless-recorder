@@ -1,5 +1,5 @@
 <template>
-  <div class="overlay" :class="{ camera: screenshotMode }">
+  <div class="overlay">
     <div :class="selectorClass" ref="selector"></div>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
       }
 
       if (!this.screenshotMode || this.screenshotClippedMode) {
-        return this.scrolling ? 'scrolling selector' : 'selector'
+        return this.scrolling ? 'hide selector' : 'selector'
       }
 
       return ''
@@ -35,10 +35,6 @@ export default {
   },
 
   methods: {
-    toggleHide() {
-      this.hide = !this.hide
-    },
-
     move(e, skippedSelectors = []) {
       if (this.element === e.target) {
         return
@@ -109,12 +105,7 @@ export default {
   border: 2px dashed rgba(255, 73, 73, 0.7);
 }
 
-.camera {
-  cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACMSURBVHgBzZDrDUBAEITnVEIHVIoKUAkd0MHphCXrstm4R/jBJF9yu5d9DfAXWWJT2DfFqVjDj0NGNd6QoEwVSC61RMEDKmLAzSQfHZETI8czx40cFGpQcpHMjdzkjA3Ct/r+XT5DWDkxqdzCmzmFTqi5yazW75HowWVkKTaq5X/Mg6gOD1Y814rPtQPiEFi9rPKoQQAAAABJRU5ErkJggg=='),
-    auto;
-}
-
-.scrolling {
+.hide {
   display: none;
 }
 </style>

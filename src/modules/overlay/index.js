@@ -86,6 +86,6 @@ export default class Overlay {
     this.selectorApp = null
 
     window.document.removeEventListener('mouseover', this.mouseOverEvent)
-    window.removeEventListener('scroll', this.isScrolling, false)
+    window.removeEventListener('scroll', this.scrollEvent, false)
   }
 }
