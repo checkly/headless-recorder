@@ -8,6 +8,8 @@ function clearState(state) {
   state.isStopped = false
   state.screenshotMode = false
   state.screenshotClippedMode = false
+
+  state.recording = []
 }
 
 const store = createStore({

@@ -129,12 +129,14 @@ class Background {
 
   handleMessage(msg, sender) {
     if (msg.control) {
-      return this.handleContenScriptMessage(msg, sender)
+      return this.handleRecordingMessage(msg, sender)
     }
 
     if (msg.type === 'SIGN_CONNECT') {
       return
     }
+
+    console.log(msg, sender)
 
     // NOTE: To account for clicks etc. we need to record the frameId
     // and url to later target the frame in playback
@@ -154,6 +156,10 @@ class Background {
 
     if (control === overlayActions.RESTART) {
       chrome.storage.local.set({ restart: true })
+      chrome.storage.local.set({ clear: false })
+      chrome.runtime.onMessage.removeListener(this.overlayHandler)
+      this.stop()
+      this.cleanUp()
       this.start()
     }
 
@@ -176,6 +182,7 @@ class Background {
     if (control === overlayActions.STOP) {
       chrome.storage.local.set({ clear: true })
       chrome.storage.local.set({ pause: false })
+      chrome.storage.local.set({ restart: false })
       this.stop()
     }
 
@@ -204,26 +211,22 @@ class Background {
     }
   }
 
-  handleContenScriptMessage(msg) {
-    if (msg.control === recordingControls.EVENT_RECORDER_STARTED) {
+  handleRecordingMessage({ control, href, value, coordinates }) {
+    if (control === recordingControls.EVENT_RECORDER_STARTED) {
       badge.setText(this._badgeState)
     }
 
-    if (msg.control === recordingControls.GET_VIEWPORT_SIZE) {
-      this.recordCurrentViewportSize(msg.coordinates)
+    if (control === recordingControls.GET_VIEWPORT_SIZE) {
+      this.recordCurrentViewportSize(coordinates)
     }
 
-    if (msg.control === recordingControls.GET_CURRENT_URL) {
-      this.recordCurrentUrl(msg.href)
+    if (control === recordingControls.GET_CURRENT_URL) {
+      this.recordCurrentUrl(href)
     }
 
-    if (msg.control === recordingControls.GET_SCREENSHOT) {
-      this.recordScreenshot(msg.value)
+    if (control === recordingControls.GET_SCREENSHOT) {
+      this.recordScreenshot(value)
     }
-
-    // if (msg.control === recordingControls.RESTART) {
-    //   this.start()
-    // }
   }
 
   handlePopupMessage(msg) {

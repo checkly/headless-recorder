@@ -20,19 +20,19 @@
           <span v-show="!isCopying">Copy to clipboard</span>
           <span v-show="isCopying">Copied!</span>
         </button>
-        <!-- <button @click="restart" class="btn-large">
+        <button @click="restart" class="btn-large">
           <img width="16" height="16" :src="getIcon('sync')" alt="restart recording" />
           Restart Recording
-        </button> -->
+        </button>
         <button @click="close" class="btn-close">
           &times;
         </button>
       </div>
     </template>
     <template v-else>
-      <div class="events" :class="{ 'events-recorded': hasRecorded && !isPaused }">
+      <!-- <div class="events" :class="{ 'events-recorded': hasRecorded && !isPaused }">
         {{ recording?.length }}
-      </div>
+      </div> -->
       <div class="rec" v-show="!isPaused">
         <span class="dot"></span>
         REC
@@ -288,7 +288,15 @@ export default {
     }
 
     .btn-close {
-      color: #ffffff;
+      color: #fff;
+    }
+
+    h3 {
+      color: #fff;
+    }
+
+    p {
+      color: #e0e6ed;
     }
   }
 
@@ -385,14 +393,14 @@ export default {
     font-family: sans-serif;
     font-size: 14px;
     margin: 0;
-    color: #45c8f1;
+    color: #1f2d3d;
   }
 
   p {
     font-family: sans-serif;
     font-size: 12px;
     margin: 0;
-    color: #8492a6;
+    color: #3c4858;
   }
 }
 

@@ -116,11 +116,11 @@ export default {
   },
 
   methods: {
-    toggleRecord() {
+    toggleRecord(close = true) {
       if (this.isRecording) {
         this.stop()
       } else {
-        window.close()
+        close && window.close()
         this.start()
       }
 
@@ -184,6 +184,7 @@ export default {
         recording,
         clear,
         pause,
+        restart,
       } = await storage.get([
         'controls',
         'code',
@@ -192,6 +193,7 @@ export default {
         'recording',
         'clear',
         'pause',
+        'restart',
       ])
 
       this.isRecording = controls.isRecording
@@ -212,6 +214,12 @@ export default {
         if (pause) {
           this.togglePause(true)
           storage.remove(['pause'])
+        }
+
+        if (restart) {
+          this.cleanUp()
+          this.toggleRecord(false)
+          storage.remove(['restart'])
         }
       } else if (this.code) {
         this.showResultsTab = true
