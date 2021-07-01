@@ -159,6 +159,11 @@ $namespace: 'hr';
     box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
     border-radius: 6px;
 
+    &.#{$namespace}-event-recorded {
+      border: solid 2px #45c8f1 !important;
+      transition: all 0.1s linear;
+    }
+
     button {
       border: none;
       margin: 0;
@@ -216,11 +221,6 @@ $namespace: 'hr';
         color: #161616;
         margin-right: 0;
       }
-    }
-
-    .#{$namespace}-event-recorded {
-      border: solid 2px #45c8f1 !important;
-      transition: all 0.1s linear;
     }
 
     .#{$namespace}-rec {

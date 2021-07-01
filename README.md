@@ -12,6 +12,8 @@
 
 > 🎥 Headless recorder is a Chrome extension that records your browser interactions and generates a Puppeteer or Playwright script.
 
+![headless recorder demo](./chrome-store/hr.gif)
+
 ## 📝 Overview
 
 Headless recorder is a Chrome extension that records your browser interactions and generates a
@@ -39,11 +41,15 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 ## 🔧 How to use?
 
-- Click the icon and hit Record.
-- Hit <kbd>tab</kbd> after you finish typing in an `input` element.
-- Click on links, inputs and other elements.
-- Wait for full page load on each navigation. The icon will switch from ![](src/images/icon_rec.png) to ![](src/images/icon_wait.png) to indicate it is ready for more input from you.
-- Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
+1. Click the icon and hit Record.
+2. Hit <kbd>tab</kbd> after you finish typing in an `input` element.
+3. Click on links, inputs and other elements.
+4. Wait for full page load on each navigation.
+
+    **The icon will switch from <img width="24px" height="24px" src="./chrome-store/rec.png" alt="recording icon"/>
+    to <img width="24px" height="24px" src="./chrome-store/wait.png" alt="waiting icon"/> to indicate it is ready for more input from you.**
+
+5. Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
 
 <br>
 
