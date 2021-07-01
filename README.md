@@ -6,7 +6,6 @@
     <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
     <img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
     <img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
-    <img src="https://img.shields.io/github/license/checkly/headless-recorder?label=License" alt="License" />
   </p>
 </p>
 
@@ -29,20 +28,34 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 - Records clicks and type events.
 - Add waitForNavigation, setViewPort and other useful clauses.
-- Generates a Puppeteer / Playwright script.
-- Shows which events are being recorded.
+- Generates a Playwright & Puppeteer script.
+- Preview CSS selectors of HTML elements.
+- Take full page and clipped screenshots.
+- Pause, resume and restart recording.
+- Persist latest script in your browser
 - Copy to clipboard.
-- Offers configuration options.
+- Run generated scripts directly on [Checkly](https://checklyhq.com)
+- Flexible configuration options and dark mode support.
 - Allows `data-id` configuration for element selection.
 
-> Note: we only record certain events. See `dom-events-to-record.js` in the code-generator folder for which events. This collection will be expanded in future releases.
+#### Recorded Events
+  - `click`
+  - `dblclick`
+  - `change`
+  - `keydown`
+  - `select`
+  - `submit`
+  - `load`
+  - `unload`
+
+> This collection will be expanded in future releases. 💪
 
 <br>
 
 ## 🔧 How to use?
 
-1. Click the icon and hit Record.
-2. Hit <kbd>tab</kbd> after you finish typing in an `input` element.
+1. Click the icon and hit the red button.
+2. 👉 Hit <kbd>tab</kbd> after you finish typing in an `input` element. 👈
 3. Click on links, inputs and other elements.
 4. Wait for full page load on each navigation.
 
@@ -53,26 +66,41 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 <br>
 
-## 🖥️ Development
+## 🖥️ Run Locally
 
-1. Open the terminal and clone the project: `$ git clone https://github.com/checkly/headless-recorder.git`
-1. Access project directory and use npm to install dependencies: `$ cd headless-recorder && npm i`
-1. Use the build npm script to build it: `$ npm run dev`
-1. Open chrome and navigate to extensions page using this URL: `chrome://extensions`
-1. Make sure 'Developer mode' is enabled
-1. Click "Load unpacked extension" button, browse the `headless-recorder/build` directory and select it
+After cloning the project, open the terminal and navigate to project root directory.
+
+```bash
+$ npm i # install dependencies
+
+$ npm run serve # run development mode
+
+$ npm run test # run test cases
+
+$ npm run lint # run and fix linter issues
+
+$ npm run build # build and zip for production
+```
+
+<br>
+
+## 🧩 Install Locally
+
+1. Open chrome and navigate to extensions page using this URL: [`chrome://extensions`](chrome://extensions).
+1. Make sure "**Developer mode**" is enabled.
+1. Click "**Load unpacked extension**" button, browse the `headless-recorder/dist` directory and select it.
+
+![](./chrome-store/dev-guide.png)
 
 <br>
 
 ## 🚀 Release
 
-1. Bump versions in `package.json` and `manifest.json`
-2. Tag the code with the version, i.e. `git tag v0.4.0`
-3. Push with tags `git push --tags`
-4. Generate a release using **gren**: `gren release --override --data-source=milestones --milestone-match="{{tag_name}}"`
+1. Bump version using `npm version` (patch, minor, major).
+2. Push changes with tags `git push --tags`
+3. Generate a release using **gren**: `gren release --override --data-source=milestones --milestone-match="{{tag_name}}"`
 
-> ⚠️ Make sure all issues associated with the new version are linked to a milestone
-with the name of the tag.
+> 🚨 Make sure all issues associated with the new version are linked to a milestone with the name of the tag.
 
 <br>
 
@@ -84,7 +112,7 @@ Headless recorder is the spiritual successor & love child of segment.io's [Daydr
 
 ## 📄 License
 
-[Apache 2](https://github.com/checkly/headless-recorder/blob/master/LICENSE)
+[MIT](https://github.com/checkly/headless-recorder/blob/master/LICENSE)
 
 <h3 align="center">Supported by</h3>
 <p align="center">
