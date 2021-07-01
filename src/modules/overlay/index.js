@@ -14,6 +14,8 @@ export default class Overlay {
     this.selectorContainer = null
 
     this.mouseOverEvent = null
+    this.scrollEvent = null
+    this.isScrolling = false
 
     this.store = store
   }
@@ -60,7 +62,14 @@ export default class Overlay {
       }
     }
 
+    this.scrollEvent = () => {
+      this.selectorApp.scrolling = true
+      window.clearTimeout(this.isScrolling)
+      this.isScrolling = setTimeout(() => (this.selectorApp.scrolling = false), 66)
+    }
+
     window.document.addEventListener('mouseover', this.mouseOverEvent)
+    window.addEventListener('scroll', this.scrollEvent, false)
   }
 
   unmount() {
@@ -77,5 +86,6 @@ export default class Overlay {
     this.selectorApp = null
 
     window.document.removeEventListener('mouseover', this.mouseOverEvent)
+    window.removeEventListener('scroll', this.isScrolling, false)
   }
 }

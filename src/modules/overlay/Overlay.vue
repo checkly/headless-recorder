@@ -82,6 +82,7 @@
 <script>
 import { directive } from 'vue-tippy'
 import 'tippy.js/dist/tippy.css'
+import '@/assets/tailwind.css'
 
 import { mapState, mapMutations } from 'vuex'
 
