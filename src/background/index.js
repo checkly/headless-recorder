@@ -244,6 +244,7 @@ class Background {
     }
 
     if (msg.action === popupActions.CLEAN_UP) {
+      chrome.runtime.onMessage.removeListener(this.overlayHandler)
       msg.value && this.stop()
       this.toggleOverlay()
       this.cleanUp()
