@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-gray-lightest flex py-9 w-full h-screen dark:bg-black">
+  <main class="bg-gray-lightest flex py-9 w-full overflow-auto dark:bg-black">
     <div class="flex flex-col w-1/4 pt-12 pr-6">
       <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
       <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>
@@ -109,6 +109,7 @@ import { version } from '../../package.json'
 import storage from '@/services/storage'
 import { isDarkMode } from '@/services/constants'
 import { defaults as code } from '@/modules/code-generator/base-generator'
+import { merge } from 'lodash'
 
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
@@ -172,18 +173,22 @@ export default {
 
     async load() {
       const { options } = await storage.get('options')
-      this.options = { ...defaultOptions, ...options }
+      merge(defaultOptions, options)
+      this.options = defaultOptions
+
       this.loading = false
     },
 
     listenForKeyCodePress() {
       this.recordingKeyCodePress = true
+
       const keyDownFunction = e => {
         this.recordingKeyCodePress = false
         this.updateKeyCodeWithNumber(e)
         window.removeEventListener('keydown', keyDownFunction, false)
         e.preventDefault()
       }
+
       window.addEventListener('keydown', keyDownFunction, false)
     },
 
@@ -195,7 +200,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+body {
+  background: #f9fafc;
+  height: 100vh;
+}
+
+body.dark {
+  background: #161616;
+}
+
 code {
   @apply font-semibold;
 }

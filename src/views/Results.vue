@@ -93,6 +93,7 @@ pre::-webkit-scrollbar {
   padding: 10px;
   background: transparent;
 }
+
 pre::-webkit-scrollbar-thumb {
   margin-right: 10px;
   padding: 10px;

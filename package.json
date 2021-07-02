@@ -15,6 +15,7 @@
     "autoprefixer": "9",
     "core-js": "3.6.5",
     "css-selector-generator": "3.0.1",
+    "lodash": "4.17.21",
     "pinia": "2.0.0-beta.3",
     "postcss": "7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@2.0.2",
