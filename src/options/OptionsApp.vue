@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-gray-lightest flex py-9 w-full overflow-auto dark:bg-black">
+  <main class="bg-gray-lightest flex py-9 w-full h-screen overflow-auto dark:bg-black">
     <div class="flex flex-col w-1/4 pt-12 pr-6">
       <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
       <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>
@@ -15,12 +15,17 @@
     <div class="flex flex-col w-1/2">
       <header class="flex flex-row justify-between items-center mb-3.5">
         <div class="flex items-baseline">
-          <h1 class="text-blue text-2xl font-bold mr-1">
+          <h1 class="text-gray-darkest dark:text-blue text-2xl font-bold mr-1">
             Headless Recorder
           </h1>
-          <span class="text-gray text-sm">v{{ version }}</span>
+          <span class="text-gray-dark dark:text-gray-light text-sm">v{{ version }}</span>
         </div>
-        <span role="alert" class="text-pink text-sm" v-show="saving">Saving...</span>
+        <span
+          role="alert"
+          class="text-gray-darkest dark:text-white text-base font-semibold"
+          v-show="saving"
+          >Saving...</span
+        >
       </header>
 
       <section>
@@ -29,7 +34,7 @@
         <div class="mb-6">
           <input
             id="custom-data-attribute"
-            class="w-full bg-gray-lighter h-7 rounded px-2 mb-2 text-sm"
+            class="w-full placeholder-gray-darkish bg-gray-lighter h-7 rounded px-2 mb-2 text-sm"
             type="text"
             v-model.trim="options.code.dataAttribute"
             @change="save"
@@ -38,21 +43,25 @@
           <p>
             Define an attribute that we'll attempt to use when selecting the elements, i.e
             "data-custom". This is handy when React or Vue based apps generate random class names.
+            <span class="font-bold"
+              >When "custom data attribute" is set, it will take precedence from over any other
+              selector (even ID)</span
+            >
           </p>
-          <p>
-            <span class="text-pink">
-              When data attribute is set, it will take precedence from over other any selector (even
-              ID)
-            </span>
-          </p>
+          <!-- <p class="mt-0">
+            <span class="text-black font-bold"
+              >When "custom data attribute" is set, it will take precedence from over any other
+              selector (even ID)</span
+            >
+          </p> -->
         </div>
         <div>
           <label>Set key code</label>
           <div class="mb-2">
-            <Button @click="listenForKeyCodePress">
+            <Button @click="listenForKeyCodePress" class="font-semibold">
               {{ recordingKeyCodePress ? 'Capturing...' : 'Record Key Stroke' }}
             </Button>
-            <span class="text-gray-darkish text-sm ml-3">
+            <span class="text-gray-dark dark:text-gray-light text-sm ml-3">
               {{ options.code.keyCode }}
             </span>
           </div>
@@ -89,7 +98,7 @@
       <section>
         <h2 class="">Extension</h2>
         <Toggle v-model="options.extension.darkMode">
-          Use Dark Mode
+          Use Dark Mode {{ options.extension.darkMode }}
         </Toggle>
         <Toggle v-model="options.extension.telemetry">
           Allow recording of usage telemetry
@@ -146,6 +155,7 @@ export default {
 
     'options.extension.darkMode': {
       handler(newVal) {
+        console.log('watcher', newVal)
         document.body.classList[newVal ? 'add' : 'remove']('dark')
       },
       immediate: true,
@@ -154,11 +164,9 @@ export default {
 
   mounted() {
     this.load()
-
-    // TODO: load state from local storage
     chrome.storage.onChanged.addListener(({ options = null }) => {
-      if (options) {
-        this.darkModer = options.newValue.extension.darkMode
+      if (options && options.newValue.extension.darkMode !== this.options.extension.darkMode) {
+        this.options.extension.darkMode = options.newValue.extension.darkMode
       }
     })
   },
@@ -174,7 +182,7 @@ export default {
     async load() {
       const { options } = await storage.get('options')
       merge(defaultOptions, options)
-      this.options = defaultOptions
+      this.options = Object.assign({}, this.options, defaultOptions)
 
       this.loading = false
     },
@@ -200,7 +208,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 body {
   background: #f9fafc;
   height: 100vh;
@@ -215,7 +223,7 @@ code {
 }
 
 a {
-  @apply text-blue underline text-sm text-right;
+  @apply text-gray-darkest dark:text-blue underline text-sm text-right;
 }
 
 h2 {
@@ -223,7 +231,8 @@ h2 {
 }
 
 label {
-  @apply text-black-dark font-semibold mb-2 block dark:text-gray-lightest;
+  color: #000;
+  @apply font-semibold text-sm mb-2 block dark:text-gray-lightest;
 }
 
 section {

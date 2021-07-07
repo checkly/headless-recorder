@@ -2,7 +2,7 @@ import Block from '@/modules/code-generator/block'
 import { headlessActions, eventsToRecord } from '@/modules/code-generator/constants'
 
 export const defaults = {
-  wrapAsync: true,
+  wrapAsync: false,
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
