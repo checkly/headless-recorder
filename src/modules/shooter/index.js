@@ -19,17 +19,18 @@ class Shooter extends EventEmitter {
   startScreenshotMode() {
     if (!this._overlay) {
       this._overlay = document.createElement('div')
-      this._overlay.className = 'headlessRecorderOverlay'
+      this._overlay.id = 'headless-recorder-shooter'
       this._overlay.style.position = 'fixed'
       this._overlay.style.top = '0px'
       this._overlay.style.left = '0px'
       this._overlay.style.width = '100%'
       this._overlay.style.height = '100%'
       this._overlay.style.pointerEvents = 'none'
+      this._overlay.style.zIndex = 2147483646
 
       if (this._isClipped) {
         this._selector = document.createElement('div')
-        this._selector.className = 'headlessRecorderOutline'
+        this._selector.id = 'headless-recorder-shooter-outline'
         this._selector.style.position = 'fixed'
         this._overlay.appendChild(this._selector)
       } else {
