@@ -40,7 +40,7 @@
           alt="copy code to clipboard"
         />
         <span v-show="!isCopying">Copy to clipboard</span>
-        <span v-show="isCopying">copied!</span>
+        <span v-show="isCopying">Copied!</span>
       </Button>
       <Button @click="run" v-show="code">
         <img src="/icons/light/zap.svg" class="mr-1" alt="thunder" />

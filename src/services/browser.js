@@ -1,5 +1,5 @@
 const CONTENT_SCRIPT_PATH = 'js/content-script.js'
-const SIGNUP_URL = 'https://app.checklyhq.com/signup'
+const SIGNUP_URL = 'https://www.checklyhq.com/product/synthetic-monitoring/'
 const RUN_URL = 'https://app.checklyhq.com/checks/new/browser'
 const DOCS_URL = 'https://www.checklyhq.com/docs/headless-recorder'
 
