@@ -185,11 +185,11 @@ export default class BaseGenerator {
     } else {
       block = new Block(this._frameId, {
         type: headlessActions.SCREENSHOT,
-        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png' })`,
+        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', fullPage: true })`,
       })
     }
 
-    this._screenshotCounter++
+    this._screenshotCounter += 1
     return block
   }
 

@@ -20,8 +20,8 @@ export default class PlaywrightCodeGenerator extends BaseGenerator {
   constructor(options) {
     super(options)
     this._header = header
-    this._wrappedHeader = wrappedHeader
     this._footer = footer
+    this._wrappedHeader = wrappedHeader
     this._wrappedFooter = wrappedFooter
   }
 

@@ -19,6 +19,9 @@ class Background {
     this._badgeState = ''
     this._isPaused = false
 
+    this._menuId = 'PUPPETEER_RECORDER_CONTEXT_MENU'
+    this._boundedMenuHandler = null
+
     // Some events are sent double on page navigations to simplify the event recorder.
     // We keep some simple state to disregard events if needed.
     this._hasGoto = false
@@ -47,6 +50,22 @@ class Background {
 
     this.overlayHandler = this.handleOverlayMessage.bind(this)
 
+    // chrome.contextMenus.create({
+    //   id: this._menuId,
+    //   title: 'Headless Recorder',
+    //   contexts: ['all'],
+    // })
+
+    // chrome.contextMenus.create({
+    //   id: this._menuId + 'SELECTOR',
+    //   title: 'Copy Selector',
+    //   parentId: this._menuId,
+    //   contexts: ['all'],
+    // })
+
+    // this._boundedMenuHandler = this.handleMenuInteraction.bind(this)
+    // chrome.contextMenus.onClicked.addListener(this._boundedMenuHandler)
+
     chrome.runtime.onMessage.addListener(this._boundedMessageHandler)
     chrome.runtime.onMessage.addListener(this.overlayHandler)
 
@@ -62,6 +81,7 @@ class Background {
     chrome.runtime.onMessage.removeListener(this._boundedMessageHandler)
     chrome.webNavigation.onCompleted.removeListener(this._boundedNavigationHandler)
     chrome.webNavigation.onBeforeNavigate.removeListener(this._boundedWaitHandler)
+    // chrome.contextMenus.onClicked.removeListener(this._boundedMenuHandler)
 
     badge.stop(this._badgeState)
 
@@ -126,6 +146,10 @@ class Background {
       action: headlessActions.SCREENSHOT,
     })
   }
+
+  // handleMenuInteraction(info, tab) {
+  //   console.log(info, tab)
+  // }
 
   handleMessage(msg, sender) {
     if (msg.control) {

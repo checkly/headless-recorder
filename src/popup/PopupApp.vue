@@ -151,15 +151,7 @@ export default {
       analytics.trackEvent({ options: this.options, event: 'Stop' })
       bus.postMessage({ action: popupActions.STOP })
 
-      const { recording, options = {} } = await storage.get(['recording', 'options'])
-      const generator = new CodeGenerator(options)
-      const { puppeteer, playwright } = generator.generate(recording)
-
-      this.showResultsTab = true
-      this.recording = recording
-      this.code = puppeteer
-      this.codeForPlaywright = playwright
-
+      await this.generateCode()
       this.storeState()
     },
 
@@ -174,6 +166,17 @@ export default {
       this.codeForPlaywright = ''
       this.showResultsTab = this.isRecording = this.isPaused = false
       this.storeState()
+    },
+
+    async generateCode() {
+      const { recording, options = { code: {} } } = await storage.get(['recording', 'options'])
+      const generator = new CodeGenerator(options.code)
+      const { puppeteer, playwright } = generator.generate(recording)
+
+      this.recording = recording
+      this.code = puppeteer
+      this.codeForPlaywright = playwright
+      this.showResultsTab = true
     },
 
     openOptions() {
@@ -228,7 +231,7 @@ export default {
           storage.remove(['restart'])
         }
       } else if (this.code) {
-        this.showResultsTab = true
+        this.generateCode()
       }
     },
 
