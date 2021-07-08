@@ -148,7 +148,6 @@ class Background {
   }
 
   // handleMenuInteraction(info, tab) {
-  //   console.log(info, tab)
   // }
 
   handleMessage(msg, sender) {
@@ -164,8 +163,6 @@ class Background {
     // and url to later target the frame in playback
     msg.frameId = sender ? sender.frameId : null
     msg.frameUrl = sender ? sender.url : null
-
-    console.log(msg)
 
     if (!this._isPaused) {
       this._recording.push(msg)

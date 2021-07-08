@@ -27,7 +27,6 @@ class Shooter extends EventEmitter {
       '.' + overlaySelectors.CURSOR_CAMERA_CLASS,
       'body'
     )
-    console.log(this.currentSelctor)
   }
 
   startScreenshotMode() {
