@@ -76,7 +76,7 @@ export default class HeadlessController {
 
   handleScreenshot(isClipped) {
     this.recorder.disableClickRecording()
-    this.shooter = new Shooter({ isClipped })
+    this.shooter = new Shooter({ isClipped, store: this.store })
 
     this.shooter.addCameraIcon()
 
@@ -84,11 +84,11 @@ export default class HeadlessController {
       ? this.shooter.startScreenshotMode()
       : this.shooter.stopScreenshotMode()
 
-    this.shooter.on('click', ({ clip }) => {
+    this.shooter.on('click', ({ selector }) => {
       this.store.commit('stopScreenshotMode')
 
       this.shooter.showScreenshotEffect()
-      this.recorder._sendMessage({ control: recordingControls.GET_SCREENSHOT, value: clip })
+      this.recorder._sendMessage({ control: recordingControls.GET_SCREENSHOT, value: selector })
       this.recorder.enableClickRecording()
     })
   }

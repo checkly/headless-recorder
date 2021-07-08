@@ -31,7 +31,7 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 - Add waitForNavigation, setViewPort and other useful clauses.
 - Generates a Playwright & Puppeteer script.
 - Preview CSS selectors of HTML elements.
-- Take full page and clipped screenshots.
+- Take full page and element screenshots.
 - Pause, resume and restart recording.
 - Persist latest script in your browser
 - Copy to clipboard.

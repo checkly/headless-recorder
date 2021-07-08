@@ -160,12 +160,12 @@ class Background {
       return
     }
 
-    console.log(msg, sender)
-
     // NOTE: To account for clicks etc. we need to record the frameId
     // and url to later target the frame in playback
     msg.frameId = sender ? sender.frameId : null
     msg.frameUrl = sender ? sender.url : null
+
+    console.log(msg)
 
     if (!this._isPaused) {
       this._recording.push(msg)

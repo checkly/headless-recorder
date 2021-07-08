@@ -19,7 +19,7 @@ export default class BaseGenerator {
     this._frame = 'page'
     this._frameId = 0
     this._allFrames = {}
-    this._screenshotCounter = 1
+    this._screenshotCounter = 0
 
     this._hasNavigation = false
   }
@@ -167,30 +167,21 @@ export default class BaseGenerator {
     throw new Error('Not implemented.')
   }
 
-  _handleScreenshot(options) {
-    let block
+  _handleScreenshot(value) {
+    this._screenshotCounter += 1
 
-    if (options && options.x && options.y && options.width && options.height) {
-      // remove the tailing 'px'
-      for (let prop in options) {
-        if (options.hasOwnProperty(prop) && options[prop].slice(-2) === "px") { // eslint-disable-line
-          options[prop] = options[prop].substring(0, options[prop].length - 2)
-        }
-      }
-
-      block = new Block(this._frameId, {
+    if (value) {
+      return new Block(this._frameId, {
         type: headlessActions.SCREENSHOT,
-        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', clip: { x: ${options.x}, y: ${options.y}, width: ${options.width}, height: ${options.height} } })`,
-      })
-    } else {
-      block = new Block(this._frameId, {
-        type: headlessActions.SCREENSHOT,
-        value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', fullPage: true })`,
+        value: `const element${this._screenshotCounter} = await page.$('${value}')
+await element${this._screenshotCounter}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png' })`,
       })
     }
 
-    this._screenshotCounter += 1
-    return block
+    return new Block(this._frameId, {
+      type: headlessActions.SCREENSHOT,
+      value: `await ${this._frame}.screenshot({ path: 'screenshot_${this._screenshotCounter}.png', fullPage: true })`,
+    })
   }
 
   _handleWaitForNavigation() {

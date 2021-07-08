@@ -64,7 +64,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="clippedScreenshot"
-        v-tippy="{ content: 'Clipped Screenshot', appendTo: 'parent' }"
+        v-tippy="{ content: 'Element Screenshot', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>

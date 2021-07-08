@@ -5,8 +5,7 @@ import BaseGenerator from '@/modules/code-generator/base-generator'
 const importPlaywright = `const { chromium } = require('playwright');\n`
 
 const header = `const browser = await chromium.launch()
-const context = await browser.newContext()
-const page = await context.newPage()`
+const page = await browser.newPage()`
 
 const footer = `await browser.close()`
 

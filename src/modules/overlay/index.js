@@ -62,6 +62,7 @@ export default class Overlay {
       }
     }
 
+    // Hide selector while the user is scrolling
     this.scrollEvent = () => {
       this.selectorApp.scrolling = true
       window.clearTimeout(this.isScrolling)
