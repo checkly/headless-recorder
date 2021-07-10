@@ -4,6 +4,7 @@
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
+    "test": "npm run test:unit",
     "test:unit": "vue-cli-service test:unit __tests__/.*.spec.js",
     "lint": "vue-cli-service lint"
   },
