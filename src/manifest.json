@@ -9,7 +9,6 @@
     "webNavigation",
     "activeTab",
     "cookies",
-    "contextMenus",
     "*://*/"
   ],
   "icons" : {

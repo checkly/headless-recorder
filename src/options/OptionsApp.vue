@@ -43,17 +43,14 @@
           <p>
             Define an attribute that we'll attempt to use when selecting the elements, i.e
             "data-custom". This is handy when React or Vue based apps generate random class names.
-            <span class="font-bold"
-              >When "custom data attribute" is set, it will take precedence from over any other
-              selector (even ID)</span
-            >
           </p>
-          <!-- <p class="mt-0">
-            <span class="text-black font-bold"
-              >When "custom data attribute" is set, it will take precedence from over any other
-              selector (even ID)</span
-            >
-          </p> -->
+          <p>
+            <span role="img" aria-label="siren">🚨</span>
+            <span class="ml-1 font-bold text-black-shady dark:text-white"
+              >When <span class="italic">"custom data attribute"</span>&nbsp;
+              is set, it will take precedence from over any other selector (even ID)
+            </span>
+          </p>
         </div>
         <div>
           <label>Set key code</label>
@@ -78,7 +75,7 @@
           Wrap code in async function
         </Toggle>
         <Toggle v-model="options.code.headless">
-          Set <code>headless</code> in puppeteer launch options
+          Set <code>headless</code> in playwright/puppeteer launch options
         </Toggle>
         <Toggle v-model="options.code.waitForNavigation">
           Add <code>waitForNavigation</code> lines on navigation
