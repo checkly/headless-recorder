@@ -1,7 +1,8 @@
 const CONTENT_SCRIPT_PATH = 'js/content-script.js'
-const SIGNUP_URL = 'https://www.checklyhq.com/product/synthetic-monitoring/'
 const RUN_URL = 'https://app.checklyhq.com/checks/new/browser'
 const DOCS_URL = 'https://www.checklyhq.com/docs/headless-recorder'
+const SIGNUP_URL =
+  'https://www.checklyhq.com/product/synthetic-monitoring/?utm_source=Chrome+Extension&utm_medium=Headless+Recorder+Chrome+Extension&utm_campaign=Headless+Recorder&utm_id=Open+Source'
 
 export default {
   getActiveTab() {
