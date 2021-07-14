@@ -7,14 +7,21 @@
   <h1>Headless Recorder</h1>
 </p>
 
-<img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
-<img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
-<img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
+<p>
+  <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
+  <img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
+  <img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
+</p>
 
 
 > 🎥 Headless recorder is a Chrome extension that records your browser interactions and generates a Playwright/Puppeteer script.
 
-![headless recorder demo](./assets/hr.gif)
+
+<br>
+<p align="center">
+  <img src="./assets/hr.gif" alt="Headless recorder demo" />
+</p>
+<br>
 
 ## 📝 Overview
 
@@ -23,7 +30,6 @@ Headless recorder is a Chrome extension that records your browser interactions a
 This project builds on existing open source projects (see [Credits](#-credits)) but adds extensibility, configurability and a smoother UI. For more information, please check our [documentation](https://www.checklyhq.com/docs/headless-recorder/).
 
 > 🤔 Do you want to learn more about Puppeteer and Playwright? Check our open [Headless Guides](https://www.checklyhq.com/learn/headless/)
->
 
 <br>
 
@@ -117,12 +123,14 @@ Headless recorder is the spiritual successor & love child of segment.io's [Daydr
 
 [MIT](https://github.com/checkly/headless-recorder/blob/master/LICENSE)
 
-<h3 align="center">Supported by</h3>
+
 <p align="center">
   <a href="https://checklyhq.com?utm_source=github&utm_medium=sponsor-logo-github&utm_campaign=headless-recorder" target="_blank">
-  <img width="200px" src="chrome-store/checkly-logo.png?raw=true" alt="Checkly" />
+  <img width="100px" src="./assets/checkly-logo.png?raw=true" alt="Checkly" />
   </a>
   <br />
   <i><sub>Delightful Active Monitoring for Developers</sub></i>
+  <br>
+  <b><sub>From Checkly with Love ♥️</sub></b>
 <p>
 
