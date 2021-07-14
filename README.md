@@ -1,22 +1,24 @@
 <p align="center">
-  <img width="200px" src="https://www.checklyhq.com/opensource/headless_recorder_logo.ad00bdc5.svg" alt="Headless Recorder" />
-  <h1 align="center">Headless Recorder</h1>
-  <br/>
-  <p align="center">
-    <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
-    <img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
-    <img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
-  </p>
+  <img width="200px" src="./assets/logo.png" alt="Headless Recorder" />
 </p>
 
-> 🎥 Headless recorder is a Chrome extension that records your browser interactions and generates a Puppeteer or Playwright script.
+<p>
+  <img height="128" src="https://www.checklyhq.com/images/footer-logo.svg" align="right" />
+  <h1>Headless Recorder</h1>
+</p>
 
-![headless recorder demo](./chrome-store/hr.gif)
+<img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
+<img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
+<img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
+
+
+> 🎥 Headless recorder is a Chrome extension that records your browser interactions and generates a Playwright/Puppeteer script.
+
+![headless recorder demo](./assets/hr.gif)
 
 ## 📝 Overview
 
-Headless recorder is a Chrome extension that records your browser interactions and generates a
-[Puppeteer](http://pptr.dev/) or [Playwright](https://playwright.dev/) script. Install it from the [Chrome Webstore](https://chrome.google.com/webstore/detail/puppeteer-recorder/djeegiggegleadkkbgopoonhjimgehda) to get started!
+Headless recorder is a Chrome extension that records your browser interactions and generates a [Playwright](https://playwright.dev/) or [Puppeteer](http://pptr.dev/)script. Install it from the [Chrome Webstore](https://chrome.google.com/webstore/detail/puppeteer-recorder/djeegiggegleadkkbgopoonhjimgehda) to get started!
 
 This project builds on existing open source projects (see [Credits](#-credits)) but adds extensibility, configurability and a smoother UI. For more information, please check our [documentation](https://www.checklyhq.com/docs/headless-recorder/).
 
