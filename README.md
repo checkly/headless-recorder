@@ -23,7 +23,7 @@
 </p>
 <br>
 
-## 📝 Overview
+## 👀 Overview
 
 Headless recorder is a Chrome extension that records your browser interactions and generates a [Playwright](https://playwright.dev/) or [Puppeteer](http://pptr.dev/)script. Install it from the [Chrome Webstore](https://chrome.google.com/webstore/detail/puppeteer-recorder/djeegiggegleadkkbgopoonhjimgehda) to get started!
 
@@ -131,6 +131,6 @@ Headless recorder is the spiritual successor & love child of segment.io's [Daydr
   <br />
   <i><sub>Delightful Active Monitoring for Developers</sub></i>
   <br>
-  <b><sub>From Checkly with Love ♥️</sub></b>
+  <b><sub>From Checkly with ♥️</sub></b>
 <p>
 
