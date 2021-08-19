@@ -63,7 +63,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="fullScreenshot"
-        v-tippy="{ content: 'Full Screenshot', appendTo: 'parent' }"
+        v-tippy="{ content: 'Full Screenshot (ctrl+shift+F)', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
       </button>
@@ -71,7 +71,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="clippedScreenshot"
-        v-tippy="{ content: 'Element Screenshot', appendTo: 'parent' }"
+        v-tippy="{ content: 'Element Screenshot (ctrl+shift+E)', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>
@@ -144,8 +144,20 @@ export default {
     },
 
     keyupListener(e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      if (!e.ctrlKey) {
+        return
+      }
+
+      if (e.key === 'k') {
         this.toggle()
+      }
+
+      if (e.key === 'F') {
+        this.fullScreenshot()
+      }
+
+      if (e.key === 'E') {
+        this.clippedScreenshot()
       }
     },
   },
