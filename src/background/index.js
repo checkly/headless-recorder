@@ -190,13 +190,13 @@ class Background {
     }
 
     if (control === overlayActions.COPY) {
-      const { options = {} } = storage.get(['options'])
+      const { options = {} } = await storage.get('options')
       const generator = new CodeGenerator(options)
       const code = generator.generate(this._recording)
 
       browser.sendTabMessage({
         action: 'CODE',
-        value: !options?.code?.showPlaywrightFirst ? code.puppeteer : code.playwright,
+        value: options?.code?.showPlaywrightFirst ? code.playwright : code.puppeteer,
       })
     }
 
