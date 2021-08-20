@@ -78,6 +78,12 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 5. Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
 
+### ⌨️ Shortcuts
+
+- `ctrl + k`: Toggle overlay
+- `ctrl + shift + F`: Take full page screenshot
+- `ctrl + shift + E`: Take element screenshot
+
 <br>
 
 ## 🖥️ Run Locally

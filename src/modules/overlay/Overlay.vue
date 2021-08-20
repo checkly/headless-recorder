@@ -1,7 +1,11 @@
 <template>
   <nav
     v-show="!screenshotMode"
-    :class="{ 'hr-event-recorded': hasRecorded && !isPaused && !isStopped, dark: darkMode }"
+    :class="{
+      'hr-event-recorded': hasRecorded && !isPaused && !isStopped,
+      dark: darkMode,
+      hide: !show,
+    }"
   >
     <template v-if="isStopped">
       <div class="hr-success-message">
@@ -34,6 +38,9 @@
         <span class="hr-red-dot"></span>
         REC
       </div>
+      <span class="hr-shortcut">
+        ctrl + k to hide
+      </span>
       <button
         class="hr-btn"
         title="stop"
@@ -56,7 +63,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="fullScreenshot"
-        v-tippy="{ content: 'Full Screenshot', appendTo: 'parent' }"
+        v-tippy="{ content: 'Full Screenshot (ctrl+shift+F)', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
       </button>
@@ -64,7 +71,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="clippedScreenshot"
-        v-tippy="{ content: 'Element Screenshot', appendTo: 'parent' }"
+        v-tippy="{ content: 'Element Screenshot (ctrl+shift+E)', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>
@@ -89,6 +96,7 @@ export default {
   data() {
     return {
       currentSelector: '',
+      show: true,
     }
   },
 
@@ -104,11 +112,23 @@ export default {
     ]),
   },
 
+  mounted() {
+    window.document.body.addEventListener('keyup', this.keyupListener, false)
+  },
+
+  beforeUnmount() {
+    window.document.body.removeEventListener('keyup', this.keyupListener, false)
+  },
+
   methods: {
     ...mapMutations(['copy', 'stop', 'close', 'restart']),
 
     getIcon(icon) {
       return browser.runtime.getURL(`icons/${this.darkMode ? 'dark' : 'light'}/${icon}.svg`)
+    },
+
+    toggle() {
+      this.show = !this.show
     },
 
     pause() {
@@ -122,6 +142,24 @@ export default {
     clippedScreenshot() {
       this.$store.commit('startScreenshotMode', true)
     },
+
+    keyupListener(e) {
+      if (!e.ctrlKey) {
+        return
+      }
+
+      if (e.key === 'k') {
+        this.toggle()
+      }
+
+      if (e.key === 'F') {
+        this.fullScreenshot()
+      }
+
+      if (e.key === 'E') {
+        this.clippedScreenshot()
+      }
+    },
   },
 }
 </script>
@@ -132,6 +170,31 @@ export default {
 $namespace: 'hr';
 
 #headless-recorder-overlay {
+  .#{$namespace}-button-open {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+  }
+
+  button {
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
   nav {
     font-family: sans-serif;
     box-sizing: border-box;
@@ -165,22 +228,6 @@ $namespace: 'hr';
     }
 
     button {
-      border: none;
-      margin: 0;
-      padding: 0;
-
-      overflow: visible;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      line-height: normal;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      margin-right: 10px;
-
       &.#{$namespace}-btn-big {
         padding: 5px 15px;
         background: #eff2f7;
@@ -221,6 +268,15 @@ $namespace: 'hr';
         color: #161616;
         margin-right: 0;
       }
+    }
+
+    .#{$namespace}-shortcut {
+      color: #8492a6;
+      margin-right: 0;
+      font-family: sans-serif;
+      position: absolute;
+      top: 4px;
+      right: 4px;
     }
 
     .#{$namespace}-rec {
@@ -321,14 +377,15 @@ $namespace: 'hr';
         }
       }
 
-      &.#{$namespace}-btn-close {
+      &.#{$namespace}-btn-close,
+      &.#{$namespace}-btn-label,
+      &.#{$namespace}-btn-up {
         color: #fff;
       }
 
-      //   svg {
-      //   stroke: #f9fafc;
-      //   fill: #f9fafc;
-      // }
+      &.#{$namespace}-btn-up {
+        background: #161616;
+      }
     }
 
     .#{$namespace}-success-message {
@@ -357,6 +414,10 @@ $namespace: 'hr';
     .tippy-arrow {
       color: #161616;
     }
+  }
+
+  nav.hide {
+    transform: translateY(82px) !important;
   }
 }
 </style>
