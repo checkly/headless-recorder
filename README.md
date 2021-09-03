@@ -73,8 +73,8 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 3. Click on links, inputs and other elements.
 4. Wait for full page load on each navigation.
 
-    **The icon will switch from <img width="24px" height="24px" src="./chrome-store/rec.png" alt="recording icon"/>
-    to <img width="24px" height="24px" src="./chrome-store/wait.png" alt="waiting icon"/> to indicate it is ready for more input from you.**
+    **The icon will switch from <img width="24px" height="24px" src="./assets/rec.png" alt="recording icon"/>
+    to <img width="24px" height="24px" src="./assets/wait.png" alt="waiting icon"/> to indicate it is ready for more input from you.**
 
 5. Click Pause when you want to navigate without recording anything. Hit Resume to continue recording.
 
@@ -110,7 +110,7 @@ $ npm run build # build and zip for production
 1. Make sure "**Developer mode**" is enabled.
 1. Click "**Load unpacked extension**" button, browse the `headless-recorder/dist` directory and select it.
 
-![](./chrome-store/dev-guide.png)
+![](./assets/dev-guide.png)
 
 <br>
 
