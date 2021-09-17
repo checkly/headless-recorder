@@ -47,8 +47,8 @@
           <p>
             <span role="img" aria-label="siren">🚨</span>
             <span class="ml-1 font-bold text-black-shady dark:text-white"
-              >When <span class="italic">"custom data attribute"</span>&nbsp;
-              is set, it will take precedence from over any other selector (even ID)
+              >When <span class="italic">"custom data attribute"</span>&nbsp; is set, it will take
+              precedence from over any other selector (even ID)
             </span>
           </p>
         </div>
