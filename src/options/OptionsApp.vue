@@ -15,7 +15,7 @@
     <div class="flex flex-col w-1/2">
       <header class="flex flex-row justify-between items-center mb-3.5">
         <div class="flex items-baseline">
-          <h1 class="text-gray-darkest dark:text-blue text-2xl font-bold mr-1">
+          <h1 class="text-blue text-2xl font-bold mr-1">
             Headless Recorder
           </h1>
           <span class="text-gray-dark dark:text-gray-light text-sm">v{{ version }}</span>
@@ -55,7 +55,7 @@
         <div>
           <label>Set key code</label>
           <div class="mb-2">
-            <Button @click="listenForKeyCodePress" class="font-semibold">
+            <Button @click="listenForKeyCodePress" class="font-semibold text-white text-sm">
               {{ recordingKeyCodePress ? 'Capturing...' : 'Record Key Stroke' }}
             </Button>
             <span class="text-gray-dark dark:text-gray-light text-sm ml-3">
@@ -219,7 +219,7 @@ code {
 }
 
 a {
-  @apply text-gray-darkest dark:text-blue underline text-sm text-right;
+  @apply text-blue underline text-sm text-right;
 }
 
 h2 {
