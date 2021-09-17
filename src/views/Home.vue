@@ -3,7 +3,7 @@
     <h3 class="text-gray-darkest text-xl font-semibold mb-3 dark:text-gray-lightest">
       No recorded events yet
     </h3>
-    <p class="text-gray-dark text-xs mb-5 text-center w-44">
+    <p class="text-gray-dark text-xs mb-5 text-center w-44 dark:text-gray-light">
       Record browser events by clicking record button
     </p>
     <RoundButton :small="false" @click="$emit('start')" class="p-10 mt-12">
