@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import _ from 'lodash'
+import find from 'lodash.find'
 import { launchPuppeteerWithExtension } from '@/__tests__/helpers'
 import { waitForAndGetEvents, cleanEventLog, startServer } from './helpers'
 
@@ -50,7 +50,7 @@ describe('forms', () => {
     await page.keyboard.press('Tab')
 
     const eventLog = await waitForAndGetEvents(page, string.length + tab + change)
-    const event = _.find(eventLog, e => {
+    const event = find(eventLog, e => {
       return e.action === 'keydown' && e.keyCode === 9
     })
     expect(event.value).toEqual(string)
@@ -62,7 +62,7 @@ describe('forms', () => {
     await page.keyboard.press('Tab')
 
     const eventLog = await waitForAndGetEvents(page, string.length + tab + change)
-    const event = _.find(eventLog, e => {
+    const event = find(eventLog, e => {
       return e.action === 'keydown' && e.keyCode === 9
     })
     expect(event.value).toEqual(string)

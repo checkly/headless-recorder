@@ -8,6 +8,10 @@
 import { mapState } from 'vuex'
 
 export default {
+  name: 'Selector',
+
+  emits: ['click'],
+
   data() {
     return {
       overlay: null,

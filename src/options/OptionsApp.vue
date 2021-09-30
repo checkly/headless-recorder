@@ -23,8 +23,8 @@
         <span
           role="alert"
           class="text-gray-darkest dark:text-white text-base font-semibold"
-          v-show="saving"
-          >Saving...</span
+          v-show="isSaving"
+          >Saving…</span
         >
       </header>
 
@@ -47,8 +47,8 @@
           <p>
             <span role="img" aria-label="siren">🚨</span>
             <span class="ml-1 font-bold text-black-shady dark:text-white"
-              >When <span class="italic">"custom data attribute"</span>&nbsp;
-              is set, it will take precedence from over any other selector (even ID)
+              >When <span class="italic">"custom data attribute"</span>&nbsp; is set, it will take
+              precedence from over any other selector (even ID)
             </span>
           </p>
         </div>
@@ -56,7 +56,7 @@
           <label>Set key code</label>
           <div class="mb-2">
             <Button @click="listenForKeyCodePress" class="font-semibold text-white text-sm">
-              {{ recordingKeyCodePress ? 'Capturing...' : 'Record Key Stroke' }}
+              {{ isRecordingKeyCodePress ? 'Capturing…' : 'Record Key Stroke' }}
             </Button>
             <span class="text-gray-dark dark:text-gray-light text-sm ml-3">
               {{ options.code.keyCode }}
@@ -109,99 +109,114 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import { version } from '../../package.json'
 
 import storage from '@/services/storage'
 import { isDarkMode } from '@/services/constants'
 import { defaults as code } from '@/modules/code-generator/base-generator'
-import { merge } from 'lodash'
+import merge from 'lodash.merge'
 
-import Button from '@/components/Button'
-import Toggle from '@/components/Toggle'
+import Button from '@/components/Button.vue'
+import Toggle from '@/components/Toggle.vue'
+import { defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-const defaultOptions = {
-  code,
-  extension: {
-    telemetry: true,
-    darkMode: isDarkMode(),
-  },
+function getDefaultOptions() {
+  return {
+    code,
+    extension: {
+      telemetry: true,
+      darkMode: isDarkMode(),
+    },
+  }
 }
 
-export default {
+export default defineComponent({
   name: 'OptionsApp',
+
   components: { Toggle, Button },
 
-  data() {
-    return {
-      version,
-      loading: true,
-      saving: false,
-      options: defaultOptions,
-      recordingKeyCodePress: false,
+  setup() {
+    const isLoading = ref(true)
+    const isSaving = ref(false)
+    const isRecordingKeyCodePress = ref(false)
+
+    const options = ref(getDefaultOptions())
+
+    let saveTimeoutHandle: number
+
+    async function load() {
+      const { options: storageOptions } = await storage.get('options')
+      merge(options.value, storageOptions)
+      isLoading.value = false
     }
-  },
 
-  watch: {
-    options: {
-      handler() {
-        this.save()
-      },
-      deep: true,
-    },
+    async function save() {
+      window.clearTimeout(saveTimeoutHandle)
+      isSaving.value = true
+      await storage.set({ options: options.value })
 
-    'options.extension.darkMode': {
-      handler(newVal) {
-        document.body.classList[newVal ? 'add' : 'remove']('dark')
-      },
-      immediate: true,
-    },
-  },
+      saveTimeoutHandle = window.setTimeout(() => (isSaving.value = false), 500)
+    }
 
-  mounted() {
-    this.load()
-    chrome.storage.onChanged.addListener(({ options = null }) => {
-      if (options && options.newValue.extension.darkMode !== this.options.extension.darkMode) {
-        this.options.extension.darkMode = options.newValue.extension.darkMode
-      }
-    })
-  },
+    function listenForKeyCodePress() {
+      isRecordingKeyCodePress.value = true
 
-  methods: {
-    async save() {
-      this.saving = true
-      await storage.set({ options: this.options })
-
-      setTimeout(() => (this.saving = false), 500)
-    },
-
-    async load() {
-      const { options } = await storage.get('options')
-      merge(defaultOptions, options)
-      this.options = Object.assign({}, this.options, defaultOptions)
-
-      this.loading = false
-    },
-
-    listenForKeyCodePress() {
-      this.recordingKeyCodePress = true
-
-      const keyDownFunction = e => {
-        this.recordingKeyCodePress = false
-        this.updateKeyCodeWithNumber(e)
+      const keyDownFunction = (e: KeyboardEvent) => {
+        isRecordingKeyCodePress.value = false
+        updateKeyCodeWithNumber(e)
         window.removeEventListener('keydown', keyDownFunction, false)
         e.preventDefault()
       }
 
       window.addEventListener('keydown', keyDownFunction, false)
-    },
+    }
 
-    updateKeyCodeWithNumber(evt) {
-      this.options.code.keyCode = parseInt(evt.keyCode, 10)
-      this.save()
-    },
+    function updateKeyCodeWithNumber(event: KeyboardEvent) {
+      // @ts-ignore
+      options.value.code.keyCode = parseInt(event.keyCode, 10)
+      save()
+    }
+
+    watch(
+      options,
+      val => {
+        save()
+        if (val.extension.darkMode) document.body.classList.add('dark')
+        else document.body.classList.remove('dark')
+      },
+      { deep: true }
+    )
+
+    function storageChangeListener(changes: {
+      [name: string]: chrome.storage.StorageChange
+    }): void {
+      const { options: storageOptions } = changes
+      if (storageOptions?.newValue.extension.darkMode !== options.value.extension.darkMode) {
+        options.value.extension.darkMode = storageOptions.newValue.extension.darkMode
+      }
+    }
+
+    onMounted(() => {
+      load()
+      chrome.storage.onChanged.addListener(storageChangeListener)
+    })
+
+    onBeforeUnmount(() => {
+      chrome.storage.onChanged.removeListener(storageChangeListener)
+    })
+
+    return {
+      version,
+      isLoading,
+      isSaving,
+      isRecordingKeyCodePress,
+      options,
+      listenForKeyCodePress,
+      save,
+    }
   },
-}
+})
 </script>
 
 <style scoped>

@@ -8,7 +8,7 @@
       ]"
       role="switch"
       aria-checked="false"
-      @click="toggle"
+      @click="$emit('update:modelValue', !modelValue)"
     >
       <span
         aria-hidden="true"
@@ -26,17 +26,19 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'Toggle',
-  props: { modelValue: { type: Boolean, default: true } },
 
-  setup(props, context) {
-    function toggle() {
-      context.emit('update:modelValue', !props.modelValue)
-    }
-
-    return { toggle }
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: true,
+    },
   },
-}
+
+  emits: ['update:modelValue'],
+})
 </script>

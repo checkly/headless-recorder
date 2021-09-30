@@ -50,17 +50,19 @@
   </section>
 </template>
 
-<script>
-import RoundButton from '@/components/RoundButton'
-import RecordingLabel from '@/components/RecordingLabel'
+<script lang="ts">
+import RoundButton from '@/components/RoundButton.vue'
+import RecordingLabel from '@/components/RecordingLabel.vue'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   components: { RoundButton, RecordingLabel },
 
   props: {
-    darkMode: { type: Boolean, default: false },
-    isRecording: { type: Boolean, default: false },
-    isPaused: { type: Boolean, default: false },
+    darkMode: Boolean,
+    isRecording: Boolean,
+    isPaused: Boolean,
   },
-}
+  emits: ['start', 'pause', 'restart', 'stop'],
+})
 </script>

@@ -12,10 +12,13 @@
   </div>
 </template>
 
-<script>
-import RoundButton from '@/components/RoundButton'
+<script lang="ts">
+import RoundButton from '@/components/RoundButton.vue'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
+  name: 'Home',
   components: { RoundButton },
-}
+  emits: ['start'],
+})
 </script>

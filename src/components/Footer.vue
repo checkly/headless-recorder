@@ -7,17 +7,17 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script lang="ts">
+import { defineComponent } from 'vue'
 import { version } from '../../package.json'
 
-export default {
-  name: 'ChecklyBadge',
+export default defineComponent({
+  name: 'Footer',
 
   setup() {
     return {
-      version: ref(version),
+      version,
     }
   },
-}
+})
 </script>

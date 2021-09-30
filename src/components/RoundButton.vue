@@ -7,14 +7,18 @@
   </button>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'RoundButton',
+
   props: {
-    small: { type: Boolean, default: false },
-    medium: { type: Boolean, default: false },
-    big: { type: Boolean, default: false },
+    small: Boolean,
+    medium: Boolean,
+    big: Boolean,
   },
-}
+})
 </script>
 
 <style scoped>

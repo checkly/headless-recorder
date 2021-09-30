@@ -4,21 +4,18 @@
     class="flex text-2xl justify-center items-center text-red font-semibold"
     :class="{ 'text-yellow': text === 'Paused', 'animate-pulse': text !== 'Paused' }"
   >
-    {{ text }}
+    {{ isPaused ? 'Paused' : 'Recording…' }}
   </div>
 </template>
 
-<script>
-export default {
-  name: 'RecordingLabel',
-  props: {
-    isPaused: { type: Boolean, default: false },
-  },
+<script lang="ts">
+import { defineComponent } from 'vue'
 
-  computed: {
-    text() {
-      return this.isPaused ? 'Paused' : 'Recording...'
-    },
+export default defineComponent({
+  name: 'RecordingLabel',
+
+  props: {
+    isPaused: Boolean,
   },
-}
+})
 </script>

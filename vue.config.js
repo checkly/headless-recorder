@@ -1,4 +1,22 @@
 module.exports = {
+  configureWebpack: {
+    resolve: {
+      extensions: ['.ts', '.js', '.vue', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'esbuild-loader',
+          options: {
+            target: 'esnext',
+          },
+        },
+      ],
+    },
+  },
+
   css: {
     extract: false,
   },

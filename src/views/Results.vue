@@ -54,6 +54,8 @@ export default {
     },
   },
 
+  emits: ['update:tab'],
+
   data() {
     return {
       activeTab: headlessTypes.PLAYWRIGHT,

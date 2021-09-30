@@ -12,12 +12,14 @@
   </button>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'Button',
 
   props: {
-    dark: { type: Boolean, default: false },
+    dark: Boolean,
   },
-}
+})
 </script>
