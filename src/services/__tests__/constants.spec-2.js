@@ -1,26 +1,29 @@
 import { isDarkMode } from '../constants'
 
-describe('isDarkMode', () => {
-    it('has matchMedia', () => {
-        window.matchMedia = undefined 
-        expect(isDarkMode()).toBe(false);
-    })
-})
+function setMatchMediaMock(matches) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn(() => ({ matches })),
+  })
+}
 
-describe('isDarkMode', () => {
-    it('has darkMode', () => {
-        window.matchMedia = () => {
-            return { matches: true }
-        }
-        expect(isDarkMode()).toBe(true)
-    })
-})
+describe('isDarkMode()', () => {
+  beforeEach(() => {
+    window?.matchMedia?.mockClear()
+  })
 
-describe('isDarkMode', () => {
-    it('has lightMode', () => {
-        window.matchMedia = () => {
-            return { matches: false }
-        }
-        expect(isDarkMode()).toBe(false)
-    })
+  it('has darkMode enabled', () => {
+    setMatchMediaMock(true)
+    expect(isDarkMode()).toBe(true)
+  })
+
+  it('has darkMode disabled', () => {
+    setMatchMediaMock(false)
+    expect(isDarkMode()).toBe(false)
+  })
+
+  it('does not have matchMedia browser API', () => {
+    window.matchMedia = null
+    expect(isDarkMode()).toBe(false)
+  })
 })

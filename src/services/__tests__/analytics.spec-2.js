@@ -1,39 +1,36 @@
 import analytics from '../analytics'
 
-describe('trackPageView', () => {
-    it('has telemetry', () => {
-        const options = {
-            extension: {
-                telemetry: "data"
-            }
-        }
-        expect(analytics.trackPageView(options)).toBe(window?._gaq?.push(['_trackPageview']));
-    })
+Object.defineProperty(window, '_gaq', {
+  writable: true,
+  value: {
+    push: jest.fn(),
+  },
 })
 
 describe('trackPageView', () => {
-    it('has no telemetry', () => {
-        const options = {}
-        expect(analytics.trackPageView(options)).toBe(undefined);
-    })
-})
+  beforeEach(() => {
+    window._gaq.push.mockClear()
+  })
 
-describe('trackEvent', () => {
-    it('has no telemetry', () => {
-        const options = {}
-        const event = "event"
-        expect(analytics.trackEvent({options, event})).toBe(undefined);
-    })
-})
+  it('has telemetry enabled', () => {
+    const options = {
+      extension: {
+        telemetry: true,
+      },
+    }
 
-describe('trackEvent', () => {
-    it('has telemetry', () => {
-        const options = {
-            extension: {
-                telemetry: "data"
-            }
-        }
-        const event = "event"
-        expect(analytics.trackEvent({options, event})).toBe(window?._gaq?.push(['_trackEvent', event, 'clicked']));
-    })
+    analytics.trackPageView(options)
+    expect(window._gaq.push.mock.calls.length).toBe(1)
+  })
+
+  it('does not have telemetry enabled', () => {
+    const options = {
+      extension: {
+        telemetry: false,
+      },
+    }
+
+    analytics.trackPageView(options)
+    expect(window._gaq.push.mock.calls.length).toBe(0)
+  })
 })
