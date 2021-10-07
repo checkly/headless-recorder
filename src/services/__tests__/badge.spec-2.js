@@ -12,41 +12,51 @@ const inputText = {
   data: '',
 };
 
-describe('badge', () => {
-  beforeEach(() => {
-    chrome.browserAction.setIcon.mockClear()
-    chrome.browserAction.setBadgeBackgroundColor.mockClear()
-  })
+beforeEach(() => {
+  chrome.browserAction.setIcon.mockClear()
+  chrome.browserAction.setBadgeBackgroundColor.mockClear()
+})
 
-  it('sets recording logo', () => {   
+describe('start', () => {
+  it('sets recording icon', () => {   
     badge.start()
     expect(chrome.browserAction.setIcon.mock.calls.length).toBe(1)
   })
+})
 
-  it('sets pause logo', () => {   
+describe('pause', () => {
+  it('sets pause icon', () => {   
     badge.pause()
     expect(chrome.browserAction.setIcon.mock.calls.length).toBe(1)
   })
+})
 
-  it('sets text', () => {   
+describe('setText', () => {
+  it('sets selected text on the badge', () => {   
     badge.setText('data')
     expect(inputText.data.text).toBe('data')
   })
+})
 
-  it('reset text', () => {   
+describe('reset', () => {
+  it('reset text to empty string', () => {   
     badge.reset()
     badge.setText('')
     expect(inputText.data.text).toBe('')
   })
+})
 
-  it('wait', () => {   
+describe('wait', () => {
+  it('changes text to wait', () => {   
     badge.wait()
     badge.setText('wait')
     expect(chrome.browserAction.setBadgeBackgroundColor.mock.calls.length).toBe(1)
     expect(inputText.data.text).toBe('wait')
   })
+})
 
-  it('stop', () => {   
+describe('stop', () => {
+  it('stops recording and sets result text', () => {   
     badge.stop('data')
     expect(chrome.browserAction.setIcon.mock.calls.length).toBe(1)
     expect(chrome.browserAction.setBadgeBackgroundColor.mock.calls.length).toBe(1)

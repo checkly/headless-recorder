@@ -7,7 +7,7 @@ describe('selector', () => {
         id: 1,
       },
     }
-    expect(selector(e)).toBe(`#${1}`)
+    expect(selector(e)).toBe(`#1`)
   })
 })
 
