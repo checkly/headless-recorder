@@ -3,25 +3,17 @@ import badge from '../badge'
 global.chrome = {
   browserAction: {
       setIcon: jest.fn(),
+      setBadgeText: jest.fn((text) => (inputText.data = text)),
   }
 }; 
 
-// function setMockText(text) {
-//   Object.defineProperty(global.chrome, 'browserAction', {
-//     writable: true,
-//     value: {
-//       setBadgeText: jest.fn(() => (inputText = text)),
-//     },
-//   })
-// }
+const inputText = {
+  data: '',
+};
 
 describe('start', () => {
   beforeEach(() => {
     chrome.browserAction.setIcon.mockClear()
-  })
-
-  beforeAll(() => {
-    const inputText = ''
   })
 
   it('sets recording logo', () => {   
@@ -34,8 +26,14 @@ describe('start', () => {
     expect(chrome.browserAction.setIcon.mock.calls.length).toBe(1)
   })
 
-  // it('sets badge text', () => {   
-  //   setMockText("hola")
-  //   expect(chrome.browserAction.setBadgeText()).toBe(true)
-  // })
+  it('sets text', () => {   
+    badge.setText('data')
+    expect(inputText.data.text).toBe('data')
+  })
+
+  it('reset text', () => {   
+    badge.reset()
+    badge.setText('')
+    expect(inputText.data.text).toBe('')
+  })
 })
