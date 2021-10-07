@@ -6,7 +6,6 @@ export default {
   },
 
   trackPageView(options) {
-    console.log('ACA', options?.extension?.telemetry)
     if (options?.extension?.telemetry) {
       window?._gaq?.push(['_trackPageview'])
     }
