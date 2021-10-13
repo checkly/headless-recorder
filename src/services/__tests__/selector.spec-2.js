@@ -7,18 +7,14 @@ describe('selector', () => {
         id: 1,
       },
     }
-    expect(selector(e)).toBe(`#1`)
+    expect(selector(e)).toBe(true)
+  })
+
+  it('has dataAttribute', () => {
+    e.target = {
+          getAttribute: jest.fn(props => (props)),
+        },
+    expect(selector(e, {dataAttribute: true})).toBe(true)
   })
 })
 
-describe('selector', () => {
-  it('has dataAttribute', () => {
-    const dataAttribute = 'data'
-    e.target.getAttribute = () => {
-      return { dataAttribute: 'data' }
-    }
-    expect(selector(e.target.getAttribute(), dataAttribute)).toBe(
-      `[${'data'}="${{ dataAttribute: 'data' }}"]`
-    )
-  })
-})
