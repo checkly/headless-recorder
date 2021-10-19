@@ -5,7 +5,7 @@
     "serve": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
     "test": "npm run test:unit",
-    "test:unit": "vue-cli-service test:unit __tests__/.*.spec-3.js",
+    "test:unit": "vue-cli-service test:unit __tests__/.*.spec.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -42,7 +42,6 @@
     "eslint-plugin-vue": "7.0.0",
     "eslint-plugin-vuejs-accessibility": "0.6.2",
     "jest": "27.2.5",
-    "jest-chrome": "0.7.2",
     "jest-vue-preprocessor": "1.7.1",
     "node-sass": "5.0.0",
     "playwright": "1.10.0",
