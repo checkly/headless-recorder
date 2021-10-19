@@ -1,4 +1,4 @@
-import { finder } from '@medv/finder'
+import { finder } from '@medv/finder/finder.js'
 
 export default function selector(e, { dataAttribute } = {}) {
   if (dataAttribute && e.target.getAttribute(dataAttribute)) {
