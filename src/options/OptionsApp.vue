@@ -84,6 +84,10 @@
           Add <code>waitForSelector</code> lines before every
           <code>page.click()</code>
         </Toggle>
+        <Toggle v-model="options.code.waitForNetworkIdleAfterClick">
+          Add <code>waitForNetwoorkIdle</code> lines after every <code>page.click()</code> or
+          <code>page.goto()</code>
+        </Toggle>
         <Toggle v-model="options.code.blankLinesBetweenBlocks">
           Add blank lines between code blocks
         </Toggle>

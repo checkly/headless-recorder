@@ -6,6 +6,7 @@ export const defaults = {
   headless: true,
   waitForNavigation: true,
   waitForSelectorOnClick: true,
+  waitForNetworkIdleAfterClick: true,
   blankLinesBetweenBlocks: true,
   dataAttribute: '',
   showPlaywrightFirst: true,
@@ -146,6 +147,12 @@ export default class BaseGenerator {
       type: eventsToRecord.CLICK,
       value: `await ${this._frame}.click('${selector}')`,
     })
+    if (this._options.waitForNetworkIdleAfterClick) {
+      block.addLine({
+        type: eventsToRecord.CLICK,
+        value: `await ${this._frame}.waitForNetworkIdle()`,
+      })
+    }
     return block
   }
 
@@ -157,10 +164,18 @@ export default class BaseGenerator {
   }
 
   _handleGoto(href) {
-    return new Block(this._frameId, {
+    const block = new Block(this._frameId)
+    block.addLine({
       type: headlessActions.GOTO,
       value: `await ${this._frame}.goto('${href}')`,
     })
+    if (this._options.waitForNetworkIdleAfterClick) {
+      block.addLine({
+        type: eventsToRecord.CLICK,
+        value: `await ${this._frame}.waitForNetworkIdle()`,
+      })
+    }
+    return block
   }
 
   _handleViewport() {
