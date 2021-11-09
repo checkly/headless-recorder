@@ -48,6 +48,10 @@ export default {
       type: String,
       default: '',
     },
+    jest: {
+      type: String,
+      default: '',
+    },
     options: {
       type: Object,
       default: () => ({}),
@@ -57,13 +61,21 @@ export default {
   data() {
     return {
       activeTab: headlessTypes.PLAYWRIGHT,
-      tabs: [headlessTypes.PLAYWRIGHT, headlessTypes.PUPPETEER],
+      tabs: [headlessTypes.PLAYWRIGHT, headlessTypes.PUPPETEER, headlessTypes.JEST],
     }
   },
 
   computed: {
     code() {
-      return this.activeTab === headlessTypes.PUPPETEER ? this.puppeteer : this.playwright
+      if (this.activeTab === headlessTypes.PUPPETEER) {
+        return this.puppeteer
+      } else if (this.activeTab === headlessTypes.PLAYWRIGHT) {
+        return this.playwright
+      } else if (this.activeTab === headlessTypes.JEST) {
+        return this.jest
+      } else {
+        return this.puppeteer
+      }
     },
   },
 

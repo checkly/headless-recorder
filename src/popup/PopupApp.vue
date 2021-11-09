@@ -17,6 +17,7 @@
     <Results
       :puppeteer="code"
       :playwright="codeForPlaywright"
+      :jest="codeForJest"
       :options="options"
       v-if="showResultsTab"
       v-on:update:tab="currentResultTab = $event"
@@ -171,11 +172,12 @@ export default {
     async generateCode() {
       const { recording, options = { code: {} } } = await storage.get(['recording', 'options'])
       const generator = new CodeGenerator(options.code)
-      const { puppeteer, playwright } = generator.generate(recording)
+      const { puppeteer, playwright, jest } = generator.generate(recording)
 
       this.recording = recording
       this.code = puppeteer
       this.codeForPlaywright = playwright
+      this.codeForJest = jest
       this.showResultsTab = true
     },
 
@@ -190,6 +192,7 @@ export default {
         code = '',
         options,
         codeForPlaywright = '',
+        codeForJest = '',
         recording,
         clear,
         pause,
@@ -199,6 +202,7 @@ export default {
         'code',
         'options',
         'codeForPlaywright',
+        'codeForJest',
         'recording',
         'clear',
         'pause',
@@ -211,6 +215,7 @@ export default {
 
       this.code = code
       this.codeForPlaywright = codeForPlaywright
+      this.codeForJest = codeForJest
 
       if (this.isRecording) {
         this.liveEvents = recording
@@ -239,6 +244,7 @@ export default {
       storage.set({
         code: this.code,
         codeForPlaywright: this.codeForPlaywright,
+        codeForJest: this.codeForJest,
         controls: { isRecording: this.isRecording, isPaused: this.isPaused },
       })
     },
