@@ -8,6 +8,7 @@ export const defaults = {
   waitForSelectorOnClick: true,
   blankLinesBetweenBlocks: true,
   dataAttribute: '',
+  resolverAttribute: '',
   showPlaywrightFirst: true,
   keyCode: 9,
 }
@@ -142,10 +143,17 @@ export default class BaseGenerator {
         value: `await ${this._frame}.waitForSelector('${selector}')`,
       })
     }
-    block.addLine({
-      type: eventsToRecord.CLICK,
-      value: `await ${this._frame}.click('${selector}')`,
-    })
+    if (!selector.startsWith('xpath:')) {
+      block.addLine({
+        type: eventsToRecord.CLICK,
+        value: `await ${this._frame}.click('${selector}')`,
+      })
+    } else {
+      block.addLine({
+        type: eventsToRecord.CLICK,
+        value: `(await ${this._frame}.$x('${selector.substr(6)}'))[0].click()`,
+      })
+    }
     return block
   }
 

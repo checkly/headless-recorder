@@ -67,6 +67,17 @@
             will not handle multiple keys.
           </p>
         </div>
+        <div>
+          <label>Set custom selector resolver</label>
+          <textarea
+            id="custom-data-resolver"
+            class="w-full placeholder-gray-darkish bg-gray-lighter rounded px-2 mb-2 text-sm"
+            type="text"
+            v-model.trim="options.code.resolverAttribute"
+            @change="save"
+            rows="10"
+          />
+        </div>
       </section>
 
       <section>

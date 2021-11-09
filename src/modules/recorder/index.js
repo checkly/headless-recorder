@@ -67,9 +67,13 @@ export default class Recorder {
     // we explicitly catch any errors and swallow them, as none node-type events are also ingested.
     // for these events we cannot generate selectors, which is OK
     try {
-      const selector = getSelector(e, { dataAttribute: this.store.state.dataAttribute })
+      const selector = getSelector(e, {
+        dataAttribute: this.store.state.dataAttribute,
+        resolverAttribute: this.store.state.resolverAttribute,
+        exclude: overlaySelectors.OVERLAY_ID,
+      })
 
-      if (selector.includes('#' + overlaySelectors.OVERLAY_ID)) {
+      if (selector === false) {
         return
       }
 

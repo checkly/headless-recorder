@@ -20,10 +20,11 @@ export default class HeadlessController {
     const { options } = await storage.get(['options'])
 
     const darkMode = options && options.extension ? options.extension.darkMode : isDarkMode()
-    const { dataAttribute } = options ? options.code : {}
+    const { dataAttribute, resolverAttribute } = options ? options.code : {}
 
     this.store.commit('setDarkMode', darkMode)
     this.store.commit('setDataAttribute', dataAttribute)
+    this.store.commit('setResolverAttribute', resolverAttribute)
 
     this.recorder.init(() => this.listenBackgroundMessages())
   }

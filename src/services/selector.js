@@ -1,6 +1,22 @@
 import { finder } from '@medv/finder/finder.js'
 
-export default function selector(e, { dataAttribute } = {}) {
+export default function selector(e, { dataAttribute, resolverAttribute, exclude } = {}) {
+  let parent = e.target
+  while (parent && parent.id != exclude) {
+    parent = parent.parentNode
+  }
+  if (parent && parent.id == exclude) {
+    return false
+  }
+
+  if (resolverAttribute) {
+    const resolver = new Function('element', resolverAttribute)
+    const ret = resolver(e.target)
+    if (typeof ret == 'string') {
+      return ret
+    }
+  }
+
   if (dataAttribute && e.target.getAttribute(dataAttribute)) {
     return `[${dataAttribute}="${e.target.getAttribute(dataAttribute)}"]`
   }

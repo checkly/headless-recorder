@@ -49,10 +49,13 @@ export default class Overlay {
       .mount('#' + overlaySelectors.OVERLAY_ID)
 
     this.mouseOverEvent = e => {
-      const selector = getSelector(e, { dataAttribute: this.store.state.dataAttribute })
-      this.overlayApp.currentSelector = selector.includes('#' + overlaySelectors.OVERLAY_ID)
-        ? ''
-        : selector
+      const selector = getSelector(e, {
+        dataAttribute: this.store.state.dataAttribute,
+        resolverAttribute: this.store.state.resolverAttribute,
+        exclude: overlaySelectors.OVERLAY_ID,
+      })
+
+      this.overlayApp.currentSelector = selector === false ? '' : selector
 
       if (
         this.overlayApp.currentSelector &&

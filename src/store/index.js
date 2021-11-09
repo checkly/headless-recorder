@@ -25,6 +25,8 @@ const store = createStore({
       hasRecorded: false,
 
       dataAttribute: '',
+      resolverAttribute: '',
+
       takeScreenshot: false,
 
       recording: [],
@@ -48,6 +50,10 @@ const store = createStore({
 
     setDataAttribute(state, dataAttribute) {
       state.dataAttribute = dataAttribute
+    },
+
+    setResolverAttribute(state, resolverAttribute) {
+      state.resolverAttribute = resolverAttribute
     },
 
     setDarkMode(state, darkMode) {

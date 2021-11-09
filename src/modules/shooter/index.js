@@ -23,10 +23,17 @@ class Shooter extends EventEmitter {
   }
 
   mouseover(e) {
-    this.currentSelctor = getSelector(e, { dataAttribute: this.store.state.dataAttribute }).replace(
-      '.' + overlaySelectors.CURSOR_CAMERA_CLASS,
-      'body'
-    )
+    const selector = getSelector(e, {
+      dataAttribute: this.store.state.dataAttribute,
+      resolverAttribute: this.store.data.resolverAttribute,
+      exclude: overlaySelectors.OVERLAY_ID,
+    })
+
+    if (selector === false) {
+      return
+    }
+
+    this.currentSelctor = selector.replace('.' + overlaySelectors.CURSOR_CAMERA_CLASS, 'body')
   }
 
   startScreenshotMode() {
