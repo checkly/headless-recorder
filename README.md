@@ -80,9 +80,9 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 ### ⌨️ Shortcuts
 
-- `ctrl + k`: Toggle overlay
-- `ctrl + shift + F`: Take full page screenshot
-- `ctrl + shift + E`: Take element screenshot
+- `alt + k`: Toggle overlay
+- `alt + shift + F`: Take full page screenshot
+- `alt + shift + E`: Take element screenshot
 
 <br>
 
