@@ -84,6 +84,9 @@
           Add <code>waitForSelector</code> lines before every
           <code>page.click()</code>
         </Toggle>
+        <Toggle v-model="options.code.typeWithSelector">
+          Use a selector with the <code>type</code> lines
+        </Toggle>
         <Toggle v-model="options.code.blankLinesBetweenBlocks">
           Add blank lines between code blocks
         </Toggle>

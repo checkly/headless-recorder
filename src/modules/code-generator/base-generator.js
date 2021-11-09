@@ -9,6 +9,7 @@ export const defaults = {
   blankLinesBetweenBlocks: true,
   dataAttribute: '',
   showPlaywrightFirst: true,
+  typeWithSelector: true,
   keyCode: 9,
 }
 
@@ -127,10 +128,17 @@ export default class BaseGenerator {
 
   _handleKeyDown(selector, value) {
     const block = new Block(this._frameId)
-    block.addLine({
-      type: eventsToRecord.KEYDOWN,
-      value: `await ${this._frame}.type('${selector}', '${this._escapeUserInput(value)}')`,
-    })
+    if (this._options.typeWithSelector) {
+      block.addLine({
+        type: eventsToRecord.KEYDOWN,
+        value: `await ${this._frame}.type('${selector}', '${this._escapeUserInput(value)}')`,
+      })
+    } else {
+      block.addLine({
+        type: eventsToRecord.KEYDOWN,
+        value: `await ${this._frame}.keyboard.type('${this._escapeUserInput(value)}')`,
+      })
+    }
     return block
   }
 
