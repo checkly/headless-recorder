@@ -13,6 +13,7 @@ export default class Recorder {
     this._isRecordingClicks = true
 
     this.store = store
+    this.dragging = false
   }
 
   init(cb) {
@@ -20,6 +21,8 @@ export default class Recorder {
 
     if (!window.pptRecorderAddedControlListeners) {
       this._addAllListeners(events)
+      window.addEventListener('mousedown', () => (this.dragging = false))
+      window.addEventListener('mousemove', () => (this.dragging = true))
       cb && cb()
       window.pptRecorderAddedControlListeners = true
     }
@@ -46,6 +49,10 @@ export default class Recorder {
   _sendMessage(msg) {
     // filter messages based on enabled / disabled features
     if (msg.action === 'click' && !this._isRecordingClicks) {
+      return
+    }
+
+    if (msg.action === 'click' && this.dragging) {
       return
     }
 
@@ -82,6 +89,7 @@ export default class Recorder {
         action: e.type,
         keyCode: e.keyCode ? e.keyCode : null,
         href: e.target.href ? e.target.href : null,
+        selection: window.getSelection().toString(),
         coordinates: Recorder._getCoordinates(e),
       })
     } catch (err) {

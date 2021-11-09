@@ -44,7 +44,17 @@ export default class BaseGenerator {
     if (!events) return result
 
     for (let i = 0; i < events.length; i++) {
-      const { action, selector, value, href, keyCode, tagName, frameId, frameUrl } = events[i]
+      const {
+        action,
+        selector,
+        value,
+        href,
+        keyCode,
+        tagName,
+        frameId,
+        frameUrl,
+        selection,
+      } = events[i]
       const escapedSelector = selector ? selector?.replace(/\\/g, '\\\\') : selector
 
       // we need to keep a handle on what frames events originate from
@@ -53,7 +63,11 @@ export default class BaseGenerator {
       switch (action) {
         case 'keydown':
           if (keyCode === this._options.keyCode) {
-            this._blocks.push(this._handleKeyDown(escapedSelector, value, keyCode))
+            if (value) {
+              this._blocks.push(this._handleKeyDown(escapedSelector, value, keyCode))
+            } else if (selection) {
+              this._blocks.push(this._handleSelection(escapedSelector, selection, keyCode))
+            }
           }
           break
         case 'click':
@@ -193,6 +207,13 @@ await element${this._screenshotCounter}.screenshot({ path: 'screenshot_${this._s
       })
     }
     return block
+  }
+
+  _handleSelection(selector, selection) {
+    return new Block(this._frameId, {
+      type: eventsToRecord.KEYDOWN,
+      value: `await expect(${this._frame}).toMatch('${selection}')`,
+    })
   }
 
   _postProcessSetFrames() {
