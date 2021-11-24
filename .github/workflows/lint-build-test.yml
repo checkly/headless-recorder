@@ -2,7 +2,7 @@ name: Lint & Build & Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
     types: [ opened, synchronize ]
 

@@ -13,7 +13,7 @@
 </p>
 
 <p>
-  <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=master" alt="Github Build"/>
+  <img src="https://github.com/checkly/headless-recorder/workflows/Lint%20&%20Build%20&%20Test/badge.svg?branch=main" alt="Github Build"/>
   <img src="https://img.shields.io/chrome-web-store/users/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore%20-%20Users" alt="Chrome Webstore Users" />
   <img src="https://img.shields.io/chrome-web-store/v/djeegiggegleadkkbgopoonhjimgehda?label=Chrome%20Webstore" alt="Chrome Webstore Version" />
 </p>
@@ -132,7 +132,7 @@ Headless recorder is the spiritual successor & love child of segment.io's [Daydr
 
 ## 📄 License
 
-[MIT](https://github.com/checkly/headless-recorder/blob/master/LICENSE)
+[MIT](https://github.com/checkly/headless-recorder/blob/main/LICENSE)
 
 
 <p align="center">

@@ -3,7 +3,7 @@
     <div class="flex flex-col w-1/4 pt-12 pr-6">
       <a href="https://www.checklyhq.com/docs/headless-recorder/" target="_blank">Docs</a>
       <a href="https://github.com/checkly/headless-recorder" target="_blank">GitHub</a>
-      <a href="https://github.com/checkly/headless-recorder/blob/master/CHANGELOG.md"
+      <a href="https://github.com/checkly/headless-recorder/blob/main/CHANGELOG.md"
         >Release notes</a
       >
       <a

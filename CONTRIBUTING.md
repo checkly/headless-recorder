@@ -14,8 +14,8 @@ When authoring new features or extending existing ones, consider the following:
 1. Clone this repository
 
 ```bash
-git clone https://github.com/checkly/puppeteer-recorder
-cd puppeteer-recorder
+git clone https://github.com/checkly/headless-recorder
+cd headless-recorder
 ```
 
 2. Install dependencies
@@ -35,7 +35,7 @@ information on using pull requests.
 
 ## Code Style
 
-- Coding style is fully defined in [.eslintrc](https://github.com/checkly/puppeteer-recorder/blob/master/.eslintrc.js)
+- Coding style is fully defined in [.eslintrc](https://github.com/checkly/headless-recorder/blob/main/.eslintrc.js)
 - Comments should be generally avoided. If the code would not be understood without comments, consider re-writing the code to make it self-explanatory.
 
 To run code linter, use:
