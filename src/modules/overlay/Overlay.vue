@@ -39,7 +39,7 @@
         REC
       </div>
       <span class="hr-shortcut">
-        ctrl + k to hide
+        alt + k to hide
       </span>
       <button
         class="hr-btn"
@@ -63,7 +63,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="fullScreenshot"
-        v-tippy="{ content: 'Full Screenshot (ctrl+shift+F)', appendTo: 'parent' }"
+        v-tippy="{ content: 'Full Screenshot (alt+shift+F)', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('screen')" alt="full page sreenshot" />
       </button>
@@ -71,7 +71,7 @@
         :disabled="isPaused"
         class="hr-btn-big"
         @click.prevent="clippedScreenshot"
-        v-tippy="{ content: 'Element Screenshot (ctrl+shift+E)', appendTo: 'parent' }"
+        v-tippy="{ content: 'Element Screenshot (alt+shift+E)', appendTo: 'parent' }"
       >
         <img width="27" height="27" :src="getIcon('clip')" alt="clipped sreenshot" />
       </button>
@@ -144,7 +144,7 @@ export default {
     },
 
     keyupListener(e) {
-      if (!e.ctrlKey) {
+      if (!e.altKey) {
         return
       }
 
