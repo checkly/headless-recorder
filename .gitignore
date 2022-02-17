@@ -27,3 +27,6 @@ pnpm-debug.log*
 *.pub
 *.zip
 /artifacts
+
+# Key files
+keys.json
