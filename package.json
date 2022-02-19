@@ -18,7 +18,7 @@
     "css-selector-generator": "3.0.1",
     "lodash": "4.17.21",
     "pinia": "2.0.0-beta.3",
-    "postcss": "7",
+    "postcss": "8",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@2.0.2",
     "vue": "3.0.6",
     "vue-tippy": "6.0.0-alpha.30",
