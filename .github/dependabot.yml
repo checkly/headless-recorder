@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    # Runs at 9am CET only on weekdays
+    schedule:
+      time: "13:00"
+      interval: "daily"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
