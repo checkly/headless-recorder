@@ -50,7 +50,7 @@
     "sass-loader": "10.1.1",
     "typescript": "3.9.3",
     "vue-cli-plugin-browser-extension": "0.25.1",
-    "vue-cli-plugin-tailwind": "2.0.6",
+    "vue-cli-plugin-tailwind": "3.0.0",
     "vue-jest": "3.0.7"
   }
 }
