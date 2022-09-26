@@ -7,7 +7,7 @@ By using our Service you are consenting to our Processing of your information as
 
 ### TL;DR:
   - We will not sell your data to anyone.
-  - We use Google Analytics o see how you interact with extension. You can opt out of both Google Analytics.
+  - We use Google Analytics to see how you interact with extension. You can opt out of both Google Analytics.
 
 ## 1. Information Collection and Use
 
