@@ -21,7 +21,7 @@
     "postcss": "7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@2.0.2",
     "vue": "3.0.6",
-    "vue-tippy": "6.0.0-alpha.30",
+    "vue-tippy": "6.0.0-alpha.58",
     "vue3-highlightjs": "1.0.5",
     "vuex": "4.0.2"
   },
