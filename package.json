@@ -26,7 +26,7 @@
     "vuex": "4.0.2"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "5.12.0",
+    "@testing-library/jest-dom": "5.16.5",
     "@vue/cli-plugin-babel": "4.5.0",
     "@vue/cli-plugin-eslint": "4.5.0",
     "@vue/cli-plugin-unit-jest": "4.5.12",
