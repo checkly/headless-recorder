@@ -1,7 +1,7 @@
 # 🚨 Deprecated!
-As of Dec 16th 2022, Headless Recorder is fully deprecated. No new changes, support, maintenance and features are expected to land
+As of Dec 16th 2022, Headless Recorder is fully deprecated. No new changes, support, maintenance or new features are expected to land.
 
-For more information and possible alternatives refer to this [issue]().
+For more information and possible alternatives refer to this [issue](https://github.com/checkly/headless-recorder/issues/232).
 
 </p>
 
