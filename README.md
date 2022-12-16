@@ -1,5 +1,7 @@
-<p align="right">
-<a href="https://www.producthunt.com/posts/headless-recorder-1-0?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-headless-recorder-1-0" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=305058&theme=light" alt="Headless Recorder 1.0 - Easily generate Playwright/Puppeteer scripts while browsing | Product Hunt" width="150" /></a>
+# 🚨 Deprecated!
+As of Dec 16th 2022, Headless Recorder is fully deprecated. No new changes, support, maintenance and features are expected to land
+
+For more information and possible alternatives refer to this [issue]().
 
 </p>
 
@@ -28,7 +30,7 @@
 </p>
 <br>
 
-## 👀 Overview
+## Overview
 
 Headless recorder is a Chrome extension that records your browser interactions and generates a [Playwright](https://playwright.dev/) or [Puppeteer](http://pptr.dev/) script. Install it from the [Chrome Webstore](https://chrome.google.com/webstore/detail/puppeteer-recorder/djeegiggegleadkkbgopoonhjimgehda) to get started!
 
@@ -38,7 +40,7 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 <br>
 
-## 🏗️ What you can do?
+## What you can do?
 
 - Records clicks and type events.
 - Add waitForNavigation, setViewPort and other useful clauses.
@@ -66,7 +68,7 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 <br>
 
-## 🔧 How to use?
+## How to use?
 
 1. Click the icon and hit the red button.
 2. 👉 Hit <kbd>tab</kbd> after you finish typing in an `input` element. 👈
@@ -86,7 +88,7 @@ This project builds on existing open source projects (see [Credits](#-credits)) 
 
 <br>
 
-## 🖥️ Run Locally
+## Run Locally
 
 After cloning the project, open the terminal and navigate to project root directory.
 
@@ -104,7 +106,7 @@ $ npm run build # build and zip for production
 
 <br>
 
-## 🧩 Install Locally
+## Install Locally
 
 1. Open chrome and navigate to extensions page using this URL: [`chrome://extensions`](chrome://extensions).
 1. Make sure "**Developer mode**" is enabled.
@@ -114,7 +116,7 @@ $ npm run build # build and zip for production
 
 <br>
 
-## 🚀 Release
+## Release
 
 1. Bump version using `npm version` (patch, minor, major).
 2. Push changes with tags `git push --tags`
@@ -124,13 +126,13 @@ $ npm run build # build and zip for production
 
 <br>
 
-## 🙏 Credits
+## Credits
 
 Headless recorder is the spiritual successor & love child of segment.io's [Daydream](https://github.com/segmentio/daydream) and [ui recorder](https://github.com/yguan/ui-recorder).
 
 <br>
 
-## 📄 License
+## License
 
 [MIT](https://github.com/checkly/headless-recorder/blob/main/LICENSE)
 
